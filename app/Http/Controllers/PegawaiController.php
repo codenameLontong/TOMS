@@ -139,6 +139,15 @@ class PegawaiController extends Controller
                 'masa_kerja_vendor' => $masa_kerja_vendor,
             ]));
 
+        // Record the creation in PegawaiHistory
+        PegawaiHistory::create([
+            'pegawai_nrp' => $pegawai->nrp, // Use nrp to connect with pegawai
+            'action_type' => 'manual',
+            'description' => "Pegawai created with NRP: {$pegawai->nrp}, Name: {$pegawai->nama}",
+            'user_id' => auth()->id(), // Record the user who created the pegawai
+            'action_date' => now(),    // Record the current date/time of creation
+        ]);
+
             return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Output any errors encountered
@@ -151,11 +160,21 @@ class PegawaiController extends Controller
         return view('dashboard.view-pegawai', compact('pegawai'));
     }
 
+    public function showupdate(Pegawai $pegawai)
+    {
+        return view('dashboard.edit-pegawai', compact('pegawai'));
+    }
+
     public function update(Request $request, Pegawai $pegawai)
     {
         $request->validate([
-            'division' => 'required|string',
-            'cabang' => 'required|string',
+            'nama' => 'required|string',
+            'jenis_kelamin' => 'required|string',
+            'agama' => 'required|string',
+            'pendidikan' => 'required|string',
+            'status' => 'required|string',
+            'tanggal_lahir' => 'required|string',
+            'no_hp' => 'required|string',
         ]);
 
         // Recalculate umur, masa kerja TN/SHN, and masa kerja vendor
@@ -168,7 +187,7 @@ class PegawaiController extends Controller
         }
 
         // Update Pegawai record
-        $pegawai->update(array_merge($request->only('division', 'cabang'), [
+        $pegawai->update(array_merge($request->only('nama', 'jenis_kelamin', 'agama', 'pendidikan', 'status', 'tanggal_lahir', 'no_hp'), [
             'umur' => $umur,
             'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
             'masa_kerja_vendor' => $masa_kerja_vendor,
@@ -184,9 +203,16 @@ class PegawaiController extends Controller
 
     public function updateMutasi(Request $request, Pegawai $pegawai)
     {
+        // Validate the request
         $request->validate([
-            'division' => 'required|string',
+            'coy' => 'required|string',
             'cabang' => 'required|string',
+            'department' => 'required|string',
+            'jabatan' => 'required|string',
+            'directorate' => 'required|string',
+            'division' => 'required|string',
+            'project_site' => 'nullable|string',
+            'lokasi_kerja' => 'required|string',
         ]);
 
         // Recalculate umur, masa kerja TN/SHN, and masa kerja vendor during mutasi
@@ -198,21 +224,45 @@ class PegawaiController extends Controller
             $masa_kerja_vendor = Carbon::parse($pegawai->tanggal_masuk_vendor)->diff(Carbon::now())->format('%y years %m months %d days');
         }
 
-        // Update Pegawai during mutasi
-        $pegawai->update(array_merge($request->only('division', 'cabang'), [
+        // Store the original state before update
+        $originalData = $pegawai->getOriginal();
+
+        // Update Pegawai's fields during mutasi
+        $pegawai->update([
+            'coy' => $request->coy,
+            'cabang' => $request->cabang,
+            'department' => $request->department,
+            'jabatan' => $request->jabatan,
+            'directorate' => $request->directorate,
+            'division' => $request->division,
+            'project_site' => $request->project_site,
+            'lokasi_kerja' => $request->lokasi_kerja,
             'umur' => $umur,
             'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
             'masa_kerja_vendor' => $masa_kerja_vendor,
-        ]));
-
-        // Record the mutation in history
-        PegawaiHistory::create([
-            'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
-            'action_type' => 'mutasi',
-            'description' => "Mutasi to division: {$request->division}, cabang: {$request->cabang}",
-            'user_id' => auth()->id(), // Record the user who performed the action
-            'action_date' => now(),    // Record the current date/time of action
         ]);
+
+        // Detect the changes for logging in the history
+        $changedAttributes = [];
+        foreach ($pegawai->getChanges() as $key => $newValue) {
+            if (isset($originalData[$key]) && $originalData[$key] != $newValue) {
+                $changedAttributes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from {$originalData[$key]} to {$newValue}";
+            }
+        }
+
+        // Build the description based on changed fields
+        $description = implode(', ', $changedAttributes);
+
+        if (!empty($description)) {
+            // Record the mutation in history
+            PegawaiHistory::create([
+                'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
+                'action_type' => 'mutasi',
+                'description' => $description,
+                'user_id' => auth()->id(),  // Record the user who performed the action
+                'action_date' => now(),     // Record the current date/time of action
+            ]);
+        }
 
         return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dimutasi!');
     }
@@ -230,14 +280,30 @@ class PegawaiController extends Controller
         ]);
 
         try {
+            // Perform the import
             Excel::import(new PegawaiImport, $request->file('file'));
+
+            // Retrieve the recently imported Pegawai records (assumes they are all new)
+            $importedPegawai = Pegawai::where('created_at', '>=', Carbon::now()->subMinutes(5))->get();  // Adjust time as needed
+
+            foreach ($importedPegawai as $pegawai) {
+                // Log the creation of each Pegawai to PegawaiHistory
+                PegawaiHistory::create([
+                    'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
+                    'action_type' => 'import',
+                    'description' => "Pegawai imported with NRP: {$pegawai->nrp}, Name: {$pegawai->nama}",
+                    'user_id' => auth()->id(), // Record the user who performed the import
+                    'action_date' => now(),    // Record the current date/time of creation
+                ]);
+            }
 
             return redirect()->route('pegawai.index')->with('success', 'File berhasil di-import!');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // Handle import failure
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor file. Silakan coba lagi.');
         }
     }
+
 
     public function terminate($nrp)
     {

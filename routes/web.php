@@ -27,9 +27,14 @@ Route::middleware('auth')->group(function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::resource('pegawai', PegawaiController::class);
+
 Route::get('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'mutasi'])->name('pegawai.mutasi');
 Route::put('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'updateMutasi'])->name('pegawai.updateMutasi');
+
 Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('pegawai.view');
+
+Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
+Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
 Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
 
