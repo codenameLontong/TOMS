@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isSuperadmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
 }
