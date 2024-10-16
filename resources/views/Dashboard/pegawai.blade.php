@@ -26,28 +26,46 @@
                         </div>
                         <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
-                    <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-                        </svg>
-                        Filter
-                    </button>
-                    <div id="filterDropdown" class="hidden z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose Division</h6>
-                        <ul class="space-y-2 text-sm">
-                            <li class="flex items-center">
-                                <input id="hr" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="hr" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">HR</label>
-                            </li>
-                            <li class="flex items-center">
-                                <input id="it" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="it" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">IT</label>
-                            </li>
-                            <li class="flex items-center">
-                                <input id="finance" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="finance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Finance</label>
-                            </li>
-                        </ul>
+
+                     <!-- Filter Button to Switch Between Active and Terminated -->
+                    <div class="flex space-x-2">
+                        <div id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter
+                        </div>
+
+                        <div id="filterDropdown" class="hidden z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-center">
+                                    <a href="{{ route('pegawai.index', ['status' => 'active']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 {{ $status === 'active' ? 'bg-blue-400' : '' }}">
+                                        Active
+                                    </a>
+                                </li>
+                                <li class="flex items-center">
+                                    <a href="{{ route('pegawai.index', ['status' => 'terminated']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 {{ $status === 'terminated' ? 'bg-red-400' : '' }}">
+                                        Terminated
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white mt-4">Choose Division</h6>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-center">
+                                    <input id="hr" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
+                                    <label for="hr" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">HR</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="it" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
+                                    <label for="it" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">IT</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="finance" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
+                                    <label for="finance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Finance</label>
+                                </li>
+                            </ul> -->
+                        </div>
                     </div>
                 </div>
                 <div class="flex space-x-3 mb-4">
@@ -65,6 +83,7 @@
                     </a>
                 </div>
             </div>
+
             <!-- Pegawai Table -->
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table id="pegawaiTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -105,7 +124,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                                     </svg>
                                 </a>
-                                <a href="" class="text-red-600 hover:text-red-800 ml-4" data-modal-target="terminateModal-{{ $pegawai->id }}">
+                                <a href="{{ route('pegawai.showterminate', $pegawai->id) }}" class="text-red-600 hover:text-red-800 ml-4" data-modal-target="terminateModal-{{ $pegawai->id }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
@@ -206,6 +225,11 @@
                 target.classList.add('hidden');
             }
             });
+        });
+
+        document.getElementById('filterDropdownButton').addEventListener('click', function() {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('hidden');
         });
 
     // Automatically hide the toast after 3 seconds (3000 milliseconds)

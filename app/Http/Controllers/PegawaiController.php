@@ -14,10 +14,22 @@ use Spatie\Permission\Models\Role;
 
 class PegawaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pegawais = Pegawai::all();
-        return view('dashboard.pegawai', compact('pegawais'));
+        // Get the filter option from request, default to 'active'
+        $status = $request->get('status', 'active');
+
+        // Remove the global scope here (if needed)
+        Pegawai::withoutGlobalScope('active')->get();
+
+        // Fetch pegawai based on the employment status (active/terminated)
+        if ($status === 'terminated') {
+            $pegawais = Pegawai::where('employment_status', 'terminated')->get();
+        } else {
+            $pegawais = Pegawai::where('employment_status', 'active')->get();
+        }
+
+        return view('dashboard.pegawai', compact('pegawais', 'status'));
     }
 
     public function create()
@@ -265,24 +277,63 @@ class PegawaiController extends Controller
     }
 
 
-
-    public function terminate($nrp)
+    public function showterminate(Pegawai $pegawai)
     {
-        $pegawai = Pegawai::where('nrp', $nrp)->firstOrFail();
+        return view('dashboard.terminate', compact('pegawai'));    }
 
-        // Update status to 'terminated'
-        $pegawai->status = 'terminated';
-        $pegawai->save();
+    public function terminate(Request $request, Pegawai $pegawai)
+    {
+        try {
+            // Store the original state before updating the pegawai
+            $originalData = $pegawai->getOriginal();
 
-        // Record the termination in history
-        PegawaiHistory::create([
-            'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
-            'action_type' => 'termination',
-            'description' => 'Pegawai was terminated.',
-            'user_id' => auth()->id(), // Record the user who performed the action
-            'action_date' => now(),    // Record the current date/time of action
-        ]);
+            // Update the employment status to 'terminated'
+            $pegawai->employment_status = 'terminated';
+            $pegawai->save();
 
-        return redirect()->route('pegawai.view', $pegawai->nrp)->with('success', 'Pegawai successfully terminated.');
+            // Find the related user by the email of the pegawai, if it exists
+            $user = \App\Models\User::where('email', $pegawai->alamat_email)->first();
+
+            // If a user exists in the 'users' table, set 'active' to false
+            if ($user) {
+                $user->active = false;
+                $user->remember_token = null; // Clear remember token
+                $user->save();
+            }
+
+            // Detect the changes for logging in the history
+            $changedAttributes = [];
+            foreach ($pegawai->getChanges() as $key => $newValue) {
+                if (isset($originalData[$key]) && $originalData[$key] != $newValue) {
+                    $changedAttributes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from {$originalData[$key]} to {$newValue}";
+                }
+            }
+
+            // Build the description based on changed fields
+            $description = implode(', ', $changedAttributes);
+
+            if (!empty($description)) {
+                // Log the termination action in PegawaiHistory
+                PegawaiHistory::create([
+                    'pegawai_nrp' => $pegawai->nrp,  // Connect with pegawai using NRP
+                    'action_type' => 'termination',
+                    'description' => $description,
+                    'user_id' => auth()->id(), // Record the user who performed the action
+                    'action_date' => now(),    // Record the current date/time of the action
+                ]);
+            }
+
+            // Redirect back with success message
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai successfully terminated.');
+
+        } catch (\Exception $e) {
+            // Catch any errors and dump the error message for debugging
+            dd($e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'Failed to terminate the Pegawai. Please try again.');
+        }
     }
+
+
 }

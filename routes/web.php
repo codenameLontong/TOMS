@@ -41,6 +41,8 @@ Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->nam
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
 
-Route::delete('/pegawai/{id}/terminate', [PegawaiController::class, 'terminate'])->name('pegawai.terminate');
+Route::get('/pegawai/{pegawai}/terminate', [PegawaiController::class, 'showterminate'])->name('pegawai.showterminate');
+Route::put('pegawai/{pegawai}/terminate', [PegawaiController::class, 'terminate'])->name('pegawai.terminate');
+
 
 require __DIR__.'/auth.php';

@@ -223,10 +223,6 @@
                         <option value="Non Astra" {{ $pegawai->astra_non_astra == 'Non Astra' ? 'selected' : '' }}>Non Astra</option>
                     </select>
                 </div> -->
-
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
-                    Update Pegawai
-                </button>
             </form>
         </div>
     </div>
