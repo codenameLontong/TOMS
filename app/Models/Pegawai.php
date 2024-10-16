@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class Pegawai extends Model
+class Pegawai extends Authenticatable
 {
     use HasFactory;
 
@@ -37,7 +38,25 @@ class Pegawai extends Model
         'alamat_email',
         'no_hp',
         'astra_non_astra',
+        'employment_status',
+        'password'
     ];
+
+    // Hide sensitive fields from JSON outputs
+    protected $hidden = [
+        'password', // Hide password from being exposed publicly
+    ];
+
+    // If you want to hash the password automatically:
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'alamat_email';
+    }
 
     // // Helper function to format date difference in "X years Y months Z days"
     // public function formatDateDifference($startDate)

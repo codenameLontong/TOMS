@@ -6,6 +6,9 @@ use App\Models\Pegawai;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class PegawaiImport implements ToCollection
 {
@@ -34,7 +37,8 @@ class PegawaiImport implements ToCollection
                 $masa_kerja_vendor = $tanggal_masuk_vendor->diff(Carbon::now())->format('%y years %m months %d days');
             }
 
-            Pegawai::create([
+            // Create a Pegawai record
+            $pegawai = Pegawai::create([
                 'nrp' => $row[0],
                 'nrp_vendor' => $row[1],
                 'nama' => $row[2],
@@ -62,6 +66,17 @@ class PegawaiImport implements ToCollection
                 'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
                 'masa_kerja_vendor' => $masa_kerja_vendor,
             ]);
+
+            // Create a corresponding User with default password
+            $user = User::create([
+                'name' => $pegawai->nama,
+                'email' => $pegawai->alamat_email,
+                'password' => bcrypt('password'),  // Default password
+            ]);
+
+            // Assign the "pegawai" role to the user
+            $pegawaiRole = Role::where('name', 'pegawai')->first();
+            $user->assignRole($pegawaiRole);
         }
     }
 

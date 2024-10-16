@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\User;
 use App\Models\PegawaiHistory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Excel;
 use App\Imports\PegawaiImport;
+use Illuminate\Support\Facades\Hash; // Use for password hashing
+use Spatie\Permission\Models\Role;
 
 class PegawaiController extends Controller
 {
@@ -21,77 +24,6 @@ class PegawaiController extends Controller
     {
         return view('dashboard.tambah-pegawai');
     }
-
-    // public function store(Request $request)
-    // {
-    //     // Validate the request
-    //     $request->validate([
-    //         'nrp' => 'required|unique:pegawais',
-    //         'nama' => 'required|string',
-    //         'coy' => 'required|string',
-    //         'cabang' => 'required|string',
-    //         'jabatan' => 'required|string',
-    //         'directorate' => 'required|string',
-    //         'division' => 'required|string',
-    //         'department' => 'required|string',
-    //         'jenis_kelamin' => 'required|string',
-    //         'agama' => 'required|string',
-    //         'pendidikan' => 'required|string',
-    //         'status' => 'required|string',
-    //         'tanggal_lahir' => 'required|date',
-    //         'tanggal_masuk_tn_shn' => 'required|date',
-    //         'tanggal_masuk_vendor' => 'nullable|date',
-    //         'jenis_kontrak_kerjasama' => 'required|string',
-    //         'implementasi_kontrak_kerjasama' => 'required|string',
-    //         'lokasi_kerja' => 'required|string',
-    //         'alamat_email' => 'required|email|unique:pegawais',
-    //         'no_hp' => 'required|string',
-    //         'astra_non_astra' => 'required|string',
-    //     ]);
-
-    //     // Format umur, masa kerja TN/SHN, and masa kerja vendor as "X years Y months Z days"
-    //     $pegawai = new Pegawai();
-
-    //     $umur = $pegawai->formatDateDifference($request->tanggal_lahir);
-    //     $masaKerjaTnShn = $pegawai->formatDateDifference($request->tanggal_masuk_tn_shn);
-    //     $masaKerjaVendor = $request->tanggal_masuk_vendor ? $pegawai->formatDateDifference($request->tanggal_masuk_vendor) : null;
-
-    //     // Create the Pegawai record with formatted strings
-    //     try {
-    //         Pegawai::create([
-    //             'nrp' => $request->nrp,
-    //             'nrp_vendor' => $request->nrp_vendor,
-    //             'nama' => $request->nama,
-    //             'coy' => $request->coy,
-    //             'cabang' => $request->cabang,
-    //             'jabatan' => $request->jabatan,
-    //             'directorate' => $request->directorate,
-    //             'division' => $request->division,
-    //             'department' => $request->department,
-    //             'jenis_kelamin' => $request->jenis_kelamin,
-    //             'agama' => $request->agama,
-    //             'pendidikan' => $request->pendidikan,
-    //             'status' => $request->status,
-    //             'tanggal_lahir' => $request->tanggal_lahir,
-    //             'tanggal_masuk_tn_shn' => $request->tanggal_masuk_tn_shn,
-    //             'tanggal_masuk_vendor' => $request->tanggal_masuk_vendor,
-    //             'jenis_kontrak_kerjasama' => $request->jenis_kontrak_kerjasama,
-    //             'implementasi_kontrak_kerjasama' => $request->implementasi_kontrak_kerjasama,
-    //             'lokasi_kerja' => $request->lokasi_kerja,
-    //             'project_site' => $request->project_site,
-    //             'alamat_email' => $request->alamat_email,
-    //             'no_hp' => $request->no_hp,
-    //             'astra_non_astra' => $request->astra_non_astra,
-    //             'umur' => $umur, // Store as string
-    //             'masa_kerja_tn_shn' => $masaKerjaTnShn, // Store as string
-    //             'masa_kerja_vendor' => $masaKerjaVendor, // Store as string
-    //         ]);
-
-    //         return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan!.');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan pegawai.');
-    //     }
-    // }
 
     public function store(Request $request)
     {
@@ -132,21 +64,32 @@ class PegawaiController extends Controller
 
         // Try to create a new Pegawai record
         try {
-            // Create a new Pegawai with calculated fields
+            // Create a new Pegawai with calculated fields and default password
             $pegawai = Pegawai::create(array_merge($request->all(), [
                 'umur' => $umur,
                 'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
                 'masa_kerja_vendor' => $masa_kerja_vendor,
+                // 'password' => 'password',  // Assign default password as "password", bcrypt will hash automatically
             ]));
 
-        // Record the creation in PegawaiHistory
-        PegawaiHistory::create([
-            'pegawai_nrp' => $pegawai->nrp, // Use nrp to connect with pegawai
-            'action_type' => 'manual',
-            'description' => "Pegawai created with NRP: {$pegawai->nrp}, Name: {$pegawai->nama}",
-            'user_id' => auth()->id(), // Record the user who created the pegawai
-            'action_date' => now(),    // Record the current date/time of creation
-        ]);
+            $user = \App\Models\User::create([
+                'name' => $pegawai->nama,
+                'email' => $pegawai->alamat_email,
+                'password' => 'password',  // Default password
+            ]);
+
+            // Assign the 'pegawai' role to the user
+            $pegawaiRole = Role::where('name', 'pegawai')->first();
+            $user->assignRole($pegawaiRole);
+
+            // Record the creation in PegawaiHistory
+            PegawaiHistory::create([
+                'pegawai_nrp' => $pegawai->nrp, // Use nrp to connect with pegawai
+                'action_type' => 'manual',
+                'description' => "Pegawai created with NRP: {$pegawai->nrp}, Name: {$pegawai->nama}",
+                'user_id' => auth()->id(), // Record the user who created the pegawai
+                'action_date' => now(),    // Record the current date/time of creation
+            ]);
 
             return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
@@ -267,7 +210,6 @@ class PegawaiController extends Controller
         return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dimutasi!');
     }
 
-
     public function showimport()
     {
         return view('dashboard.import');
@@ -280,7 +222,7 @@ class PegawaiController extends Controller
         ]);
 
         try {
-            // Perform the import
+            // Perform the import using PegawaiImport class
             Excel::import(new PegawaiImport, $request->file('file'));
 
             // Retrieve the recently imported Pegawai records (assumes they are all new)
@@ -295,14 +237,33 @@ class PegawaiController extends Controller
                     'user_id' => auth()->id(), // Record the user who performed the import
                     'action_date' => now(),    // Record the current date/time of creation
                 ]);
+
+                // Check if a corresponding User already exists for this Pegawai
+                $user = User::where('email', $pegawai->alamat_email)->first();
+
+                if (!$user) {
+                    // Create a new User for the Pegawai with default password "password"
+                    $user = User::create([
+                        'name' => $pegawai->nama,
+                        'email' => $pegawai->alamat_email,
+                        'password' => bcrypt('password'), // Default password
+                    ]);
+
+                    // Assign the "pegawai" role to the new User
+                    $pegawaiRole = Role::where('name', 'pegawai')->first();
+                    if ($pegawaiRole) {
+                        $user->assignRole($pegawaiRole);
+                    }
+                }
             }
 
-            return redirect()->route('pegawai.index')->with('success', 'File berhasil di-import!');
+            return redirect()->route('pegawai.index')->with('success', 'File berhasil di-import dan pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Handle import failure
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor file. Silakan coba lagi.');
         }
     }
+
 
 
     public function terminate($nrp)

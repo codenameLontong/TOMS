@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'multi-user', // We'll define this provider
         ],
     ],
 
@@ -60,15 +60,21 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'multi-user' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
+            'table' => 'users',  // Fallback to `users` table by default
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        'pegawais' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pegawai::class,
+        ],
     ],
 
     /*
