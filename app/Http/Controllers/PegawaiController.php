@@ -11,6 +11,8 @@ use Excel;
 use App\Imports\PegawaiImport;
 use Illuminate\Support\Facades\Hash; // Use for password hashing
 use Spatie\Permission\Models\Role;
+use App\Models\Cabang;
+use App\Http\Controllers\CabangController;
 
 class PegawaiController extends Controller
 {
@@ -34,7 +36,9 @@ class PegawaiController extends Controller
 
     public function create()
     {
-        return view('dashboard.tambah-pegawai');
+        $cabangs = Cabang::all();
+
+        return view('dashboard.tambah-pegawai', compact('cabangs'));
     }
 
     public function store(Request $request)
@@ -279,7 +283,8 @@ class PegawaiController extends Controller
 
     public function showterminate(Pegawai $pegawai)
     {
-        return view('dashboard.terminate', compact('pegawai'));    }
+        return view('dashboard.terminate', compact('pegawai'));
+    }
 
     public function terminate(Request $request, Pegawai $pegawai)
     {
@@ -335,5 +340,16 @@ class PegawaiController extends Controller
         }
     }
 
+    public function checkNrp(Request $request)
+    {
+        $exists = Pegawai::where('nrp', $request->input('nrp'))->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $exists = Pegawai::where('alamat_email', $request->input('alamat_email'))->exists();
+        return response()->json(['exists' => $exists]);
+    }
 
 }

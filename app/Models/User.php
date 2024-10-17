@@ -22,15 +22,22 @@ class User extends Authenticatable
      * @return void
      */
 
-     protected static function booted()
-     {
-         // Apply the active scope only during login or authentication-related actions
-         if (!app()->runningInConsole() && request()->routeIs('login', 'auth.*')) {
-             static::addGlobalScope('active', function (Builder $builder) {
-                 $builder->where('active', 1); // Only retrieve active users
-             });
-         }
-     }
+    //  protected static function booted()
+    //  {
+    //      // Apply the active scope only during login or authentication-related actions
+    //      if (!app()->runningInConsole() && request()->routeIs('login', 'auth.*')) {
+    //          static::addGlobalScope('active', function (Builder $builder) {
+    //              $builder->where('active', 1); // Only retrieve active users
+    //          });
+    //      }
+    //  }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('active', 1); // Only retrieve active users for login
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
