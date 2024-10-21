@@ -34,9 +34,9 @@
                 <!-- Optional: Add any other necessary fields related to Cabang if needed -->
 
                 <!-- Submit Button -->
-                <div class="flex justify-end">
-                    <button type="submit" class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Update Cabang</button>
-                </div>
+                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2.5">
+                    Update
+                </button>
             </form>
         </div>
     </div>
