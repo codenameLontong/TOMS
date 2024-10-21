@@ -19,11 +19,11 @@
                 @csrf
                 <!-- NRP and NRP Vendor -->
                 <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
+                    <!-- <div class="w-1/2">
                         <label for="nrp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP</label>
                         <input type="text" id="nrp" name="nrp" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         <p id="nrp_error" class="text-red-600 text-sm mt-2 hidden">NRP already exists.</p>
-                    </div>
+                    </div> -->
                     <div class="w-1/2">
                         <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
                         <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
@@ -199,6 +199,7 @@
                     <div class="w-1/2">
                         <label for="alamat_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Email</label>
                         <input type="email" id="alamat_email" name="alamat_email" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <p id="email_error" class="text-red-600 text-sm mt-2 hidden">Email already exists.</p>
                     </div>
                     <div class="w-1/2">
                         <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
@@ -215,28 +216,53 @@
                     </select>
                 </div>
 
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
+                <button type="submit" id="tambahPegawaiBtn" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg px-5 py-2.5">
                     Tambah
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Pegawai</h2>
-            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file .XLSX/.CSV</label>
-                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" name="file">
-                </div>
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
-                    Import
-                </button>
-            </form>
-        </div>
-    </div>
+    <script>
+        const emailInput = document.getElementById('alamat_email');
+        const emailErrorMsg = document.getElementById('email_error');
+        const tambahPegawaiBtn = document.getElementById('tambahPegawaiBtn');
+
+        // Disable the submit button initially and apply grey background
+        tambahPegawaiBtn.disabled = true;
+
+        emailInput.addEventListener('input', function () {
+            const email = this.value;
+
+            if (email.length > 0) {
+                // Send AJAX request to check if email exists
+                fetch(`{{ route('pegawai.checkEmail') }}?alamat_email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            // Show the error message and disable the button
+                            emailErrorMsg.classList.remove('hidden');
+                            tambahPegawaiBtn.disabled = true;
+                            tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');  // Set grey background when disabled
+                            tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+                        } else {
+                            // Hide the error message and enable the button
+                            emailErrorMsg.classList.add('hidden');
+                            tambahPegawaiBtn.disabled = false;
+                            tambahPegawaiBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                            tambahPegawaiBtn.classList.add('bg-blue-700', 'hover:bg-primary-800');  // Set blue background when enabled
+                        }
+                    });
+            } else {
+                // If input is empty, disable the button and hide the error message
+                emailErrorMsg.classList.add('hidden');
+                tambahPegawaiBtn.disabled = true;
+                tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+            }
+        });
+    </script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

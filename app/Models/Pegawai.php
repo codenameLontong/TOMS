@@ -39,6 +39,7 @@ class Pegawai extends Authenticatable
         'nama',
         'coy',
         'cabang',
+        'kode_cabang',
         'jabatan',
         'directorate',
         'division',

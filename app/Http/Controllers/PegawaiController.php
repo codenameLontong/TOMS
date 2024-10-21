@@ -43,12 +43,11 @@ class PegawaiController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the request
+        // Validate the request (excluding 'nrp' since it will be generated)
         $request->validate([
-            'nrp' => 'required|unique:pegawais',
             'nama' => 'required|string',
             'coy' => 'required|string',
-            'cabang' => 'required|string',
+            'cabang' => 'required|string', // This is the lokasi_cabang from the form
             'jabatan' => 'required|string',
             'directorate' => 'required|string',
             'division' => 'required|string',
@@ -69,6 +68,33 @@ class PegawaiController extends Controller
             'astra_non_astra' => 'required|string',
         ]);
 
+        // Fetch the kode_cabang from the cabangs table based on the selected lokasi_cabang
+        $cabang = Cabang::where('lokasi_cabang', $request->input('cabang'))->first();
+
+        if (!$cabang) {
+            return redirect()->back()->withErrors('Cabang not found.');
+        }
+
+        $kodeCabang = $cabang->kode_cabang; // Retrieve kode_cabang from the cabangs table
+        $tahunMasuk = Carbon::parse($request->input('tanggal_masuk_tn_shn'))->format('y'); // Last 2 digits of the year
+
+        // Find the latest pegawai in this cabang and year
+        $latestPegawai = Pegawai::where('cabang', $request->input('cabang'))
+                        ->whereYear('tanggal_masuk_tn_shn', Carbon::parse($request->input('tanggal_masuk_tn_shn'))->year)
+                        ->orderBy('nrp', 'desc')
+                        ->first();
+
+        // Determine the order number for the new NRP
+        if ($latestPegawai) {
+            $latestOrder = (int)substr($latestPegawai->nrp, -2); // Get the last 2 digits of the NRP
+            $newOrder = str_pad($latestOrder + 1, 2, '0', STR_PAD_LEFT); // Increment by 1 and pad with 0s if necessary
+        } else {
+            $newOrder = '01'; // If no pegawai in this year and cabang, start with '01'
+        }
+
+        // Generate the NRP
+        $nrp = $kodeCabang . $tahunMasuk . $newOrder;
+
         // Calculate umur, masa kerja TN/SHN, and masa kerja vendor
         $umur = Carbon::parse($request->tanggal_lahir)->diff(Carbon::now())->format('%y years %m months %d days');
         $masa_kerja_tn_shn = Carbon::parse($request->tanggal_masuk_tn_shn)->diff(Carbon::now())->format('%y years %m months %d days');
@@ -82,16 +108,17 @@ class PegawaiController extends Controller
         try {
             // Create a new Pegawai with calculated fields and default password
             $pegawai = Pegawai::create(array_merge($request->all(), [
+                'nrp' => $nrp,  // Generated NRP
                 'umur' => $umur,
                 'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
                 'masa_kerja_vendor' => $masa_kerja_vendor,
-                // 'password' => 'password',  // Assign default password as "password", bcrypt will hash automatically
             ]));
 
+            // Create a corresponding user with default password 'password'
             $user = \App\Models\User::create([
                 'name' => $pegawai->nama,
                 'email' => $pegawai->alamat_email,
-                'password' => 'password',  // Default password
+                'password' => bcrypt('password'),  // Default password, hashed
             ]);
 
             // Assign the 'pegawai' role to the user
@@ -107,12 +134,13 @@ class PegawaiController extends Controller
                 'action_date' => now(),    // Record the current date/time of creation
             ]);
 
-            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan!');
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan dengan NRP: ' . $nrp);
         } catch (\Exception $e) {
             // Output any errors encountered
             dd($e->getMessage());
         }
     }
+
 
     public function view(Pegawai $pegawai)
     {
@@ -228,7 +256,7 @@ class PegawaiController extends Controller
 
     public function showimport()
     {
-        return view('dashboard.import');
+        return view('dashboard.import-pegawai');
     }
 
     public function import(Request $request)
@@ -249,7 +277,7 @@ class PegawaiController extends Controller
                 PegawaiHistory::create([
                     'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
                     'action_type' => 'import',
-                    'description' => "Pegawai imported with NRP: {$pegawai->nrp}, Name: {$pegawai->nama}",
+                    'description' => "Pegawai berhasil di-import dengan NRP: {$pegawai->nrp}, Nama: {$pegawai->nama}",
                     'user_id' => auth()->id(), // Record the user who performed the import
                     'action_date' => now(),    // Record the current date/time of creation
                 ]);
@@ -278,12 +306,6 @@ class PegawaiController extends Controller
             // Handle import failure
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor file. Silakan coba lagi.');
         }
-    }
-
-
-    public function showterminate(Pegawai $pegawai)
-    {
-        return view('dashboard.terminate', compact('pegawai'));
     }
 
     public function terminate(Request $request, Pegawai $pegawai)
@@ -329,7 +351,7 @@ class PegawaiController extends Controller
             }
 
             // Redirect back with success message
-            return redirect()->route('pegawai.index')->with('success', 'Pegawai successfully terminated.');
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dinonaktifkan.');
 
         } catch (\Exception $e) {
             // Catch any errors and dump the error message for debugging
@@ -338,12 +360,6 @@ class PegawaiController extends Controller
             // Redirect back with an error message
             return redirect()->back()->with('error', 'Failed to terminate the Pegawai. Please try again.');
         }
-    }
-
-    public function checkNrp(Request $request)
-    {
-        $exists = Pegawai::where('nrp', $request->input('nrp'))->exists();
-        return response()->json(['exists' => $exists]);
     }
 
     public function checkEmail(Request $request)

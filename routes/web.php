@@ -22,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
+    Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
 
     Route::get('/cabang', [CabangController::class, 'index'])->name('cabang.index'); // View all Cabangs
 
@@ -50,19 +52,15 @@ Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('
 Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
-Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
 
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
 
-Route::get('/pegawai/{pegawai}/terminate', [PegawaiController::class, 'showterminate'])->name('pegawai.showterminate');
 Route::put('pegawai/{pegawai}/terminate', [PegawaiController::class, 'terminate'])->name('pegawai.terminate');
 
 Route::get('/cabang/showimport', [CabangController::class, 'showimport'])->name('cabang.showimport');
 Route::post('/cabang/import', [CabangController::class, 'import'])->name('cabang.import');
 
-Route::get('/pegawai/check-nrp', [PegawaiController::class, 'checkNrp'])->name('pegawai.checkNrp');
-Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 

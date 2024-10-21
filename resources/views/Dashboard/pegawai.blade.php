@@ -75,6 +75,7 @@
                         </svg>
                         Tambah Pegawai
                     </a>
+
                     <a href="{{ route('pegawai.showimport') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
@@ -90,11 +91,21 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th class="px-6 py-3">NRP</th>
-                            <th class="px-6 py-3">Nama</th>
-                            <th class="px-6 py-3">COY</th>
-                            <th class="px-6 py-3">Cabang</th>
-                            <th class="px-6 py-3">Jabatan</th>
-                            <th class="px-6 py-3">Department</th>
+                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(1)">Nama
+                                <span id="sortIconNama" class="inline-block"></span>
+                            </th>
+                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(2)">COY
+                                <span id="sortIconCOY" class="inline-block"></span>
+                            </th>
+                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(3)">Cabang
+                                <span id="sortIconCabang" class="inline-block"></span>
+                            </th>
+                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(4)">Jabatan
+                                <span id="sortIconJabatan" class="inline-block"></span>
+                            </th>
+                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(5)">Department
+                                <span id="sortIconDepartment" class="inline-block"></span>
+                            </th>
                             <th class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
@@ -114,23 +125,54 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
                                 </a>
-                                <a href="{{ route('pegawai.showupdate', $pegawai->id) }}" class="text-blue-600 hover:text-blue-800 ml-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                    </svg>
-                                </a>
-                                <a href="{{ route('pegawai.mutasi', $pegawai->id) }}" class="text-red-600 hover:text-red-800 ml-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                                    </svg>
-                                </a>
-                                <a href="{{ route('pegawai.showterminate', $pegawai->id) }}" class="text-red-600 hover:text-red-800 ml-4" data-modal-target="terminateModal-{{ $pegawai->id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                </a>
+                                @if($status === 'active')
+                                    <a href="{{ route('pegawai.showupdate', $pegawai->id) }}" class="text-blue-600 hover:text-blue-800 ml-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                        </svg>
+                                    </a>
+                                    <a href="{{ route('pegawai.mutasi', $pegawai->id) }}" class="text-red-600 hover:text-red-800 ml-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                                        </svg>
+                                    </a>
+                                    <button data-modal-target="terminateModal-{{ $pegawai->id }}" data-modal-toggle="terminateModal-{{ $pegawai->id }}" class="text-red-600 hover:text-red-800 ml-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                    </button>
+                                @endif
                             </td>
                         </tr>
+                        <!-- Modal for this specific Pegawai -->
+                        <div id="terminateModal-{{ $pegawai->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="terminateModal-{{ $pegawai->id }}">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                    <div class="p-4 md:p-5 text-center">
+                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                        </svg>
+                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin akan menonaktifkan pegawai ini?</h3>
+                                        <form method="POST" action="{{ route('pegawai.terminate', $pegawai->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <button data-modal-hide="terminateModal-{{ $pegawai->id }}" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                                Ya
+                                            </button>
+                                            <button data-modal-hide="terminateModal-{{ $pegawai->id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                Tidak
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         @endforeach
                     </tbody>
                 </table>
@@ -239,6 +281,60 @@
                 toast.classList.add('hidden');
             }
         }, 4000);
+
+        let currentSortOrder = {};  // Track the current sort state for each column
+        const iconNama = document.getElementById('sortIconNama');
+        const iconCOY = document.getElementById('sortIconCOY');
+        const iconCabang = document.getElementById('sortIconCabang');
+        const iconJabatan = document.getElementById('sortIconJabatan');
+        const iconDepartment = document.getElementById('sortIconDepartment');
+
+        function resetIcons() {
+            iconNama.textContent = '';
+            iconCOY.textContent = '';
+            iconCabang.textContent = '';
+            iconJabatan.textContent = '';
+            iconDepartment.textContent = '';
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("pegawaiTable");
+            const rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+            let isAscending = currentSortOrder[columnIndex] !== 'asc';
+            currentSortOrder = {};  // Reset the sort state for all columns
+            currentSortOrder[columnIndex] = isAscending ? 'asc' : 'desc';
+
+            // Sorting logic
+            rows.sort((a, b) => {
+                const cellA = a.cells[columnIndex].textContent.trim().toLowerCase();
+                const cellB = b.cells[columnIndex].textContent.trim().toLowerCase();
+
+                if (cellA < cellB) return isAscending ? -1 : 1;
+                if (cellA > cellB) return isAscending ? 1 : -1;
+                return 0;
+            });
+
+            // Update the table by appending sorted rows
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+
+            // Reset icons for all columns
+            resetIcons();
+
+            // Update the icons for sorting based on the column sorted
+            if (columnIndex === 1) {
+                iconNama.textContent = isAscending ? '▲' : '▼';
+            } else if (columnIndex === 2) {
+                iconCOY.textContent = isAscending ? '▲' : '▼';
+            } else if (columnIndex === 3) {
+                iconCabang.textContent = isAscending ? '▲' : '▼';
+            } else if (columnIndex === 4) {
+                iconJabatan.textContent = isAscending ? '▲' : '▼';
+            } else if (columnIndex === 5) {
+                iconDepartment.textContent = isAscending ? '▲' : '▼';
+            }
+        }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
