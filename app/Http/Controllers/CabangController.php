@@ -29,7 +29,7 @@ class CabangController extends Controller
 
         Cabang::create($request->all());
 
-        return redirect()->route('cabang.index')->with('success', 'Cabang created successfully.');
+        return redirect()->route('cabang.index')->with('success', 'Cabang berhasil dibuat!.');
     }
 
     public function view(Cabang $cabang)
@@ -51,7 +51,7 @@ class CabangController extends Controller
 
         $cabang->update($request->all());
 
-        return redirect()->route('cabang.index')->with('success', 'Cabang updated successfully.');
+        return redirect()->route('cabang.index')->with('success', 'Cabang berhasil di-update.');
     }
 
     public function showdelete(Cabang $cabang)
@@ -63,7 +63,7 @@ class CabangController extends Controller
     {
         $cabang->delete();
 
-        return redirect()->route('cabang.index')->with('success', 'Cabang deleted successfully.');
+        return redirect()->route('cabang.index')->with('success', 'Cabang berhasil dihapus.');
     }
 
 
@@ -80,7 +80,7 @@ class CabangController extends Controller
 
         Excel::import(new CabangImport, $request->file('file'));
 
-        return redirect()->route('cabang.index')->with('success', 'Cabang imported successfully!');
+        return redirect()->route('cabang.index')->with('success', 'Cabang berhasil di-import!');
     }
 
     public function checkKodeCabang(Request $request)

@@ -11,8 +11,8 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Edit Pegawai</h2>
 
             <form method="POST" action="{{ route('pegawai.update', $pegawai->id) }}">
@@ -223,6 +223,10 @@
                         <option value="Non Astra" {{ $pegawai->astra_non_astra == 'Non Astra' ? 'selected' : '' }}>Non Astra</option>
                     </select>
                 </div> -->
+
+                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2.5">
+                    Update
+                </button>
             </form>
         </div>
     </div>

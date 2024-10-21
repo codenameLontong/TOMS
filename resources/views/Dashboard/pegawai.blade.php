@@ -6,15 +6,26 @@
     <title>Pegawai - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
 <body>
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Pegawai</h2>
-
             <!-- Search Bar and Actions -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                 <div class="flex items-center space-x-2">
@@ -49,25 +60,34 @@
                                     </a>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
 
-                            <!-- <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white mt-4">Choose Division</h6>
+                    <div class="flex space-x-2">
+                        <div id="exportDropdownButton" data-dropdown-toggle="exportDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
+                            Export
+                            <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" />
+                            </svg>
+                        </div>
+
+                        <div id="exportDropdown" class="hidden z-10 w-52 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                             <ul class="space-y-2 text-sm">
                                 <li class="flex items-center">
-                                    <input id="hr" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                    <label for="hr" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">HR</label>
+                                    <button id="export-xlsx" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-green-300 bg-green-200">
+                                        Export XLSX
+                                    </button>
                                 </li>
                                 <li class="flex items-center">
-                                    <input id="it" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                    <label for="it" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">IT</label>
+                                    <button id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
+                                        Export PDF
+                                    </button>
                                 </li>
-                                <li class="flex items-center">
-                                    <input id="finance" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                    <label for="finance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Finance</label>
-                                </li>
-                            </ul> -->
+                            </ul>
                         </div>
                     </div>
                 </div>
+
                 <div class="flex space-x-3 mb-4">
                     <a href="{{ route('pegawai.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
@@ -83,6 +103,7 @@
                         Import Pegawai
                     </a>
                 </div>
+
             </div>
 
             <!-- Pegawai Table -->
@@ -144,6 +165,7 @@
                                 @endif
                             </td>
                         </tr>
+
                         <!-- Modal for this specific Pegawai -->
                         <div id="terminateModal-{{ $pegawai->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative p-4 w-full max-w-md max-h-full">
@@ -179,36 +201,25 @@
             </div>
 
             <!-- Pagination -->
-            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+            <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
                     of
-                    <span class="font-semibold text-gray-900 dark:text-white">100</span>
+                    <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px">
+                <ul class="inline-flex items-stretch -space-x-px" id="pagination-list">
                     <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="prev-page" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
+                    <li id="pagination-buttons" class="flex space"></li>
                     <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">2</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">...</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="next-page" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M7.293 5.293a1 1 0 011.414 0L12.586 10l-3.879 3.707a1 1 0 01-1.414-1.414L10.586 10l-3.293-3.293a1 1 0 010-1.414z" />
@@ -335,8 +346,189 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dropdown toggle for export options
+            document.getElementById('exportDropdownButton').addEventListener('click', function () {
+                const dropdown = document.getElementById('exportDropdown');
+                dropdown.classList.toggle('hidden');
+            });
+
+            // Export XLSX functionality (excluding "Actions" column)
+            document.getElementById('export-xlsx').addEventListener('click', function () {
+                const table = document.getElementById('pegawaiTable');
+                // Create a new table array excluding the last column (Actions column)
+                const data = [];
+                const rows = table.querySelectorAll('tr');
+
+                rows.forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td, th').forEach((cell, index) => {
+                        if (index !== row.cells.length - 1) { // Exclude last column (Actions)
+                            rowData.push(cell.innerText);
+                        }
+                    });
+                    data.push(rowData);
+                });
+
+                // Create the workbook and worksheet
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, 'Pegawai Data');
+
+                // Export the XLSX file
+                XLSX.writeFile(wb, 'Pegawai_Export.xlsx');
+            });
+
+            // Export PDF functionality (excluding "Actions" column)
+            document.getElementById('export-pdf').addEventListener('click', function () {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.autoTable({
+                    html: '#pegawaiTable',
+                    theme: 'grid',
+                    styles: { fontSize: 10 },
+                    margin: { top: 10 },
+                    columnStyles: {
+                        6: { cellWidth: 0 }, // Assuming "Actions" is the 7th column (index 6)
+                    },
+                    didParseCell: function (data) {
+                        // Exclude the last column (Actions column)
+                        if (data.column.index === 6) {
+                            data.cell.styles.cellPadding = 0;
+                            data.cell.styles.fontSize = 0; // Remove text from the cell
+                        }
+                    }
+                });
+
+                doc.save('Pegawai_Export.pdf');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data for pagination
+            const totalRecords = 100; // Total number of records (change dynamically based on data)
+            const recordsPerPage = 20; // Number of records per page
+            let currentPage = 1; // Current page
+
+            // Pagination elements
+            const paginationList = document.getElementById('pagination-list');
+            const paginationButtons = document.getElementById('pagination-buttons');
+            const prevPageButton = document.getElementById('prev-page');
+            const nextPageButton = document.getElementById('next-page');
+            const currentRange = document.getElementById('current-range');
+            const totalRecordsElement = document.getElementById('total-records');
+
+            // Calculate total pages
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            // Update total records count in the UI
+            totalRecordsElement.textContent = totalRecords;
+
+            // Function to render pagination buttons
+            function renderPaginationButtons() {
+                paginationButtons.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        updatePagination();
+                    });
+                    paginationButtons.appendChild(pageButton);
+                }
+            }
+
+            // Function to update the pagination display and records range
+            function updatePagination() {
+                // Update current page range
+                const startRecord = (currentPage - 1) * recordsPerPage + 1;
+                const endRecord = Math.min(startRecord + recordsPerPage - 1, totalRecords);
+                currentRange.textContent = `${startRecord}-${endRecord}`;
+
+                // Enable/disable prev/next buttons
+                prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
+                nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
+
+                // Render pagination buttons
+                renderPaginationButtons();
+
+                // TODO: Load new data based on current page
+                // You will need to load the actual data for the new page and update the table/list.
+            }
+
+            // Handle previous page click
+            prevPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+
+            // Handle next page click
+            nextPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+
+            // Initial setup
+            updatePagination();
+        });
+
+        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Change the icons inside the button based on previous settings
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        var themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function() {
+
+            // toggle icons inside button
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+
+            // if NOT set via local storage previously
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+
+        });
+
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 </body>
 </html>

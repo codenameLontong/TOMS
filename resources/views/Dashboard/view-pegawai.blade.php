@@ -11,9 +11,13 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Informasi Pegawai</h2>
+
+            <!-- <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+                <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
+                    <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Pegawai</h2> -->
 
             <form method="POST" action="{{ route('pegawai.update', $pegawai->id) }}">
                 @csrf
@@ -180,8 +184,8 @@
 
     <!-- History Section -->
     <!-- <div class="p-4 mt-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 max-w-3xl mx-auto"> -->
-    <div class="p-2 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-2 sm:ml-64 bg-gray-100 dark:bg-gray-900">
+        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
             <h3 class="mb-4 text-lg font-bold text-gray-900 dark:text-white">History</h3>
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
