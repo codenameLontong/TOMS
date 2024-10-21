@@ -368,4 +368,36 @@ class PegawaiController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
+    public function showUpdatePassword() {
+        return view('dashboard.settings'); // Assuming you have a Blade view named 'settings.password'
+    }
+
+    public function updatePassword(Request $request) {
+        // Validation of inputs
+        $request->validate([
+            'old-password' => 'required',
+            'new-password' => 'required|confirmed|min:8',
+        ]);
+
+        try {
+            // Ensure the old password is correct
+            if (!Hash::check($request->input('old-password'), auth()->user()->password)) {
+                return back()->withErrors(['old-password' => 'Password lama tidak sesuai.']);
+            }
+
+            // Update the password
+            auth()->user()->update([
+                'password' => Hash::make($request->input('new-password')),
+            ]);
+
+            return redirect()->back()->with('success', 'Password berhasil diubah.');
+
+        } catch (\Exception $e) {
+            // If an exception occurs, we dump the exception details for debugging
+            dd($e->getMessage(), $e->getFile(), $e->getLine());
+        }
+    }
+
+
+
 }

@@ -124,37 +124,26 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                        <!-- Pagination -->
+            <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
                     of
-                    <span class="font-semibold text-gray-900 dark:text-white">100</span>
+                    <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px">
+                <ul class="inline-flex items-stretch -space-x-px" id="pagination-list">
                     <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="prev-page" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
+                    <li id="pagination-buttons" class="flex space"></li>
                     <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">2</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">...</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="next-page" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M7.293 5.293a1 1 0 011.414 0L12.586 10l-3.879 3.707a1 1 0 01-1.414-1.414L10.586 10l-3.293-3.293a1 1 0 010-1.414z" />
@@ -163,6 +152,7 @@
                     </li>
                 </ul>
             </nav>
+
         </div>
     </div>
 
@@ -257,6 +247,92 @@
                 toast.classList.add('hidden');
             }
         }, 4000);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pagination variables
+            const rows = document.querySelectorAll('#cabangTable tbody tr'); // Select all rows from the table
+            const recordsPerPage = 15; // Number of records per page
+            let currentPage = 1; // Start on the first page
+
+            // Pagination elements
+            const paginationList = document.getElementById('pagination-list');
+            const paginationButtons = document.getElementById('pagination-buttons');
+            const prevPageButton = document.getElementById('prev-page');
+            const nextPageButton = document.getElementById('next-page');
+            const currentRange = document.getElementById('current-range');
+            const totalRecordsElement = document.getElementById('total-records');
+
+            const totalRecords = rows.length; // Total number of rows in the table
+            const totalPages = Math.ceil(totalRecords / recordsPerPage); // Calculate total pages
+
+            // Update total records count in the UI
+            totalRecordsElement.textContent = totalRecords;
+
+            // Function to show the correct rows based on the current page
+            function showPage(page) {
+                const startRecord = (page - 1) * recordsPerPage;
+                const endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
+
+                rows.forEach((row, index) => {
+                    if (index >= startRecord && index < endRecord) {
+                        row.style.display = ''; // Show the row
+                    } else {
+                        row.style.display = 'none'; // Hide the row
+                    }
+                });
+
+                // Update the current page range text
+                currentRange.textContent = `${startRecord + 1}-${endRecord}`;
+
+                // Disable/Enable prev/next buttons as necessary
+                prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
+                nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
+
+                // Render pagination buttons
+                renderPaginationButtons();
+            }
+
+            // Function to render pagination buttons
+            function renderPaginationButtons() {
+                paginationButtons.innerHTML = ''; // Clear existing buttons
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
+                    pageButton.textContent = i;
+
+                    pageButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+
+                    paginationButtons.appendChild(pageButton);
+                }
+            }
+
+            // Handle previous page button click
+            prevPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+
+            // Handle next page button click
+            nextPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+
+            // Initial page setup
+            showPage(currentPage);
+        });
     </script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
 

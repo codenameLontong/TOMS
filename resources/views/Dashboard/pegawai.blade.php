@@ -50,13 +50,13 @@
                         <div id="filterDropdown" class="hidden z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                             <ul class="space-y-2 text-sm">
                                 <li class="flex items-center">
-                                    <a href="{{ route('pegawai.index', ['status' => 'active']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 {{ $status === 'active' ? 'bg-blue-400' : '' }}">
-                                        Active
+                                    <a href="{{ route('pegawai.index', ['status' => 'active']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-green-300 bg-green-200 {{ $status === 'active' ? 'bg-blue-400' : '' }}">
+                                        Aktif
                                     </a>
                                 </li>
                                 <li class="flex items-center">
-                                    <a href="{{ route('pegawai.index', ['status' => 'terminated']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 {{ $status === 'terminated' ? 'bg-red-400' : '' }}">
-                                        Terminated
+                                    <a href="{{ route('pegawai.index', ['status' => 'terminated']) }}" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200 {{ $status === 'terminated' ? 'bg-red-400' : '' }}">
+                                        Non-aktif
                                     </a>
                                 </li>
                             </ul>
@@ -228,6 +228,7 @@
                     </li>
                 </ul>
             </nav>
+
         </div>
     </div>
 
@@ -406,10 +407,10 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Data for pagination
-            const totalRecords = 100; // Total number of records (change dynamically based on data)
-            const recordsPerPage = 20; // Number of records per page
-            let currentPage = 1; // Current page
+            // Pagination variables
+            const rows = document.querySelectorAll('#pegawaiTable tbody tr'); // Select all rows from the table
+            const recordsPerPage = 15; // Number of records per page
+            let currentPage = 1; // Start on the first page
 
             // Pagination elements
             const paginationList = document.getElementById('pagination-list');
@@ -419,68 +420,78 @@
             const currentRange = document.getElementById('current-range');
             const totalRecordsElement = document.getElementById('total-records');
 
-            // Calculate total pages
-            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+            const totalRecords = rows.length; // Total number of rows in the table
+            const totalPages = Math.ceil(totalRecords / recordsPerPage); // Calculate total pages
 
             // Update total records count in the UI
             totalRecordsElement.textContent = totalRecords;
 
-            // Function to render pagination buttons
-            function renderPaginationButtons() {
-                paginationButtons.innerHTML = '';
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageButton = document.createElement('a');
-                    pageButton.href = '#';
-                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
-                    pageButton.textContent = i;
-                    pageButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        currentPage = i;
-                        updatePagination();
-                    });
-                    paginationButtons.appendChild(pageButton);
-                }
-            }
+            // Function to show the correct rows based on the current page
+            function showPage(page) {
+                const startRecord = (page - 1) * recordsPerPage;
+                const endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
 
-            // Function to update the pagination display and records range
-            function updatePagination() {
-                // Update current page range
-                const startRecord = (currentPage - 1) * recordsPerPage + 1;
-                const endRecord = Math.min(startRecord + recordsPerPage - 1, totalRecords);
-                currentRange.textContent = `${startRecord}-${endRecord}`;
+                rows.forEach((row, index) => {
+                    if (index >= startRecord && index < endRecord) {
+                        row.style.display = ''; // Show the row
+                    } else {
+                        row.style.display = 'none'; // Hide the row
+                    }
+                });
 
-                // Enable/disable prev/next buttons
+                // Update the current page range text
+                currentRange.textContent = `${startRecord + 1}-${endRecord}`;
+
+                // Disable/Enable prev/next buttons as necessary
                 prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
                 nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
 
                 // Render pagination buttons
                 renderPaginationButtons();
-
-                // TODO: Load new data based on current page
-                // You will need to load the actual data for the new page and update the table/list.
             }
 
-            // Handle previous page click
+            // Function to render pagination buttons
+            function renderPaginationButtons() {
+                paginationButtons.innerHTML = ''; // Clear existing buttons
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
+                    pageButton.textContent = i;
+
+                    pageButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+
+                    paginationButtons.appendChild(pageButton);
+                }
+            }
+
+            // Handle previous page button click
             prevPageButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (currentPage > 1) {
                     currentPage--;
-                    updatePagination();
+                    showPage(currentPage);
                 }
             });
 
-            // Handle next page click
+            // Handle next page button click
             nextPageButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (currentPage < totalPages) {
                     currentPage++;
-                    updatePagination();
+                    showPage(currentPage);
                 }
             });
 
-            // Initial setup
-            updatePagination();
+            // Initial page setup
+            showPage(currentPage);
         });
+
 
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');

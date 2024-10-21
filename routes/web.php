@@ -21,6 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
+
+    Route::get('/password/update', [PegawaiController::class, 'showUpdatePassword'])->name('password.showUpdatePassword');
+    Route::put('/password/update', [PegawaiController::class, 'updatePassword'])->name('password.updatePassword');
+
+
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
     Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
