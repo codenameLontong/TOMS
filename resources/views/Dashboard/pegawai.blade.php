@@ -107,27 +107,27 @@
             </div>
 
             <!-- Pegawai Table -->
-            <div class="relative overflow-x-auto sm:rounded-lg">
+            <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
                 <table id="pegawaiTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
-                            <th class="px-6 py-3">NRP</th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(1)">Nama
+                            <th class="px-6 py-3 sticky top-0">NRP</th>
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(1)">Nama
                                 <span id="sortIconNama" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(2)">COY
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(2)">COY
                                 <span id="sortIconCOY" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(3)">Cabang
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(3)">Cabang
                                 <span id="sortIconCabang" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(4)">Jabatan
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(4)">Jabatan
                                 <span id="sortIconJabatan" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(5)">Department
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(5)">Department
                                 <span id="sortIconDepartment" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3">Actions</th>
+                            <th class="px-6 py-3 sticky top-0">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -380,26 +380,36 @@
                 XLSX.writeFile(wb, 'Pegawai_Export.xlsx');
             });
 
-            // Export PDF functionality (excluding "Actions" column)
             document.getElementById('export-pdf').addEventListener('click', function () {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
+                // Get the table element
+                const table = document.getElementById('pegawaiTable');
+
+                // Define the columns to be included (all except the last one, assuming "Actions" is the last column)
+                const columnsToInclude = Array.from(table.querySelectorAll('thead th')).map((th, index) => {
+                    if (index !== 6) { // Exclude the "Actions" column (index 6)
+                        return th.innerText;
+                    }
+                }).filter(Boolean);
+
+                // Extract table data and exclude the "Actions" column from each row
+                const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+                    return Array.from(row.querySelectorAll('td')).map((td, index) => {
+                        if (index !== 6) { // Exclude the "Actions" column (index 6)
+                            return td.innerText;
+                        }
+                    }).filter(Boolean);
+                });
+
+                // Generate the PDF with autoTable
                 doc.autoTable({
-                    html: '#pegawaiTable',
+                    head: [columnsToInclude],
+                    body: rows,
                     theme: 'grid',
                     styles: { fontSize: 10 },
                     margin: { top: 10 },
-                    columnStyles: {
-                        6: { cellWidth: 0 }, // Assuming "Actions" is the 7th column (index 6)
-                    },
-                    didParseCell: function (data) {
-                        // Exclude the last column (Actions column)
-                        if (data.column.index === 6) {
-                            data.cell.styles.cellPadding = 0;
-                            data.cell.styles.fontSize = 0; // Remove text from the cell
-                        }
-                    }
                 });
 
                 doc.save('Pegawai_Export.pdf');

@@ -78,19 +78,24 @@ class PegawaiController extends Controller
         $kodeCabang = $cabang->kode_cabang; // Retrieve kode_cabang from the cabangs table
         $tahunMasuk = Carbon::parse($request->input('tanggal_masuk_tn_shn'))->format('y'); // Last 2 digits of the year
 
-        // Find the latest pegawai in this cabang and year
-        $latestPegawai = Pegawai::where('cabang', $request->input('cabang'))
-                        ->whereYear('tanggal_masuk_tn_shn', Carbon::parse($request->input('tanggal_masuk_tn_shn'))->year)
+        // Find the latest pegawai in this cabang and year (considering both kode_cabang and year in NRP)
+        $latestPegawai = Pegawai::where('nrp', 'like', $kodeCabang . $tahunMasuk . '%')  // Ensure it matches both kode_cabang and tahun
                         ->orderBy('nrp', 'desc')
                         ->first();
 
         // Determine the order number for the new NRP
         if ($latestPegawai) {
-            $latestOrder = (int)substr($latestPegawai->nrp, -2); // Get the last 2 digits of the NRP
+            $latestOrder = (int)substr($latestPegawai->nrp, -2); // Get the last 2 digits of the NRP (the order part)
             $newOrder = str_pad($latestOrder + 1, 2, '0', STR_PAD_LEFT); // Increment by 1 and pad with 0s if necessary
         } else {
             $newOrder = '01'; // If no pegawai in this year and cabang, start with '01'
         }
+
+        // Generate the new NRP (S = prefix, kodeCabang, tahunMasuk, newOrder)
+        $newNRP = 'S' . $kodeCabang . $tahunMasuk . $newOrder;
+
+        // Now you can use the $newNRP for the new pegawai
+
 
         // Generate the NRP
         $nrp = $kodeCabang . $tahunMasuk . $newOrder;

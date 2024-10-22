@@ -52,18 +52,18 @@
             </div>
 
             <!-- Cabang Table -->
-            <div class="relative overflow-x-auto sm:rounded-lg">
+            <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
                 <table id="cabangTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
                             <!-- Sortable Columns -->
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(0)">Kode Cabang
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(0)">Kode Cabang
                                 <span id="sortIconKode" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 cursor-pointer" onclick="sortTable(1)">Lokasi Cabang
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(1)">Lokasi Cabang
                                 <span id="sortIconLokasi" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3">Actions</th>
+                            <th class="px-6 py-3 sticky top-0">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -9,7 +9,7 @@
                     </svg>
                 </button>
                 <a href="#" class="flex ms-2 md:me-24">
-                    <img src="{{ asset('toms.svg') }}" alt="TOMS Logo" class="w-20 h-8">
+                    <img src= "/traknus-logo.png" alt="TOMS Logo" class="w-30 h-7">
                 </a>
             </div>
             <div class="flex items-center">

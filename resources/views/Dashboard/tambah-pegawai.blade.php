@@ -151,7 +151,9 @@
                             <option value="Islam">Islam</option>
                             <option value="Kristen">Kristen</option>
                             <option value="Katolik">Katolik</option>
-                            <!-- Add other religions -->
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Khonghuchu">Khonghuchu</option>
                         </select>
                     </div>
                 </div>
@@ -161,9 +163,14 @@
                     <div class="w-1/2">
                         <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pendidikan</label>
                         <select id="pendidikan" name="pendidikan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SLTP">SLTP</option>
                             <option value="SMA">SMA</option>
                             <option value="SMK">SMK</option>
+                            <option value="D1">D1</option>
                             <option value="D3">D3</option>
+                            <option value="D4">D4</option>
                             <option value="S1">S1</option>
                         </select>
                     </div>
@@ -171,12 +178,12 @@
                         <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                         <select id="status" name="status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                             <option value="TK">TK</option>
+                            <option value="K0">K0</option>
                             <option value="K1">K1</option>
                             <option value="K2">K2</option>
                             <option value="K2">K3</option>
                             <option value="K2">K4</option>
                             <option value="K2">K5</option>
-                            <!-- Add other statuses -->
                         </select>
                     </div>
                 </div>
