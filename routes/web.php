@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\OvertimeController;
 
 
 Route::get('/', function () {
@@ -21,7 +22,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::resource('overtime', OvertimeController::class);
+    Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
+    Route::post('/overtime', [OvertimeController::class, 'store'])->name('overtime.store');
+    // Route to handle NRP search
+    Route::get('/search-nrp', [PegawaiController::class, 'searchByNRP'])->name('pegawais.search');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -43,4 +49,4 @@ Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
 
 Route::delete('/pegawai/{id}/terminate', [PegawaiController::class, 'terminate'])->name('pegawai.terminate');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

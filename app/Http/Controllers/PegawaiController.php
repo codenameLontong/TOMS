@@ -285,4 +285,15 @@ class PegawaiController extends Controller
 
         return redirect()->route('pegawai.view', $pegawai->nrp)->with('success', 'Pegawai successfully terminated.');
     }
+
+    public function searchByNRP(Request $request)
+    {
+        $pegawai = Pegawai::where('nrp', $request->nrp)->first();
+
+        if ($pegawai) {
+            return response()->json(['success' => true, 'data' => $pegawai]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
 }
