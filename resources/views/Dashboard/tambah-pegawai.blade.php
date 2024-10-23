@@ -10,22 +10,17 @@
 <body>
     <x-navbar />
     <x-sidebar />
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 bg-white dark:bg-gray-800 max-w-3xl mx-auto bg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Pegawai</h2>
 
             <form method="POST" action="{{ route('pegawai.store') }}">
                 @csrf
                 <!-- NRP and NRP Vendor -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="nrp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP</label>
-                        <input type="text" id="nrp" name="nrp" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    </div>
-                    <div class="w-1/2">
-                        <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
-                        <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    </div>
+                <div class="mb-4">
+                    <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
+                    <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 </div>
 
                 <!-- Nama -->
@@ -46,22 +41,9 @@
                     <div class="w-1/2">
                         <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
                         <select id="cabang" name="cabang" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="BANDAR LAMPUNG">Bandar Lampung</option>
-                            <option value="BANDUNG">Bandung</option>
-                            <option value="BANJARMASIN">Banjarmasin</option>
-                            <option value="JAKARTA">Jakarta</option>
-                            <option value="JAMBI">Jambi</option>
-                            <option value="JAYAPURA">Jayapura</option>
-                            <option value="MAKASSAR">Makassar</option>
-                            <option value="MEDAN">Medan</option>
-                            <option value="PALEMBANG">Palembang</option>
-                            <option value="PADANG">Padang</option>
-                            <option value="PEKANBARU">Pekanbaru</option>
-                            <option value="PONTIANAK">Pontianak</option>
-                            <option value="SAMARINDA">Samarinda</option>
-                            <option value="SAMPIT">Sampit</option>
-                            <option value="SEMARANG">Semarang</option>
-                            <option value="SURABAYA">Surabaya</option>
+                            @foreach($cabangs as $cabang)
+                                <option value="{{ $cabang->lokasi_cabang }}">{{ $cabang->lokasi_cabang }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -169,7 +151,9 @@
                             <option value="Islam">Islam</option>
                             <option value="Kristen">Kristen</option>
                             <option value="Katolik">Katolik</option>
-                            <!-- Add other religions -->
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Khonghuchu">Khonghuchu</option>
                         </select>
                     </div>
                 </div>
@@ -179,9 +163,14 @@
                     <div class="w-1/2">
                         <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pendidikan</label>
                         <select id="pendidikan" name="pendidikan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SLTP">SLTP</option>
                             <option value="SMA">SMA</option>
                             <option value="SMK">SMK</option>
+                            <option value="D1">D1</option>
                             <option value="D3">D3</option>
+                            <option value="D4">D4</option>
                             <option value="S1">S1</option>
                         </select>
                     </div>
@@ -189,12 +178,12 @@
                         <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                         <select id="status" name="status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                             <option value="TK">TK</option>
+                            <option value="K0">K0</option>
                             <option value="K1">K1</option>
                             <option value="K2">K2</option>
                             <option value="K2">K3</option>
                             <option value="K2">K4</option>
                             <option value="K2">K5</option>
-                            <!-- Add other statuses -->
                         </select>
                     </div>
                 </div>
@@ -210,6 +199,7 @@
                     <div class="w-1/2">
                         <label for="alamat_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Email</label>
                         <input type="email" id="alamat_email" name="alamat_email" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <p id="email_error" class="text-red-600 text-sm mt-2 hidden">Email already exists.</p>
                     </div>
                     <div class="w-1/2">
                         <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
@@ -226,28 +216,53 @@
                     </select>
                 </div>
 
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
+                <button type="submit" id="tambahPegawaiBtn" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg px-5 py-2.5">
                     Tambah
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Pegawai</h2>
-            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file .XLSX/.CSV</label>
-                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" name="file">
-                </div>
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
-                    Import
-                </button>
-            </form>
-        </div>
-    </div>
+    <script>
+        const emailInput = document.getElementById('alamat_email');
+        const emailErrorMsg = document.getElementById('email_error');
+        const tambahPegawaiBtn = document.getElementById('tambahPegawaiBtn');
+
+        // Disable the submit button initially and apply grey background
+        tambahPegawaiBtn.disabled = true;
+
+        emailInput.addEventListener('input', function () {
+            const email = this.value;
+
+            if (email.length > 0) {
+                // Send AJAX request to check if email exists
+                fetch(`{{ route('pegawai.checkEmail') }}?alamat_email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            // Show the error message and disable the button
+                            emailErrorMsg.classList.remove('hidden');
+                            tambahPegawaiBtn.disabled = true;
+                            tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');  // Set grey background when disabled
+                            tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+                        } else {
+                            // Hide the error message and enable the button
+                            emailErrorMsg.classList.add('hidden');
+                            tambahPegawaiBtn.disabled = false;
+                            tambahPegawaiBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                            tambahPegawaiBtn.classList.add('bg-blue-700', 'hover:bg-primary-800');  // Set blue background when enabled
+                        }
+                    });
+            } else {
+                // If input is empty, disable the button and hide the error message
+                emailErrorMsg.classList.add('hidden');
+                tambahPegawaiBtn.disabled = true;
+                tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+            }
+        });
+    </script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

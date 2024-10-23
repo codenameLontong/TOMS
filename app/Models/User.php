@@ -7,11 +7,37 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasRoles, HasFactory, Notifiable;
+
+    /**
+     * The "booted" method of the model.
+     *
+     * This method applies the global scope to automatically filter out inactive users.
+     *
+     * @return void
+     */
+
+    //  protected static function booted()
+    //  {
+    //      // Apply the active scope only during login or authentication-related actions
+    //      if (!app()->runningInConsole() && request()->routeIs('login', 'auth.*')) {
+    //          static::addGlobalScope('active', function (Builder $builder) {
+    //              $builder->where('active', 1); // Only retrieve active users
+    //          });
+    //      }
+    //  }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('active', 1); // Only retrieve active users for login
+        });
+    }
 
     /**
      * The attributes that are mass assignable.

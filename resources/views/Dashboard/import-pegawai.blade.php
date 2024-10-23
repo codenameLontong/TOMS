@@ -11,10 +11,11 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-2xl mx-auto">
+
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lgbg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Pegawai</h2>
-            <!-- <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file .XLSX/.CSV</label>
@@ -23,9 +24,10 @@
                 <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
                     Import
                 </button>
-            </form> -->
+            </form>
         </div>
     </div>
+
 
 
 
