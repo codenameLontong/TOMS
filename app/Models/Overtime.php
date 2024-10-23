@@ -105,4 +105,7 @@ class Overtime extends Model
     {
         return $this->belongsTo(Pegawai::class, 'person_id', 'id');
     }
+    public function overtimeReason() {
+        return $this->belongsTo(OvertimeReasonOrder::class, 'overtime_reason_order_id');
+    }
 }
