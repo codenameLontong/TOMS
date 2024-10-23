@@ -1,10 +1,4 @@
 <p align="center">
-  <a href="#">
-    <img src="/traknus-logo.png" width="400" alt="Traknus Logo">
-  </a>
-</p>
-
-<p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Laravel-11.x-red" alt="Laravel Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/Build-Passing-brightgreen" alt="Build Status"></a>
 </p>
