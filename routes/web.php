@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\CabangController;
+use App\Http\Controllers\VendorController;
 
 
 Route::get('/', function () {
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
     Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
 
+    // CABANG
     Route::get('/cabang', [CabangController::class, 'index'])->name('cabang.index'); // View all Cabangs
 
     Route::get('/cabang/create', [CabangController::class, 'create'])->name('cabang.create'); // Create Cabang page
@@ -40,9 +42,20 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cabang/{cabang}/view', [CabangController::class, 'view'])->name('cabang.view'); // View a single Cabang
 
-    Route::get('/cabang/{cabang}/delete', [CabangController::class, 'showdelete'])->name('cabang.showdelete');
     Route::delete('/cabang/{cabang}/delete', [CabangController::class, 'delete'])->name('cabang.delete'); // Delete Cabang
 
+    // VENDOR
+    Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index'); // View all Vendors
+
+    Route::get('/vendor/create', [VendorController::class, 'create'])->name('vendor.create'); // Create Vendor page
+    Route::post('/vendor/store', [VendorController::class, 'store'])->name('vendor.store'); // Store new Vendor
+
+    Route::get('/vendor/{vendor}/edit', [VendorController::class, 'edit'])->name('vendor.edit'); // Edit Vendor page
+    Route::put('/vendor/{vendor}', [VendorController::class, 'update'])->name('vendor.update'); // Update Vendor
+
+    Route::get('/vendor/{vendor}/view', [VendorController::class, 'view'])->name('vendor.view'); // View a single Vendor
+
+    Route::delete('/vendor/{vendor}/delete', [VendorController::class, 'delete'])->name('vendor.delete'); // Delete Vendor
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -66,8 +79,11 @@ Route::put('pegawai/{pegawai}/terminate', [PegawaiController::class, 'terminate'
 Route::get('/cabang/showimport', [CabangController::class, 'showimport'])->name('cabang.showimport');
 Route::post('/cabang/import', [CabangController::class, 'import'])->name('cabang.import');
 
+Route::get('/vendor/showimport', [VendorController::class, 'showimport'])->name('vendor.showimport');
+Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor.import');
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
+Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
 
 
 

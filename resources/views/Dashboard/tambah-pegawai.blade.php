@@ -18,10 +18,21 @@
             <form method="POST" action="{{ route('pegawai.store') }}">
                 @csrf
                 <!-- NRP and NRP Vendor -->
-                <div class="mb-4">
-                    <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
-                    <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
+                        <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    </div>
+                    <div class="w-1/2">
+                        <label for="vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vendor</label>
+                        <select id="vendor" name="vendor" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            @foreach($vendors as $vendor)
+                                <option value="{{ $vendor->nama_vendor }}">{{ $vendor->nama_vendor }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
+
 
                 <!-- Nama -->
                 <div class="mb-4">
@@ -207,14 +218,13 @@
                     </div>
                 </div>
 
-                <!-- Astra/Non Astra -->
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                     <label for="astra_non_astra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Astra/Non Astra</label>
                     <select id="astra_non_astra" name="astra_non_astra" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         <option value="Astra">Astra</option>
                         <option value="Non Astra">Non Astra</option>
                     </select>
-                </div>
+                </div> -->
 
                 <button type="submit" id="tambahPegawaiBtn" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg px-5 py-2.5">
                     Tambah

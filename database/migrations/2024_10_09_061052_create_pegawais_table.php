@@ -45,11 +45,11 @@ return new class extends Migration {
             $table->string('masa_kerja_vendor')->nullable(); // Calculated field
             $table->enum('jenis_kontrak_kerjasama', ['LABOUR SUPPLY', 'JOB SUPPLY']);
             $table->enum('implementasi_kontrak_kerjasama', ['LABOUR SUPPLY', 'JOB SUPPLY']);
+            $table->string('vendor');
             $table->string('lokasi_kerja');
             $table->string('project_site')->nullable();
             $table->string('alamat_email')->unique();
             $table->string('no_hp');
-            $table->enum('astra_non_astra', ['Astra', 'Non Astra']);
             $table->string('employment_status')->default('active'); // renamed 'status' to 'employment_status'
             $table->timestamps();
         });

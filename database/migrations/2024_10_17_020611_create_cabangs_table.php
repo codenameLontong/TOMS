@@ -17,6 +17,7 @@ class CreateCabangsTable extends Migration
             $table->id();
             $table->string('kode_cabang')->unique();
             $table->string('lokasi_cabang');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

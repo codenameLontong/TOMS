@@ -41,6 +41,12 @@
                     <input type="text" id="nama" name="nama" value="{{ $pegawai->nama }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                 </div>
 
+                <!-- Vendor -->
+                <div class="mb-4">
+                    <label for="vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vendor</label>
+                    <input type="text" id="vendor" name="vendor" value="{{ $pegawai->vendor }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                </div>
+
                 <!-- Coy and Cabang -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
@@ -171,12 +177,6 @@
                         <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
                         <input type="text" id="no_hp" name="no_hp" value="{{ $pegawai->no_hp }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
-                </div>
-
-                <!-- Astra / Non Astra -->
-                <div class="mb-4">
-                    <label for="astra_non_astra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Astra / Non Astra</label>
-                    <input type="text" id="astra_non_astra" name="astra_non_astra" value="{{ $pegawai->astra_non_astra }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                 </div>
             </form>
         </div>

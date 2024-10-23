@@ -12,7 +12,9 @@ use App\Imports\PegawaiImport;
 use Illuminate\Support\Facades\Hash; // Use for password hashing
 use Spatie\Permission\Models\Role;
 use App\Models\Cabang;
+use App\Models\Vendor;
 use App\Http\Controllers\CabangController;
+use App\Http\Controllers\VendorController;
 
 class PegawaiController extends Controller
 {
@@ -37,8 +39,9 @@ class PegawaiController extends Controller
     public function create()
     {
         $cabangs = Cabang::all();
+        $vendors = Vendor::all();
 
-        return view('dashboard.tambah-pegawai', compact('cabangs'));
+        return view('dashboard.tambah-pegawai', compact('cabangs', 'vendors'));
     }
 
     public function store(Request $request)
@@ -61,11 +64,11 @@ class PegawaiController extends Controller
             'tanggal_masuk_vendor' => 'nullable|date',
             'jenis_kontrak_kerjasama' => 'required|string',
             'implementasi_kontrak_kerjasama' => 'required|string',
+            'vendor' => 'required|string',
             'lokasi_kerja' => 'required|string',
             'project_site' => 'nullable|string',
             'alamat_email' => 'required|email|unique:pegawais',
             'no_hp' => 'required|string',
-            'astra_non_astra' => 'required|string',
         ]);
 
         // Fetch the kode_cabang from the cabangs table based on the selected lokasi_cabang
@@ -309,6 +312,7 @@ class PegawaiController extends Controller
             return redirect()->route('pegawai.index')->with('success', 'File berhasil di-import dan pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Handle import failure
+            dd($e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor file. Silakan coba lagi.');
         }
     }
