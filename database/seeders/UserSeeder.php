@@ -63,7 +63,7 @@ class UserSeeder extends Seeder
         ]);
         // Assign the hc_div_head role to this user
         $hcDivHead->assignRole('hc_div_head');
-
+        
         // Create Pegawai User
         $pegawai = User::create([
             'name' => 'Pegawai',

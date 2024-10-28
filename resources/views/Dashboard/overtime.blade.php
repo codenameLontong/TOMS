@@ -6,6 +6,13 @@
     <title>Overtime - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </head>
 <body>
     <x-navbar />
@@ -20,21 +27,23 @@
                 <div class="flex items-center space-x-2">
                     <div class="relative mt-1">
                         <div class="absolute inset-y-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            {{-- <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
+                            </svg> --}}
                         </div>
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari lembur" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <!-- Filter Options Here -->
                 </div>
                 <div class="flex space-x-3 mb-4">
+                    @role('superadmin|admin|direct_superior|superior|hcs_dept_head|hc_div_head')
                     <a href="{{ route('overtime.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         Buat SPL
                     </a>
+                    @endrole
                 </div>
             </div>
 
@@ -62,13 +71,8 @@
                             <td class="px-6 py-4">{{ $overtime->request_date }}</td>
                             <td class="px-6 py-4">{{ $overtime->start_time }}</td>
                             <td class="px-6 py-4">{{ $overtime->end_time }}</td>
-                            <td class="px-6 py-4">
-                                @if($overtime->status == 'Plan')
-                                    <span class="bg-yellow-500 text-white py-1 px-3 rounded-full">{{ $overtime->status }}</span>
-                                @else
-                                    {{ $overtime->status }}
-                                @endif
-                            </td>
+                            <td class="px-6 py-4">{{ $overtime->status }}</td>
+                            @role('superadmin|admin|superior|hcs_dept_head|hc_div_head')
                             <td class="flex px-6 py-4">
                                 <!-- View Icon -->
                                 <div class="relative" style="position: relative; display: inline-block;">
@@ -101,6 +105,79 @@
                                     <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Delete</span>
                                 </div>
                             </td>
+                            @endrole
+
+                            @if(isset($overtime))
+                            @role('pegawai')
+                            <td class="flex px-6 py-4 space-x-2">
+                            @if ($overtime->status == 'Plan')
+                            <!-- Trigger Approve Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
+                                onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
+                            </button>
+
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
+                            @endif
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
+
+                        @if(isset($overtime))
+                            @role('direct_superior')
+                            <td class="flex px-6 py-4 space-x-2">
+                            @if ($overtime->status == 'Need Verification')
+                            <!-- Trigger Verification Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
+                                onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
+                            </button>
+
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
+                            @endif
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
+
+                        @if(isset($overtime))
+                            @role('hcs_dept_head')
+                            <td class="flex px-6 py-4 space-x-2">
+                            @if ($overtime->status == 'Need HC Approval')
+                            <!-- Trigger Confirmation Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
+                                onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
+                            </button>
+
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
+                            @endif
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
+
+
+                        </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -131,6 +208,104 @@
             </div>
         </div>
     </div>
+
+    <!-- Notes Modal -->
+    <!-- Approve Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="approveModalLabel">Approve Overtime</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="approveForm">
+              @csrf
+              <div class="mb-3">
+                  <label for="approved_note" class="form-label">Approval Note (Optional)</label>
+                  <textarea class="form-control" id="approved_note" name="approved_note" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Approve</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reject Modal -->
+  <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rejectModalLabel">Reject Overtime</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="rejectForm">
+              @csrf
+              <div class="mb-3">
+                  <label for="rejected_note" class="form-label">Rejection Note (Optional)</label>
+                  <textarea class="form-control" id="rejected_note" name="rejected_note" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger">Reject</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+      <!-- Verification Modal -->
+<div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="verificationModalLabel">Verify Overtime</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="verificationForm">
+              @csrf
+              <div class="mb-3">
+                  <label for="verification_note" class="form-label">Verify Note (Optional)</label>
+                  <textarea class="form-control" id="verification_note" name="verification_note" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Verify</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+      <!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirm Overtime</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" id="confirmationForm">
+              @csrf
+              <div class="mb-3">
+                  <label for="confirmation_note" class="form-label">Confirm Note (Optional)</label>
+                  <textarea class="form-control" id="confirmation_note" name="confirmation_note" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
     <script>
         document.querySelectorAll('td div').forEach(function(div) {
             div.addEventListener('mouseover', function() {
@@ -177,6 +352,24 @@
         }
 
         document.getElementById('cancelButton').addEventListener('click', closeDeleteModal);
+
+        function setApproveAction(action) {
+        // Set the action attribute of the approve form dynamically
+        document.getElementById('approveForm').action = action;
+        }
+
+        function setRejectAction(action) {
+            // Set the action attribute of the reject form dynamically
+            document.getElementById('rejectForm').action = action;
+        }
+        function setVerificationAction(action) {
+        // Set the action attribute of the verification form dynamically
+        document.getElementById('verificationForm').action = action;
+        }
+        function setConfirmationAction(action) {
+        // Set the action attribute of the confirmation form dynamically
+        document.getElementById('confirmationForm').action = action;
+        }
 
     </script>
 

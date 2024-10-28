@@ -52,6 +52,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/overtime/{id}/edit', [OvertimeController::class, 'edit'])->name('overtime.edit');
     Route::put('/overtime/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
 
+    // Add these routes for approval and rejection
+    Route::post('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+    Route::post('/overtime/{id}/reject', [OvertimeController::class, 'reject'])->name('overtime.reject');
+    Route::post('/overtime/{id}/verify', [OvertimeController::class, 'verify'])->name('overtime.verify');
+    Route::post('/overtime/{id}/confirm', [OvertimeController::class, 'confirm'])->name('overtime.confirm');
+
+
+
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

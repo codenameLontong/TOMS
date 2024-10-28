@@ -76,6 +76,9 @@
                         <!-- Hidden field for person_id -->
                         <input type="hidden" id="person_id" name="person_id">
 
+                        <!-- Hidden field for person_email -->
+                        <input type="hidden" id="person_email" name="person_email">
+
                         <!-- Other Form Fields (Date, Time, Reason, To-Do) -->
                         <div>
                             <label for="request_date" class="block mb-1">Request Date</label>
@@ -116,53 +119,55 @@
     <!-- JavaScript to handle AJAX and search functionality -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#search').on('keyup', function() {
-                var query = $(this).val();
-                if (query.length >= 2) {
-                    $('#loading-spinner').removeClass('hidden');
-                    $.ajax({
-                        url: "{{ route('search.pegawais') }}",
-                        type: "GET",
-                        data: { query: query },
-                        success: function(response) {
-                            $('#loading-spinner').addClass('hidden');
-                            $('#search-results').empty().removeClass('hidden');
-                            if (response.length > 0) {
-                                $.each(response, function(index, pegawai) {
-                                    $('#search-results').append(
-                                        `<li class="p-2 hover:bg-gray-100 cursor-pointer" data-id="${pegawai.id}" data-nrp="${pegawai.nrp}" data-name="${pegawai.nama}" data-department="${pegawai.department}" data-division="${pegawai.division}">
-                                            ${pegawai.nrp} - ${pegawai.nama}
-                                        </li>`
-                                    );
-                                });
-                            } else {
-                                $('#search-results').append('<li class="p-2">No results found</li>');
-                            }
+ $(document).ready(function() {
+        $('#search').on('keyup', function() {
+            var query = $(this).val();
+            if (query.length >= 2) {
+                $('#loading-spinner').removeClass('hidden');
+                $.ajax({
+                    url: "{{ route('search.pegawais') }}",  // Assuming the correct route
+                    type: "GET",
+                    data: { query: query },
+                    success: function(response) {
+                        $('#loading-spinner').addClass('hidden');
+                        $('#search-results').empty().removeClass('hidden');
+                        if (response.length > 0) {
+                            $.each(response, function(index, pegawai) {
+                                $('#search-results').append(
+                                    `<li class="p-2 hover:bg-gray-100 cursor-pointer" data-id="${pegawai.id}" data-nrp="${pegawai.nrp}" data-name="${pegawai.nama}" data-department="${pegawai.department}" data-division="${pegawai.division}" data-email="${pegawai.alamat_email}">
+                                        ${pegawai.nrp} - ${pegawai.nama}
+                                    </li>`
+                                );
+                            });
+                        } else {
+                            $('#search-results').append('<li class="p-2">No results found</li>');
                         }
-                    });
-                } else {
-                    $('#search-results').addClass('hidden');
-                }
-            });
-
-            // Handle click on a result item
-            $(document).on('click', '#search-results li', function() {
-                var id = $(this).data('id');
-                var nrp = $(this).data('nrp');
-                var name = $(this).data('name');
-                var department = $(this).data('department');
-                var division = $(this).data('division');
-
-                $('#person_id').val(id);
-                $('#nrp').val(nrp);
-                $('#nama').val(name);
-                $('#department').val(department);
-                $('#division').val(division);
-
+                    }
+                });
+            } else {
                 $('#search-results').addClass('hidden');
-            });
+            }
         });
+
+        // Handle click on a result item
+        $(document).on('click', '#search-results li', function() {
+            var id = $(this).data('id');
+            var nrp = $(this).data('nrp');
+            var name = $(this).data('name');
+            var department = $(this).data('department');
+            var division = $(this).data('division');
+            var email = $(this).data('email');  // Get the email
+
+            $('#person_id').val(id);
+            $('#nrp').val(nrp);
+            $('#nama').val(name);
+            $('#department').val(department);
+            $('#division').val(division);
+            $('#person_email').val(email);  // Set the hidden email field
+
+            $('#search-results').addClass('hidden');
+        });
+    });
     </script>
 </body>
 </html>
