@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
-
+use App\Http\Controllers\AppraisalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,7 +21,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-
+    Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index');
+    
+    
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -38,9 +40,22 @@ Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->na
 
 Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
 
+
+Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
+Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
+Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
+Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
+
+Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
+Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
+
+
+
+
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
 
 Route::delete('/pegawai/{id}/terminate', [PegawaiController::class, 'terminate'])->name('pegawai.terminate');
+
 
 require __DIR__.'/auth.php';
