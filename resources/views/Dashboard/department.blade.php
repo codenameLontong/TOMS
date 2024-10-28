@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cabang - Dashboard</title>
+    <title>Department - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
     <script>
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
     } else {
-        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.remove('dark');
     }
-</script>
+    </script>
 </head>
 <body>
     <x-navbar />
@@ -22,7 +21,7 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Cabang</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Department</h2>
             <!-- Search Bar -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                 <div class="relative mt-1">
@@ -34,56 +33,50 @@
                     <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
 
-                <!-- Add New Cabang Button -->
+                <!-- Add New Department Button -->
                 <div class="flex space-x-3 mb-4">
-                    <a href="{{ route('cabang.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
+                    <a href="{{ route('department.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        Tambah Cabang
-                    </a>
-                    <a href="{{ route('cabang.showimport') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                        </svg>
-                        Import Cabang
+                        Tambah Department
                     </a>
                 </div>
             </div>
 
-            <!-- Cabang Table -->
+            <!-- Department Table -->
             <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
-                <table id="cabangTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table id="departmentTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
                             <!-- Sortable Columns -->
-                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(0)">Kode Cabang
-                                <span id="sortIconKode" class="inline-block"></span>
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(0)">Division
+                                <span id="sortIconName" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(1)">Lokasi Cabang
-                                <span id="sortIconLokasi" class="inline-block"></span>
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(1)">Department
+                                <span id="sortIconDivision" class="inline-block"></span>
                             </th>
                             <th class="px-6 py-3 sticky top-0">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($cabangs as $cabang)
+                        @foreach($departments as $department)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ $cabang->kode_cabang }}</td>
-                            <td class="px-6 py-4">{{ $cabang->lokasi_cabang }}</td>
+                        <td class="px-6 py-4">{{ $department->division->nama_division }}</td>
+                            <td class="px-6 py-4">{{ $department->nama_department }}</td>
                             <td class="flex px-6 py-4">
-                                <a href="{{ route('cabang.view', $cabang->id) }}" class="text-blue-600 hover:text-blue-800">
+                                <a href="{{ route('department.view', $department->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
                                 </a>
-                                <a href="{{ route('cabang.edit', $cabang->id) }}" class="text-blue-600 hover:text-blue-800 ml-4">
+                                <a href="{{ route('department.edit', $department->id) }}" class="text-blue-600 hover:text-blue-800 ml-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                     </svg>
                                 </a>
-                                <button data-modal-target="terminateModal-{{ $cabang->id }}" data-modal-toggle="terminateModal-{{ $cabang->id }}" class="text-red-600 hover:text-red-800 ml-4">
+                                <button data-modal-target="terminateModal-{{ $department->id }}" data-modal-toggle="terminateModal-{{ $department->id }}" class="text-red-600 hover:text-red-800 ml-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                     </svg>
@@ -91,10 +84,10 @@
                             </td>
                         </tr>
 
-                        <div id="terminateModal-{{ $cabang->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div id="terminateModal-{{ $department->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative p-4 w-full max-w-md max-h-full">
                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="terminateModal-{{ $cabang->id }}">
+                                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="terminateModal-{{ $department->id }}">
                                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                         </svg>
@@ -104,14 +97,14 @@
                                         <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                         </svg>
-                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin akan menghapus cabang ini?</h3>
-                                        <form method="POST" action="{{ route('cabang.delete', $cabang->id) }}">
+                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin akan menghapus department ini?</h3>
+                                        <form method="POST" action="{{ route('department.delete', $department->id) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button data-modal-hide="terminateModal-{{ $cabang->id }}" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                            <button data-modal-hide="terminateModal-{{ $department->id }}" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                                 Ya
                                             </button>
-                                            <button data-modal-hide="terminateModal-{{ $cabang->id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                            <button data-modal-hide="terminateModal-{{ $department->id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 Tidak
                                             </button>
                                         </form>
@@ -128,7 +121,7 @@
             <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    <span id="current-range" class="font-semibold text-gray-900 dark:text-white">1-10</span>
                     of
                     <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
                 </span>
@@ -175,19 +168,18 @@
     @endif
 
     <script>
-        let currentSortOrder = {};  // To keep track of the current sort state for each column
+        let currentSortOrder = {};
 
         function sortTable(columnIndex) {
-            const table = document.getElementById("cabangTable");
-            const rows = Array.from(table.rows).slice(1); // Exclude the header row
-            const iconKode = document.getElementById('sortIconKode');
-            const iconLokasi = document.getElementById('sortIconLokasi');
+            const table = document.getElementById("departmentTable");
+            const rows = Array.from(table.rows).slice(1);
+            const iconName = document.getElementById('sortIconName');
+            const iconDivision = document.getElementById('sortIconDivision');
 
             let isAscending = currentSortOrder[columnIndex] !== 'asc';
-            currentSortOrder = {};  // Reset the sort state
+            currentSortOrder = {};
             currentSortOrder[columnIndex] = isAscending ? 'asc' : 'desc';
 
-            // Sorting logic
             rows.sort((a, b) => {
                 const cellA = a.cells[columnIndex].textContent.trim().toLowerCase();
                 const cellB = b.cells[columnIndex].textContent.trim().toLowerCase();
@@ -197,23 +189,21 @@
                 return 0;
             });
 
-            // Update the table
             rows.forEach(row => table.tBodies[0].appendChild(row));
 
-            // Update the icons for sorting
             if (columnIndex === 0) {
-                iconKode.textContent = isAscending ? '▲' : '▼';
-                iconLokasi.textContent = '';
+                iconName.textContent = isAscending ? '▲' : '▼';
+                iconDivision.textContent = '';
             } else if (columnIndex === 1) {
-                iconLokasi.textContent = isAscending ? '▲' : '▼';
-                iconKode.textContent = '';
+                iconDivision.textContent = isAscending ? '▲' : '▼';
+                iconName.textContent = '';
             }
         }
 
         function searchTable() {
             const input = document.getElementById('table-search');
             const filter = input.value.toLowerCase();
-            const table = document.getElementById('cabangTable');
+            const table = document.getElementById('departmentTable');
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 1; i < rows.length; i++) {
@@ -240,7 +230,6 @@
             });
         });
 
-        // Automatically hide the toast after 4 seconds
         setTimeout(() => {
             const toast = document.getElementById('toast-success');
             if (toast) {
@@ -249,12 +238,10 @@
         }, 4000);
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Pagination variables
-            const rows = document.querySelectorAll('#cabangTable tbody tr'); // Select all rows from the table
-            const recordsPerPage = 15; // Number of records per page
-            let currentPage = 1; // Start on the first page
+            const rows = document.querySelectorAll('#departmentTable tbody tr');
+            const recordsPerPage = 15;
+            let currentPage = 1;
 
-            // Pagination elements
             const paginationList = document.getElementById('pagination-list');
             const paginationButtons = document.getElementById('pagination-buttons');
             const prevPageButton = document.getElementById('prev-page');
@@ -262,40 +249,31 @@
             const currentRange = document.getElementById('current-range');
             const totalRecordsElement = document.getElementById('total-records');
 
-            const totalRecords = rows.length; // Total number of rows in the table
-            const totalPages = Math.ceil(totalRecords / recordsPerPage); // Calculate total pages
+            const totalRecords = rows.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-            // Update total records count in the UI
             totalRecordsElement.textContent = totalRecords;
 
-            // Function to show the correct rows based on the current page
             function showPage(page) {
                 const startRecord = (page - 1) * recordsPerPage;
                 const endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
 
                 rows.forEach((row, index) => {
                     if (index >= startRecord && index < endRecord) {
-                        row.style.display = ''; // Show the row
+                        row.style.display = '';
                     } else {
-                        row.style.display = 'none'; // Hide the row
+                        row.style.display = 'none';
                     }
                 });
 
-                // Update the current page range text
                 currentRange.textContent = `${startRecord + 1}-${endRecord}`;
-
-                // Disable/Enable prev/next buttons as necessary
                 prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
                 nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
-
-                // Render pagination buttons
                 renderPaginationButtons();
             }
 
-            // Function to render pagination buttons
             function renderPaginationButtons() {
-                paginationButtons.innerHTML = ''; // Clear existing buttons
-
+                paginationButtons.innerHTML = '';
                 for (let i = 1; i <= totalPages; i++) {
                     const pageButton = document.createElement('a');
                     pageButton.href = '#';
@@ -312,7 +290,6 @@
                 }
             }
 
-            // Handle previous page button click
             prevPageButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (currentPage > 1) {
@@ -321,7 +298,6 @@
                 }
             });
 
-            // Handle next page button click
             nextPageButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (currentPage < totalPages) {
@@ -330,7 +306,6 @@
                 }
             });
 
-            // Initial page setup
             showPage(currentPage);
         });
     </script>
@@ -339,3 +314,5 @@
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
+
+

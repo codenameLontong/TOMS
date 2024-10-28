@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cabang extends Model
+class Vendor extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,9 @@ class Cabang extends Model
      * @var array
      */
     protected $fillable = [
-        'kode_cabang',
-        'lokasi_cabang',
+        'kode_vendor',
+        'nama_vendor',
+        'astra_non_astra',
         'is_active',
     ];
 
@@ -35,4 +36,3 @@ class Cabang extends Model
     //     return $this->hasMany(Product::class);
     // }
 }
-

@@ -44,6 +44,7 @@ class Pegawai extends Authenticatable
         'directorate',
         'division',
         'department',
+        'section',
         'jenis_kelamin',
         'agama',
         'pendidikan',
@@ -56,11 +57,11 @@ class Pegawai extends Authenticatable
         'masa_kerja_vendor',
         'jenis_kontrak_kerjasama',
         'implementasi_kontrak_kerjasama',
+        'vendor',
         'lokasi_kerja',
         'project_site',
         'alamat_email',
         'no_hp',
-        'astra_non_astra',
         'employment_status',
         'password'
     ];

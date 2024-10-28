@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Pegawai;
 use App\Models\User;
 use App\Models\PegawaiHistory;
+use App\Models\Company;
+use App\Models\Directorate;
+use App\Models\Division;
+use App\Models\Department;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Excel;
@@ -12,7 +17,12 @@ use App\Imports\PegawaiImport;
 use Illuminate\Support\Facades\Hash; // Use for password hashing
 use Spatie\Permission\Models\Role;
 use App\Models\Cabang;
+use App\Models\Vendor;
 use App\Http\Controllers\CabangController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\StructureController;
+use Illuminate\Support\Facades\Log;
+
 
 class PegawaiController extends Controller
 {
@@ -37,21 +47,57 @@ class PegawaiController extends Controller
     public function create()
     {
         $cabangs = Cabang::all();
+        $vendors = Vendor::all();
+        $companies = Company::all();
+        $directorates = Directorate::all();
+        $divisions = Division::all();
+        $departments = Department::all();
+        $sections = Section::all();
 
-        return view('dashboard.tambah-pegawai', compact('cabangs'));
+        return view('dashboard.tambah-pegawai', compact('cabangs', 'vendors', 'companies', 'directorates', 'divisions', 'departments', 'sections'));
+    }
+
+    // Method to fetch directorates based on company
+    public function getDirectorates($companyId)
+    {
+        $directorates = Directorate::where('company_id', $companyId)->get();
+        return response()->json($directorates);
+    }
+
+    // Method to fetch divisions based on directorate
+    public function getDivisions($directorateId)
+    {
+        $divisions = Division::where('directorate_id', $directorateId)->get();
+        return response()->json($divisions);
+    }
+
+    // Method to fetch departments based on division
+    public function getDepartments($divisionId)
+    {
+        $departments = Department::where('division_id', $divisionId)->get();
+        return response()->json($departments);
+    }
+
+    // Method to fetch sections based on department
+    public function getSections($departmentId)
+    {
+        $sections = Section::where('department_id', $departmentId)->get();
+        return response()->json($sections);
     }
 
     public function store(Request $request)
     {
+        $directorate = Directorate::find($request->input('directorate'));
+        $division = Division::find($request->input('division'));
+        $department = Department::find($request->input('department'));
+        $section = Section::find($request->input('section'));
+        $company = Company::find($request->input('coy'));
+
         // Validate the request (excluding 'nrp' since it will be generated)
         $request->validate([
             'nama' => 'required|string',
-            'coy' => 'required|string',
-            'cabang' => 'required|string', // This is the lokasi_cabang from the form
+            'cabang' => 'required|string',
             'jabatan' => 'required|string',
-            'directorate' => 'required|string',
-            'division' => 'required|string',
-            'department' => 'required|string',
             'jenis_kelamin' => 'required|string',
             'agama' => 'required|string',
             'pendidikan' => 'required|string',
@@ -61,11 +107,11 @@ class PegawaiController extends Controller
             'tanggal_masuk_vendor' => 'nullable|date',
             'jenis_kontrak_kerjasama' => 'required|string',
             'implementasi_kontrak_kerjasama' => 'required|string',
+            'vendor' => 'required|string',
             'lokasi_kerja' => 'required|string',
             'project_site' => 'nullable|string',
             'alamat_email' => 'required|email|unique:pegawais',
             'no_hp' => 'required|string',
-            'astra_non_astra' => 'required|string',
         ]);
 
         // Fetch the kode_cabang from the cabangs table based on the selected lokasi_cabang
@@ -94,9 +140,6 @@ class PegawaiController extends Controller
         // Generate the new NRP (S = prefix, kodeCabang, tahunMasuk, newOrder)
         $newNRP = 'S' . $kodeCabang . $tahunMasuk . $newOrder;
 
-        // Now you can use the $newNRP for the new pegawai
-
-
         // Generate the NRP
         $nrp = $kodeCabang . $tahunMasuk . $newOrder;
 
@@ -117,6 +160,11 @@ class PegawaiController extends Controller
                 'umur' => $umur,
                 'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
                 'masa_kerja_vendor' => $masa_kerja_vendor,
+                'coy' => $company->coy,
+                'directorate' => $directorate->nama_directorate,
+                'division' => $division->nama_division,
+                'department' => $department->nama_department,
+                'section' => $section->nama_section ?? null,
             ]));
 
             // Create a corresponding user with default password 'password'
@@ -138,11 +186,11 @@ class PegawaiController extends Controller
                 'user_id' => auth()->id(), // Record the user who created the pegawai
                 'action_date' => now(),    // Record the current date/time of creation
             ]);
-
-            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan dengan NRP: ' . $nrp);
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Output any errors encountered
             dd($e->getMessage());
+
         }
     }
 
@@ -190,74 +238,100 @@ class PegawaiController extends Controller
 
     public function mutasi(Pegawai $pegawai)
     {
-        return view('dashboard.mutasi-pegawai', compact('pegawai'));
+        $cabangs = Cabang::all();
+        $vendors = Vendor::all();
+        $companies = Company::all();
+        $directorates = Directorate::all();
+        $divisions = Division::all();
+        $departments = Department::all();
+        $sections = Section::all();
+
+        return view('dashboard.mutasi-pegawai', compact('pegawai', 'cabangs', 'vendors', 'companies', 'directorates', 'divisions', 'departments', 'sections'));
     }
 
     public function updateMutasi(Request $request, Pegawai $pegawai)
     {
-        // Validate the request
-        $request->validate([
-            'coy' => 'required|string',
-            'cabang' => 'required|string',
-            'department' => 'required|string',
-            'jabatan' => 'required|string',
-            'directorate' => 'required|string',
-            'division' => 'required|string',
-            'project_site' => 'nullable|string',
-            'lokasi_kerja' => 'required|string',
-        ]);
-
-        // Recalculate umur, masa kerja TN/SHN, and masa kerja vendor during mutasi
-        $umur = Carbon::parse($pegawai->tanggal_lahir)->diff(Carbon::now())->format('%y years %m months %d days');
-        $masa_kerja_tn_shn = Carbon::parse($pegawai->tanggal_masuk_tn_shn)->diff(Carbon::now())->format('%y years %m months %d days');
-
-        $masa_kerja_vendor = null;
-        if ($pegawai->tanggal_masuk_vendor) {
-            $masa_kerja_vendor = Carbon::parse($pegawai->tanggal_masuk_vendor)->diff(Carbon::now())->format('%y years %m months %d days');
-        }
-
-        // Store the original state before update
-        $originalData = $pegawai->getOriginal();
-
-        // Update Pegawai's fields during mutasi
-        $pegawai->update([
-            'coy' => $request->coy,
-            'cabang' => $request->cabang,
-            'department' => $request->department,
-            'jabatan' => $request->jabatan,
-            'directorate' => $request->directorate,
-            'division' => $request->division,
-            'project_site' => $request->project_site,
-            'lokasi_kerja' => $request->lokasi_kerja,
-            'umur' => $umur,
-            'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
-            'masa_kerja_vendor' => $masa_kerja_vendor,
-        ]);
-
-        // Detect the changes for logging in the history
-        $changedAttributes = [];
-        foreach ($pegawai->getChanges() as $key => $newValue) {
-            if (isset($originalData[$key]) && $originalData[$key] != $newValue) {
-                $changedAttributes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from {$originalData[$key]} to {$newValue}";
-            }
-        }
-
-        // Build the description based on changed fields
-        $description = implode(', ', $changedAttributes);
-
-        if (!empty($description)) {
-            // Record the mutation in history
-            PegawaiHistory::create([
-                'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
-                'action_type' => 'mutasi',
-                'description' => $description,
-                'user_id' => auth()->id(),  // Record the user who performed the action
-                'action_date' => now(),     // Record the current date/time of action
+        try {
+            // Validate the request
+            $request->validate([
+                'jabatan' => 'required|string',
+                'project_site' => 'nullable|string',
+                'lokasi_kerja' => 'required|string',
             ]);
-        }
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dimutasi!');
+            // Fetch the related entities based on their IDs from the form
+            $company = Company::find($request->input('coy'));
+            $cabang = Cabang::find($request->input('cabang'));
+            $directorate = Directorate::find($request->input('directorate'));
+            $division = Division::find($request->input('division'));
+            $department = Department::find($request->input('department'));
+            $section = Section::find($request->input('section'));
+
+            // Recalculate umur, masa kerja TN/SHN, and masa kerja vendor during mutasi
+            $umur = Carbon::parse($pegawai->tanggal_lahir)->diff(Carbon::now())->format('%y years %m months %d days');
+            $masa_kerja_tn_shn = Carbon::parse($pegawai->tanggal_masuk_tn_shn)->diff(Carbon::now())->format('%y years %m months %d days');
+
+            $masa_kerja_vendor = null;
+            if ($pegawai->tanggal_masuk_vendor) {
+                $masa_kerja_vendor = Carbon::parse($pegawai->tanggal_masuk_vendor)->diff(Carbon::now())->format('%y years %m months %d days');
+            }
+
+            // Store the original state before update
+            $originalData = $pegawai->getOriginal();
+
+            // Update Pegawai's fields during mutasi
+            $pegawai->update([
+                'coy' => $company->coy,
+                'cabang' => $cabang->lokasi_cabang,
+                'directorate' => $directorate->nama_directorate,
+                'division' => $division->nama_division,
+                'department' => $department->nama_department,
+                'section' => $section->nama_section ?? null,
+                'jabatan' => $request->jabatan,
+                'project_site' => $request->project_site,
+                'lokasi_kerja' => $request->lokasi_kerja,
+                'umur' => $umur,
+                'masa_kerja_tn_shn' => $masa_kerja_tn_shn,
+                'masa_kerja_vendor' => $masa_kerja_vendor,
+            ]);
+
+            // Detect the changes for logging in the history
+            $changedAttributes = [];
+            foreach ($pegawai->getChanges() as $key => $newValue) {
+                if (isset($originalData[$key]) && $originalData[$key] != $newValue) {
+                    $changedAttributes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from {$originalData[$key]} to {$newValue}";
+                }
+            }
+
+            // Build the description based on changed fields
+            $description = implode(', ', $changedAttributes);
+
+            if (!empty($description)) {
+                // Record the mutation in history
+                PegawaiHistory::create([
+                    'pegawai_nrp' => $pegawai->nrp,  // Use nrp to connect
+                    'action_type' => 'mutasi',
+                    'description' => $description,
+                    'user_id' => auth()->id(),  // Record the user who performed the action
+                    'action_date' => now(),     // Record the current date/time of action
+                ]);
+            }
+
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dimutasi!');
+
+        } catch (\Exception $e) {
+            // Log the error message
+            Log::error('Error in Mutasi: ' . $e->getMessage());
+
+            // Use dd() to output the exception for debugging
+            dd($e->getMessage(), $e->getFile(), $e->getLine());
+
+            // Return an error response
+            return redirect()->back()->with('error', 'Something went wrong during the mutasi process.');
+        }
     }
+
+
 
     public function showimport()
     {
@@ -309,6 +383,7 @@ class PegawaiController extends Controller
             return redirect()->route('pegawai.index')->with('success', 'File berhasil di-import dan pegawai berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Handle import failure
+            dd($e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor file. Silakan coba lagi.');
         }
     }
