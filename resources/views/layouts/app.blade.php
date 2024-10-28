@@ -6,6 +6,8 @@
     <title>{{ $title ?? 'Dashboard' }} - TOMS</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
+
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
     <x-navbar /> <!-- Include the Navbar Component -->

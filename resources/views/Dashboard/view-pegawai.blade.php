@@ -11,9 +11,13 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Informasi Pegawai</h2>
+
+            <!-- <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+                <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
+                    <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Pegawai</h2> -->
 
             <form method="POST" action="{{ route('pegawai.update', $pegawai->id) }}">
                 @csrf
@@ -37,39 +41,50 @@
                     <input type="text" id="nama" name="nama" value="{{ $pegawai->nama }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                 </div>
 
-                <!-- Coy and Cabang -->
+                <!-- Vendor -->
+                <div class="mb-4">
+                    <label for="vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vendor</label>
+                    <input type="text" id="vendor" name="vendor" value="{{ $pegawai->vendor }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                </div>
+
+                <!-- Coy and Directorate -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="coy" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
                         <input type="text" id="coy" name="coy" value="{{ $pegawai->coy }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                     <div class="w-1/2">
-                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
-                        <input type="text" id="cabang" name="cabang" value="{{ $pegawai->cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                        <input type="text" id="directorate" name="directorate" value="{{ $pegawai->directorate }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 
-                <!-- Department and Jabatan -->
+                <!-- Division and Department -->
                 <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
+                        <input type="text" id="division" name="division" value="{{ $pegawai->division }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    </div>
                     <div class="w-1/2">
                         <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
                         <input type="text" id="department" name="department" value="{{ $pegawai->department }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <input type="text" id="section" name="section" value="{{ $pegawai->section }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                </div>
+
+                <!-- Cabang and Jabatan -->
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
+                        <input type="text" id="cabang" name="cabang" value="{{ $pegawai->cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    </div>
                     <div class="w-1/2">
                         <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
                         <input type="text" id="jabatan" name="jabatan" value="{{ $pegawai->jabatan }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                    </div>
-                </div>
-
-                <!-- Directorate and Division -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
-                        <input type="text" id="directorate" name="directorate" value="{{ $pegawai->directorate }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div class="w-1/2">
-                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
-                        <input type="text" id="division" name="division" value="{{ $pegawai->division }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 
@@ -168,20 +183,14 @@
                         <input type="text" id="no_hp" name="no_hp" value="{{ $pegawai->no_hp }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
-
-                <!-- Astra / Non Astra -->
-                <div class="mb-4">
-                    <label for="astra_non_astra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Astra / Non Astra</label>
-                    <input type="text" id="astra_non_astra" name="astra_non_astra" value="{{ $pegawai->astra_non_astra }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                </div>
             </form>
         </div>
     </div>
 
     <!-- History Section -->
     <!-- <div class="p-4 mt-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 max-w-3xl mx-auto"> -->
-    <div class="p-2 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-2 sm:ml-64 bg-gray-100 dark:bg-gray-900">
+        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
             <h3 class="mb-4 text-lg font-bold text-gray-900 dark:text-white">History</h3>
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

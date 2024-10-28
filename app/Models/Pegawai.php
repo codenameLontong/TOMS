@@ -6,10 +6,32 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class Pegawai extends Authenticatable
 {
     use HasFactory;
+
+        /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // Add the global scope only when required (e.g., for login)
+        if (!app()->runningInConsole() && request()->routeIs('login')) {
+            static::addGlobalScope('active', function (Builder $builder) {
+                $builder->where('active', 1); // Only retrieve active users
+            });
+        }
+    }
+
+    // Method to disable the global scope for specific queries
+    public static function withoutGlobalScopeActive()
+    {
+        return static::withoutGlobalScope('active');
+    }
 
     protected $fillable = [
         'nrp',
@@ -17,10 +39,12 @@ class Pegawai extends Authenticatable
         'nama',
         'coy',
         'cabang',
+        'kode_cabang',
         'jabatan',
         'directorate',
         'division',
         'department',
+        'section',
         'jenis_kelamin',
         'agama',
         'pendidikan',
@@ -33,11 +57,11 @@ class Pegawai extends Authenticatable
         'masa_kerja_vendor',
         'jenis_kontrak_kerjasama',
         'implementasi_kontrak_kerjasama',
+        'vendor',
         'lokasi_kerja',
         'project_site',
         'alamat_email',
         'no_hp',
-        'astra_non_astra',
         'employment_status',
         'password'
     ];
@@ -106,5 +130,9 @@ class Pegawai extends Authenticatable
     public function histories()
     {
         return $this->hasMany(PegawaiHistory::class, 'pegawai_nrp', 'nrp');
+    }
+    public function overtimes()
+    {
+        return $this->hasMany(Overtime::class, 'person_id', 'id');
     }
 }

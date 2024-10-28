@@ -7,16 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"  rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <section class="bg-gray-50 dark:bg-gray-900">
+<body class="flex flex-col min-h-screen">
+
+    <section class="flex-grow bg-[url('/traknus.jpg')] bg-cover bg-gray-700 bg-blend-multiply backdrop-blur-sm min-h-screen flex items-center justify-center">
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                Selamat Datang di TOMS!
+            <a href="#" class="flex items-center mb-6 text-5xl font-semibold text-white dark:text-white">
+                Selamat datang di TOMS!
             </a>
             <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Sign in to your account
+                        Silahkan login ke akun Anda
                     </h1>
                     <!-- Form starts here -->
                     <form method="POST" action="{{ route('login') }}" class="space-y-4 md:space-y-6">
@@ -60,7 +61,9 @@
             </div>
         </div>
     </section>
+    <x-footer />
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
 </body>
 </html>

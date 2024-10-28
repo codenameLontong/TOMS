@@ -11,21 +11,26 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 bg-white dark:bg-gray-800 max-w-3xl mx-auto bg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Pegawai</h2>
 
             <form method="POST" action="{{ route('pegawai.store') }}">
                 @csrf
-                <!-- NRP and NRP Vendor -->
+
+                <!-- NRP and Vendor -->
                 <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="nrp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP</label>
-                        <input type="text" id="nrp" name="nrp" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    </div>
                     <div class="w-1/2">
                         <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
                         <input type="text" id="nrp_vendor" name="nrp_vendor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    </div>
+                    <div class="w-1/2">
+                        <label for="vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vendor</label>
+                        <select id="vendor" name="vendor" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            @foreach($vendors as $vendor)
+                                <option value="{{ $vendor->nama_vendor }}">{{ $vendor->nama_vendor }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -35,56 +40,20 @@
                     <input type="text" id="nama" name="nama" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 </div>
 
-                <!-- COY and Cabang -->
+                <!-- COY and Directorate -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                        <label for="coy" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
-                        <select id="coy" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="TN">TN</option>
-                            <option value="SHN">SHN</option>
+                        <label for="COY" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
+                        <select id="COY" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->coy }}</option>
+                            @endforeach
                         </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
-                        <select id="cabang" name="cabang" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="BANDAR LAMPUNG">Bandar Lampung</option>
-                            <option value="BANDUNG">Bandung</option>
-                            <option value="BANJARMASIN">Banjarmasin</option>
-                            <option value="JAKARTA">Jakarta</option>
-                            <option value="JAMBI">Jambi</option>
-                            <option value="JAYAPURA">Jayapura</option>
-                            <option value="MAKASSAR">Makassar</option>
-                            <option value="MEDAN">Medan</option>
-                            <option value="PALEMBANG">Palembang</option>
-                            <option value="PADANG">Padang</option>
-                            <option value="PEKANBARU">Pekanbaru</option>
-                            <option value="PONTIANAK">Pontianak</option>
-                            <option value="SAMARINDA">Samarinda</option>
-                            <option value="SAMPIT">Sampit</option>
-                            <option value="SEMARANG">Semarang</option>
-                            <option value="SURABAYA">Surabaya</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Jabatan and Directorate -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
-                        <input type="text" id="jabatan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     </div>
                     <div class="w-1/2">
                         <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
                         <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <!-- Add options for directorate -->
-                            <option value="Branch Support and Improvement">Branch Support and Improvement</option>
-                            <option value="Corporate Procurement">Corporate Procurement</option>
-                            <option value="Finance and Administration">Finance and Administration</option>
-                            <option value="Human Capital & Sustainability">Human Capital & Sustainability</option>
-                            <option value="Marketing & Sales">Marketing & Sales</option>
-                            <option value="Material Handling Business">Material Handling Business</option>
-                            <option value="Power, Agro and Construction Business">Power, Agro and Construction Business</option>
-                            <!-- Add other directorates -->
+                            <option value=""></option>
                         </select>
                     </div>
                 </div>
@@ -94,26 +63,43 @@
                     <div class="w-1/2">
                         <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
                         <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <!-- Add options for division -->
-                            <option value="Branch Support and Improvement">Branch Support and Improvement</option>
-                            <option value="Corporate Procurement">Corporate Procurement</option>
-                            <option value="Finance, Accounting, Taxes and IT">Finance, Accounting, Taxes and IT</option>
-                            <option value="Human Capital, SSEHS and General Affair">Human Capital, SSEHS and General Affair</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Material Handling Sales and Marketing">Material Handling Sales and Marketing</option>
-                            <option value="Product Support">Product Support</option>
-                            <option value="Rental Marketing and Business Controller">Rental Marketing and Business Controller</option>
-                            <option value="Rental, FG Wilson and Genset Center">Rental, FG Wilson and Genset Center</option>
+                            <option value=""></option>
                         </select>
                     </div>
                     <div class="w-1/2">
                         <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
-                        <input type="text" id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value=""></option>
+                        </select>
                     </div>
                 </div>
 
-                                <!-- Tanggal Masuk TN/SHN and Vendor -->
-                                <div class="flex space-x-4 mb-4">
+                <!-- Section -->
+                <div class="mb-4">
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <select id="section" name="section" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+                <!-- Jabatan and Cabang -->
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
+                        <input type="text" id="jabatan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    </div>
+                    <div class="w-1/2">
+                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
+                        <select id="cabang" name="cabang" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            @foreach($cabangs as $cabang)
+                                <option value="{{ $cabang->lokasi_cabang }}">{{ $cabang->lokasi_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tanggal Masuk TN/SHN and Vendor -->
+                <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="tanggal_masuk_tn_shn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Masuk TN/SHN</label>
                         <input type="date" id="tanggal_masuk_tn_shn" name="tanggal_masuk_tn_shn" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
@@ -170,7 +156,9 @@
                             <option value="Islam">Islam</option>
                             <option value="Kristen">Kristen</option>
                             <option value="Katolik">Katolik</option>
-                            <!-- Add other religions -->
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Khonghuchu">Khonghuchu</option>
                         </select>
                     </div>
                 </div>
@@ -180,9 +168,14 @@
                     <div class="w-1/2">
                         <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pendidikan</label>
                         <select id="pendidikan" name="pendidikan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SLTP">SLTP</option>
                             <option value="SMA">SMA</option>
                             <option value="SMK">SMK</option>
+                            <option value="D1">D1</option>
                             <option value="D3">D3</option>
+                            <option value="D4">D4</option>
                             <option value="S1">S1</option>
                         </select>
                     </div>
@@ -190,12 +183,12 @@
                         <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                         <select id="status" name="status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                             <option value="TK">TK</option>
+                            <option value="K0">K0</option>
                             <option value="K1">K1</option>
                             <option value="K2">K2</option>
-                            <option value="K2">K3</option>
-                            <option value="K2">K4</option>
-                            <option value="K2">K5</option>
-                            <!-- Add other statuses -->
+                            <option value="K3">K3</option>
+                            <option value="K4">K4</option>
+                            <option value="K5">K5</option>
                         </select>
                     </div>
                 </div>
@@ -211,6 +204,7 @@
                     <div class="w-1/2">
                         <label for="alamat_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Email</label>
                         <input type="email" id="alamat_email" name="alamat_email" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <p id="email_error" class="text-red-600 text-sm mt-2 hidden">Email already exists.</p>
                     </div>
                     <div class="w-1/2">
                         <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
@@ -218,39 +212,176 @@
                     </div>
                 </div>
 
-                <!-- Astra/Non Astra -->
-                <div class="mb-4">
-                    <label for="astra_non_astra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Astra/Non Astra</label>
-                    <select id="astra_non_astra" name="astra_non_astra" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                        <option value="Astra">Astra</option>
-                        <option value="Non Astra">Non Astra</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
+                <button type="submit" id="tambahPegawaiBtn" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg px-5 py-2.5">
                     Tambah
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Pegawai</h2>
-            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file .XLSX/.CSV</label>
-                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" name="file">
-                </div>
-                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
-                    Import
-                </button>
-            </form>
-        </div>
-    </div>
+    <script>
+        const emailInput = document.getElementById('alamat_email');
+        const emailErrorMsg = document.getElementById('email_error');
+        const tambahPegawaiBtn = document.getElementById('tambahPegawaiBtn');
 
+        // Disable the submit button initially
+        tambahPegawaiBtn.disabled = true;
+
+        // Email validation and button enable/disable logic
+        emailInput.addEventListener('input', function () {
+            const email = this.value;
+
+            if (email.length > 0) {
+                fetch(`{{ route('pegawai.checkEmail') }}?alamat_email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            emailErrorMsg.classList.remove('hidden');
+                            tambahPegawaiBtn.disabled = true;
+                            tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                            tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+                        } else {
+                            emailErrorMsg.classList.add('hidden');
+                            tambahPegawaiBtn.disabled = false;
+                            tambahPegawaiBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                            tambahPegawaiBtn.classList.add('bg-blue-700', 'hover:bg-primary-800');
+                        }
+                    });
+            } else {
+                emailErrorMsg.classList.add('hidden');
+                tambahPegawaiBtn.disabled = true;
+                tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const directorateSelect = document.getElementById('directorate');
+        const divisionSelect = document.getElementById('division');
+        const departmentSelect = document.getElementById('department');
+        const sectionSelect = document.getElementById('section');
+        const companySelect = document.getElementById('COY');
+
+        // Initial check for the prefilled company
+        if (companySelect.value) {
+            fetchDirectorates(companySelect.value);
+        }
+
+        // Fetch directorates based on selected company
+        companySelect.addEventListener('change', function() {
+            const companyId = this.value;
+            if (companyId) {
+                fetchDirectorates(companyId);
+            } else {
+                resetDropdown(directorateSelect);
+                resetDropdown(divisionSelect);
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        function fetchDirectorates(companyId) {
+            fetch(`/get-directorates/${companyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDropdown(directorateSelect, data, 'nama_directorate');
+                    resetDropdown(divisionSelect);
+                    resetDropdown(departmentSelect);
+                    resetDropdown(sectionSelect);
+
+                    // Automatically select the first directorate and trigger the change event
+                    if (data.length > 0) {
+                        directorateSelect.value = data[0].id;
+                        directorateSelect.dispatchEvent(new Event('change'));  // Trigger change event for the next dropdown
+                    }
+                });
+        }
+
+        // Fetch divisions based on selected directorate
+        directorateSelect.addEventListener('change', function() {
+            const directorateId = this.value;
+            if (directorateId) {
+                fetch(`/get-divisions/${directorateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(divisionSelect, data, 'nama_division');
+                        resetDropdown(departmentSelect);
+                        resetDropdown(sectionSelect);
+
+                        // Automatically select the first division and trigger the change event
+                        if (data.length > 0) {
+                            divisionSelect.value = data[0].id;
+                            divisionSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            } else {
+                resetDropdown(divisionSelect);
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Fetch departments based on selected division
+        divisionSelect.addEventListener('change', function() {
+            const divisionId = this.value;
+            if (divisionId) {
+                fetch(`/get-departments/${divisionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(departmentSelect, data, 'nama_department');
+                        resetDropdown(sectionSelect);
+
+                        // Automatically select the first department and trigger the change event
+                        if (data.length > 0) {
+                            departmentSelect.value = data[0].id;
+                            departmentSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            } else {
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Fetch sections based on selected department
+        departmentSelect.addEventListener('change', function() {
+            const departmentId = this.value;
+            if (departmentId) {
+                fetch(`/get-sections/${departmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(sectionSelect, data, 'nama_section');
+
+                        // Automatically select the first section
+                        if (data.length > 0) {
+                            sectionSelect.value = data[0].id;
+                        }
+                    });
+            } else {
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Helper function to populate dropdown
+        function populateDropdown(dropdown, data, attribute) {
+            dropdown.innerHTML = '';
+            data.forEach(item => {
+                dropdown.innerHTML += `<option value="${item.id}">${item[attribute]}</option>`;
+            });
+        }
+
+        // Helper function to reset dropdown
+        function resetDropdown(dropdown) {
+            dropdown.innerHTML = '<option value=""></option>';
+        }
+    });
+
+
+
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
+
+

@@ -60,7 +60,7 @@
       </div>
     </div>
   </nav>
-  
+
   <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
      <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
         <ul class="space-y-2 font-medium">
@@ -137,15 +137,15 @@
                   </svg>
                   <span class="flex-1 ms-3 whitespace-nowrap">Pengajuan Lembur</span>
                </a>
-            </li>            
+            </li>
          </li>
         </ul>
      </div>
   </aside>
-  
+
   <div class="p-4 sm:ml-64">
-     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        
+     <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14">
+
 <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
    <div class="flex justify-between">
      <div>
@@ -206,11 +206,10 @@
      </div>
    </div>
  </div>
- 
+
      </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
-  
