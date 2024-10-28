@@ -17,7 +17,8 @@
 
             <form method="POST" action="{{ route('pegawai.store') }}">
                 @csrf
-                <!-- NRP and NRP Vendor -->
+
+                <!-- NRP and Vendor -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="nrp_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NRP Vendor</label>
@@ -33,21 +34,59 @@
                     </div>
                 </div>
 
-
                 <!-- Nama -->
                 <div class="mb-4">
                     <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
                     <input type="text" id="nama" name="nama" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 </div>
 
-                <!-- COY and Cabang -->
+                <!-- COY and Directorate -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                        <label for="coy" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
-                        <select id="coy" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="TN">TN</option>
-                            <option value="SHN">SHN</option>
+                        <label for="COY" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
+                        <select id="COY" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->coy }}</option>
+                            @endforeach
                         </select>
+                    </div>
+                    <div class="w-1/2">
+                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                        <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Division and Department -->
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
+                        <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="w-1/2">
+                        <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
+                        <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section -->
+                <div class="mb-4">
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <select id="section" name="section" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+                <!-- Jabatan and Cabang -->
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
+                        <input type="text" id="jabatan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     </div>
                     <div class="w-1/2">
                         <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
@@ -59,53 +98,8 @@
                     </div>
                 </div>
 
-                <!-- Jabatan and Directorate -->
+                <!-- Tanggal Masuk TN/SHN and Vendor -->
                 <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
-                        <input type="text" id="jabatan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    </div>
-                    <div class="w-1/2">
-                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
-                        <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <!-- Add options for directorate -->
-                            <option value="Branch Support and Improvement">Branch Support and Improvement</option>
-                            <option value="Corporate Procurement">Corporate Procurement</option>
-                            <option value="Finance and Administration">Finance and Administration</option>
-                            <option value="Human Capital & Sustainability">Human Capital & Sustainability</option>
-                            <option value="Marketing & Sales">Marketing & Sales</option>
-                            <option value="Material Handling Business">Material Handling Business</option>
-                            <option value="Power, Agro and Construction Business">Power, Agro and Construction Business</option>
-                            <!-- Add other directorates -->
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Division and Department -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
-                        <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <!-- Add options for division -->
-                            <option value="Branch Support and Improvement">Branch Support and Improvement</option>
-                            <option value="Corporate Procurement">Corporate Procurement</option>
-                            <option value="Finance, Accounting, Taxes and IT">Finance, Accounting, Taxes and IT</option>
-                            <option value="Human Capital, SSEHS and General Affair">Human Capital, SSEHS and General Affair</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Material Handling Sales and Marketing">Material Handling Sales and Marketing</option>
-                            <option value="Product Support">Product Support</option>
-                            <option value="Rental Marketing and Business Controller">Rental Marketing and Business Controller</option>
-                            <option value="Rental, FG Wilson and Genset Center">Rental, FG Wilson and Genset Center</option>
-                        </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
-                        <input type="text" id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    </div>
-                </div>
-
-                                <!-- Tanggal Masuk TN/SHN and Vendor -->
-                                <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="tanggal_masuk_tn_shn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Masuk TN/SHN</label>
                         <input type="date" id="tanggal_masuk_tn_shn" name="tanggal_masuk_tn_shn" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
@@ -192,9 +186,9 @@
                             <option value="K0">K0</option>
                             <option value="K1">K1</option>
                             <option value="K2">K2</option>
-                            <option value="K2">K3</option>
-                            <option value="K2">K4</option>
-                            <option value="K2">K5</option>
+                            <option value="K3">K3</option>
+                            <option value="K4">K4</option>
+                            <option value="K5">K5</option>
                         </select>
                     </div>
                 </div>
@@ -218,14 +212,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="mb-4">
-                    <label for="astra_non_astra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Astra/Non Astra</label>
-                    <select id="astra_non_astra" name="astra_non_astra" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                        <option value="Astra">Astra</option>
-                        <option value="Non Astra">Non Astra</option>
-                    </select>
-                </div> -->
-
                 <button type="submit" id="tambahPegawaiBtn" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg px-5 py-2.5">
                     Tambah
                 </button>
@@ -238,43 +224,164 @@
         const emailErrorMsg = document.getElementById('email_error');
         const tambahPegawaiBtn = document.getElementById('tambahPegawaiBtn');
 
-        // Disable the submit button initially and apply grey background
+        // Disable the submit button initially
         tambahPegawaiBtn.disabled = true;
 
+        // Email validation and button enable/disable logic
         emailInput.addEventListener('input', function () {
             const email = this.value;
 
             if (email.length > 0) {
-                // Send AJAX request to check if email exists
                 fetch(`{{ route('pegawai.checkEmail') }}?alamat_email=${email}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
-                            // Show the error message and disable the button
                             emailErrorMsg.classList.remove('hidden');
                             tambahPegawaiBtn.disabled = true;
-                            tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');  // Set grey background when disabled
+                            tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
                             tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
                         } else {
-                            // Hide the error message and enable the button
                             emailErrorMsg.classList.add('hidden');
                             tambahPegawaiBtn.disabled = false;
                             tambahPegawaiBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                            tambahPegawaiBtn.classList.add('bg-blue-700', 'hover:bg-primary-800');  // Set blue background when enabled
+                            tambahPegawaiBtn.classList.add('bg-blue-700', 'hover:bg-primary-800');
                         }
                     });
             } else {
-                // If input is empty, disable the button and hide the error message
                 emailErrorMsg.classList.add('hidden');
                 tambahPegawaiBtn.disabled = true;
                 tambahPegawaiBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
                 tambahPegawaiBtn.classList.remove('bg-blue-700', 'hover:bg-primary-800');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const directorateSelect = document.getElementById('directorate');
+        const divisionSelect = document.getElementById('division');
+        const departmentSelect = document.getElementById('department');
+        const sectionSelect = document.getElementById('section');
+        const companySelect = document.getElementById('COY');
+
+        // Initial check for the prefilled company
+        if (companySelect.value) {
+            fetchDirectorates(companySelect.value);
+        }
+
+        // Fetch directorates based on selected company
+        companySelect.addEventListener('change', function() {
+            const companyId = this.value;
+            if (companyId) {
+                fetchDirectorates(companyId);
+            } else {
+                resetDropdown(directorateSelect);
+                resetDropdown(divisionSelect);
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        function fetchDirectorates(companyId) {
+            fetch(`/get-directorates/${companyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDropdown(directorateSelect, data, 'nama_directorate');
+                    resetDropdown(divisionSelect);
+                    resetDropdown(departmentSelect);
+                    resetDropdown(sectionSelect);
+
+                    // Automatically select the first directorate and trigger the change event
+                    if (data.length > 0) {
+                        directorateSelect.value = data[0].id;
+                        directorateSelect.dispatchEvent(new Event('change'));  // Trigger change event for the next dropdown
+                    }
+                });
+        }
+
+        // Fetch divisions based on selected directorate
+        directorateSelect.addEventListener('change', function() {
+            const directorateId = this.value;
+            if (directorateId) {
+                fetch(`/get-divisions/${directorateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(divisionSelect, data, 'nama_division');
+                        resetDropdown(departmentSelect);
+                        resetDropdown(sectionSelect);
+
+                        // Automatically select the first division and trigger the change event
+                        if (data.length > 0) {
+                            divisionSelect.value = data[0].id;
+                            divisionSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            } else {
+                resetDropdown(divisionSelect);
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Fetch departments based on selected division
+        divisionSelect.addEventListener('change', function() {
+            const divisionId = this.value;
+            if (divisionId) {
+                fetch(`/get-departments/${divisionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(departmentSelect, data, 'nama_department');
+                        resetDropdown(sectionSelect);
+
+                        // Automatically select the first department and trigger the change event
+                        if (data.length > 0) {
+                            departmentSelect.value = data[0].id;
+                            departmentSelect.dispatchEvent(new Event('change'));
+                        }
+                    });
+            } else {
+                resetDropdown(departmentSelect);
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Fetch sections based on selected department
+        departmentSelect.addEventListener('change', function() {
+            const departmentId = this.value;
+            if (departmentId) {
+                fetch(`/get-sections/${departmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(sectionSelect, data, 'nama_section');
+
+                        // Automatically select the first section
+                        if (data.length > 0) {
+                            sectionSelect.value = data[0].id;
+                        }
+                    });
+            } else {
+                resetDropdown(sectionSelect);
+            }
+        });
+
+        // Helper function to populate dropdown
+        function populateDropdown(dropdown, data, attribute) {
+            dropdown.innerHTML = '';
+            data.forEach(item => {
+                dropdown.innerHTML += `<option value="${item.id}">${item[attribute]}</option>`;
+            });
+        }
+
+        // Helper function to reset dropdown
+        function resetDropdown(dropdown) {
+            dropdown.innerHTML = '<option value=""></option>';
+        }
+    });
+
+
+
     </script>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
+
+

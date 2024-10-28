@@ -54,18 +54,12 @@ class CabangController extends Controller
         return redirect()->route('cabang.index')->with('success', 'Cabang berhasil di-update.');
     }
 
-    public function showdelete(Cabang $cabang)
-    {
-        return view('dashboard.delete-cabang', compact('cabang'));
-    }
-
     public function delete(Cabang $cabang)
     {
         $cabang->delete();
 
         return redirect()->route('cabang.index')->with('success', 'Cabang berhasil dihapus.');
     }
-
 
     public function showimport()
     {

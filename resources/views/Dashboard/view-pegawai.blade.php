@@ -47,39 +47,44 @@
                     <input type="text" id="vendor" name="vendor" value="{{ $pegawai->vendor }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                 </div>
 
-                <!-- Coy and Cabang -->
+                <!-- Coy and Directorate -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="coy" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
                         <input type="text" id="coy" name="coy" value="{{ $pegawai->coy }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                     <div class="w-1/2">
-                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
-                        <input type="text" id="cabang" name="cabang" value="{{ $pegawai->cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                        <input type="text" id="directorate" name="directorate" value="{{ $pegawai->directorate }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 
-                <!-- Department and Jabatan -->
+                <!-- Division and Department -->
                 <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
+                        <input type="text" id="division" name="division" value="{{ $pegawai->division }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    </div>
                     <div class="w-1/2">
                         <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
                         <input type="text" id="department" name="department" value="{{ $pegawai->department }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <input type="text" id="section" name="section" value="{{ $pegawai->section }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                </div>
+
+                <!-- Cabang and Jabatan -->
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-1/2">
+                        <label for="cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cabang</label>
+                        <input type="text" id="cabang" name="cabang" value="{{ $pegawai->cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    </div>
                     <div class="w-1/2">
                         <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
                         <input type="text" id="jabatan" name="jabatan" value="{{ $pegawai->jabatan }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                    </div>
-                </div>
-
-                <!-- Directorate and Division -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
-                        <input type="text" id="directorate" name="directorate" value="{{ $pegawai->directorate }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div class="w-1/2">
-                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
-                        <input type="text" id="division" name="division" value="{{ $pegawai->division }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 

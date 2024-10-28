@@ -44,6 +44,7 @@ class Pegawai extends Authenticatable
         'directorate',
         'division',
         'department',
+        'section',
         'jenis_kelamin',
         'agama',
         'pendidikan',

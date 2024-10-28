@@ -12,27 +12,13 @@ return new class extends Migration {
             $table->string('nrp')->unique();
             $table->string('nrp_vendor')->nullable();
             $table->string('nama');
-            $table->enum('coy', ['TN', 'SHN']);
-            $table->enum('cabang', [
-                'BANDAR LAMPUNG', 'BANDUNG', 'BANJARMASIN', 'JAKARTA', 'JAMBI', 'JAYAPURA',
-                'MAKASSAR', 'MEDAN', 'PALEMBANG', 'PADANG', 'PEKANBARU', 'PONTIANAK',
-                'SAMARINDA', 'SAMPIT', 'SEMARANG', 'SURABAYA'
-            ]);
+            $table->string('coy');
+            $table->string('cabang');
             $table->string('jabatan');
-            $table->enum('directorate', [
-                'Branch Support and Improvement', 'Corporate Procurement',
-                'Finance and Administration', 'Human Capital & Sustainability',
-                'Marketing & Sales', 'Material Handling Business',
-                'Power, Agro and Construction Business'
-            ]);
-            $table->enum('division', [
-                'Branch Support and Improvement', 'Corporate Procurement',
-                'Finance, Accounting, Taxes and IT', 'Human Capital, SSEHS and General Affair',
-                'Marketing', 'Material Handling Sales and Marketing',
-                'Product Support', 'Rental Marketing and Business Controller',
-                'Rental, FG Wilson and Genset Center'
-            ]);
+            $table->string('directorate');
+            $table->string('division');
             $table->string('department');
+            $table->string('section')->nullable();
             $table->enum('jenis_kelamin', ['MALE', 'FEMALE']);
             $table->enum('agama', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
             $table->enum('pendidikan', ['SD', 'SMP', 'SLTP', 'SMA', 'SMK', 'S1', 'D1', 'D3', 'D4']);
