@@ -328,6 +328,13 @@
             // Initial page setup
             showPage(currentPage);
         });
+
+        setTimeout(() => {
+            const toast = document.getElementById('toast-success');
+            if (toast) {
+                toast.classList.add('hidden');
+            }
+        }, 4000);
     </script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
 

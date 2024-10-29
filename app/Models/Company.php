@@ -11,6 +11,6 @@ class Company extends Model
 
     public function directorates()
     {
-        return $this->hasMany(Directorate::class);
+        return $this->hasMany(Directorate::class)->orderBy('nama_directorate', 'asc');
     }
 }

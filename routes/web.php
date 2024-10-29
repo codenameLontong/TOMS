@@ -74,9 +74,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/directorate/{directorate}', [DirectorateController::class, 'update'])->name('directorate.update'); // Update directorate
     Route::get('/directorate/{directorate}/view', [DirectorateController::class, 'view'])->name('directorate.view'); // View a single directorate
     Route::delete('/directorate/{directorate}/delete', [DirectorateController::class, 'delete'])->name('directorate.delete'); // Delete directorate
-    Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
     Route::get('/directorate/check-nama-directorate', [DirectorateController::class, 'checkNamaDirectorate'])->name('directorate.checkNamaDirectorate');
-
+    Route::get('/get-directorates-by-company', [DirectorateController::class, 'getDirectoratesByCompany'])->name('getDirectoratesByCompany');
 
     // DIVISION
     Route::get('/division', [DivisionController::class, 'index'])->name('division.index'); // View all divisions
@@ -87,8 +86,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/division/{division}/view', [DivisionController::class, 'view'])->name('division.view'); // View a single division
     Route::delete('/division/{division}/delete', [DivisionController::class, 'delete'])->name('division.delete'); // Delete division
     Route::get('/division/check-nama-division', [DivisionController::class, 'checkNamaDivision'])->name('division.checkNamaDivision');
-    Route::get('/get-directorates-by-company', [DivisionController::class, 'getDirectoratesByCompany'])->name('getDirectoratesByCompany');
-
 
     // DEPARTMENT
     Route::get('/department', [DepartmentController::class, 'index'])->name('department.index'); // View all departments
@@ -98,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/department/{department}', [DepartmentController::class, 'update'])->name('department.update'); // Update department
     Route::get('/department/{department}/view', [DepartmentController::class, 'view'])->name('department.view'); // View a single department
     Route::delete('/department/{department}/delete', [DepartmentController::class, 'delete'])->name('department.delete'); // Delete department
-
+    Route::get('/department/check-nama-department', [DepartmentController::class, 'checkNamaDepartment'])->name('department.checkNamaDepartment');
 
     // SECTION
     Route::get('/section', [SectionController::class, 'index'])->name('section.index'); // View all sections
@@ -108,6 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/section/{section}', [SectionController::class, 'update'])->name('section.update'); // Update section
     Route::get('/section/{section}/view', [SectionController::class, 'view'])->name('section.view'); // View a single section
     Route::delete('/section/{section}/delete', [SectionController::class, 'delete'])->name('section.delete'); // Delete section
+    Route::get('/section/check-nama-section', [SectionController::class, 'checkNamaSection'])->name('section.checkNamaSection');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -133,6 +131,8 @@ Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
+
+
 
 
 
