@@ -131,4 +131,8 @@ class Pegawai extends Authenticatable
     {
         return $this->hasMany(PegawaiHistory::class, 'pegawai_nrp', 'nrp');
     }
+    public function overtimes()
+    {
+        return $this->hasMany(Overtime::class, 'person_id', 'id');
+    }
 }

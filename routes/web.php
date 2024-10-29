@@ -12,6 +12,9 @@ use App\Http\Controllers\DirectorateController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\OvertimeController;
+use App\Models\Overtime;
+use App\Http\Controllers\AppraisalController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -53,6 +56,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/cabang/{cabang}', [CabangController::class, 'update'])->name('cabang.update'); // Update Cabang
     Route::get('/cabang/{cabang}/view', [CabangController::class, 'view'])->name('cabang.view'); // View a single Cabang
     Route::delete('/cabang/{cabang}/delete', [CabangController::class, 'delete'])->name('cabang.delete'); // Delete Cabang
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+
+    // OVERTIME
+    Route::resource('overtime', OvertimeController::class);
+    Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
+    Route::post('/overtime', [OvertimeController::class, 'store'])->name('overtime.store');
+    Route::get('/search-pegawais', [OvertimeController::class, 'search'])->name('search.pegawais');
+    Route::get('/overtime/{id}', [OvertimeController::class, 'show'])->name('overtime.show');
+    Route::get('/overtime/{id}/edit', [OvertimeController::class, 'edit'])->name('overtime.edit');
+    Route::put('/overtime/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
+    Route::post('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+    Route::post('/overtime/{id}/reject', [OvertimeController::class, 'reject'])->name('overtime.reject');
+    Route::post('/overtime/{id}/verify', [OvertimeController::class, 'verify'])->name('overtime.verify');
+    Route::post('/overtime/{id}/confirm', [OvertimeController::class, 'confirm'])->name('overtime.confirm');
 
     // VENDOR
     Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index'); // View all Vendors
@@ -118,6 +135,16 @@ Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
 
+
+Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
+Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
+Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
+Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
+
+Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
+Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
+
+
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
 
@@ -138,4 +165,5 @@ Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->
 
 
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
