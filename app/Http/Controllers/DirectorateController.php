@@ -8,12 +8,21 @@ use App\Models\Department;
 use App\Models\Directorate;
 use App\Models\Division;
 use App\Models\Section;
+use Illuminate\Support\Facades\Log;
+
+
 
 class DirectorateController extends Controller
 {
     public function index()
     {
-        $directorates = Directorate::all();
+        $directorates = Directorate::with('company')
+            ->join('companies', 'directorates.company_id', '=', 'companies.id')
+            ->orderBy('companies.coy', 'asc')
+            ->orderBy('directorates.nama_directorate', 'asc')
+            ->select('directorates.*')
+            ->get();
+
         return view('dashboard.directorate', compact('directorates'));
     }
 
@@ -37,7 +46,7 @@ class DirectorateController extends Controller
 
         Directorate::create($request->all());
 
-        return redirect()->route('directorate.index')->with('success', 'Directorate berhasil dibuat!.');
+        return redirect()->route('directorate.index')->with('success', 'Directorate berhasil dibuat!');
     }
 
     public function view(Directorate $directorate)
@@ -53,14 +62,16 @@ class DirectorateController extends Controller
     public function update(Request $request, Directorate $directorate)
     {
         $request->validate([
-            'nama_directorate' => 'required',
-            'company_id' => 'required|exists:companies,id',
+            'nama_directorate' => 'required|unique:directorates,nama_directorate,' . $directorate->id,
         ]);
 
-        $directorate->update($request->all());
+        $directorate->update([
+            'nama_directorate' => $request->input('nama_directorate'),
+        ]);
 
         return redirect()->route('directorate.index')->with('success', 'Directorate berhasil di-update.');
     }
+
 
     public function delete(Directorate $directorate)
     {
@@ -71,13 +82,17 @@ class DirectorateController extends Controller
 
     public function checkNamaDirectorate(Request $request)
     {
-        // Fetch the 'nama_directorate' from the request
+        // Fetch 'nama_directorate' and 'company_id' from the request
         $nama_directorate = $request->query('nama_directorate');
+        $company_id = $request->query('company_id'); // Ensure company_id is passed from the frontend
 
-        // Check if a directorate with the same 'nama_directorate' exists
-        $exists = Directorate::where('nama_directorate', $nama_directorate)->exists();
+        // Check if a directorate with the same 'nama_directorate' exists in the same company
+        $exists = Directorate::where('nama_directorate', $nama_directorate)
+                            ->where('company_id', $company_id)
+                            ->exists();
 
         // Return a JSON response with the result
         return response()->json(['exists' => $exists]);
     }
+
 }

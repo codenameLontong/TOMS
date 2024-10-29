@@ -43,30 +43,32 @@
     </div>
 
     <script>
-    const namaDirectorateInput = document.getElementById('nama_directorate');
-    const errorMsg = document.getElementById('nama_directorate_error');
+        const namaDirectorateInput = document.getElementById('nama_directorate');
+        const companySelect = document.getElementById('company_id');
+        const errorMsg = document.getElementById('nama_directorate_error');
 
-    namaDirectorateInput.addEventListener('input', function () {
-        const namaDirectorate = this.value;
+        namaDirectorateInput.addEventListener('input', function () {
+            const namaDirectorate = this.value;
+            const companyId = companySelect.value; // Get the selected company ID
 
-        if (namaDirectorate.length > 0) {
-            // Send AJAX request to check if nama_directorate exists
-            fetch(`{{ route('directorate.checkNamaDirectorate') }}?nama_directorate=${namaDirectorate}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        // Show the error message but do not disable the button
-                        errorMsg.classList.remove('hidden');
-                    } else {
-                        // Hide the error message
-                        errorMsg.classList.add('hidden');
-                    }
-                });
-        } else {
-            // If input is empty, hide the error message
-            errorMsg.classList.add('hidden');
-        }
-    });
+            if (namaDirectorate.length > 0 && companyId) {
+                // Send AJAX request to check if nama_directorate exists for the selected company
+                fetch(`{{ route('directorate.checkNamaDirectorate') }}?nama_directorate=${namaDirectorate}&company_id=${companyId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            // Show the error message but do not disable the button
+                            errorMsg.classList.remove('hidden');
+                        } else {
+                            // Hide the error message
+                            errorMsg.classList.add('hidden');
+                        }
+                    });
+            } else {
+                // If input is empty, hide the error message
+                errorMsg.classList.add('hidden');
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

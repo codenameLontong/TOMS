@@ -16,7 +16,7 @@ class Department extends Model
 
     public function sections()
     {
-        return $this->hasMany(Section::class);
+        return $this->hasMany(Section::class)->orderBy('nama_section', 'asc');
     }
 }
 

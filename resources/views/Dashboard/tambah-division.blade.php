@@ -12,7 +12,7 @@
     <x-sidebar />
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
-        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lg">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Division</h2>
 
             <form method="POST" action="{{ route('division.store') }}">
@@ -20,7 +20,7 @@
 
                 <!-- Select Company -->
                 <div class="mb-4">
-                    <label for="company_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company</label>
+                    <label for="company_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Company</label>
                     <select id="company_id" name="company_id" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         @foreach($companies as $company)
                             <option value="{{ $company->id }}">{{ $company->coy }}</option>
@@ -28,10 +28,11 @@
                     </select>
                 </div>
 
-                <!-- Select Directorate (dynamically updated based on selected company) -->
+                <!-- Select Directorate -->
                 <div class="mb-4">
-                    <label for="directorate_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                    <label for="directorate_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pilih Directorate</label>
                     <select id="directorate_id" name="directorate_id" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
                     </select>
                 </div>
 
@@ -50,53 +51,110 @@
     </div>
 
     <script>
-    const namaDivisionInput = document.getElementById('nama_division');
-    const errorMsg = document.getElementById('nama_division_error');
+        // Handle checking if division name already exists
+        const namaDivisionInput = document.getElementById('nama_division');
+        const directorateSelect = document.getElementById('directorate_id'); // Ensure this element is captured for the directorate select dropdown
+        const errorMsg = document.getElementById('nama_division_error');
 
-    namaDivisionInput.addEventListener('input', function () {
-        const namaDivision = this.value;
+        namaDivisionInput.addEventListener('input', function () {
+            const namaDivision = this.value;
+            const directorateId = directorateSelect.value; // Get the selected directorate ID
 
-        if (namaDivision.length > 0) {
-            // Send AJAX request to check if nama_division exists
-            fetch(`{{ route('division.checkNamaDivision') }}?nama_division=${namaDivision}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        // Show the error message but do not disable the button
-                        errorMsg.classList.remove('hidden');
-                    } else {
-                        // Hide the error message
-                        errorMsg.classList.add('hidden');
-                    }
-                });
-        } else {
-            // If input is empty, hide the error message
-            errorMsg.classList.add('hidden');
-        }
-    });
-
-    // Fetch Directorates when a company is selected
-    const companySelect = document.getElementById('company_id');
-    const directorateSelect = document.getElementById('directorate_id');
-
-    companySelect.addEventListener('change', function () {
-        const companyId = this.value;
-        directorateSelect.innerHTML = '<option value="">-- Pilih Directorate --</option>';
-
-        if (companyId) {
-            // Send AJAX request to get the directorates for the selected company
-            fetch(`{{ route('getDirectoratesByCompany') }}?company_id=${companyId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.directorates.forEach(function (directorate) {
-                        const option = document.createElement('option');
-                        option.value = directorate.id;
-                        option.textContent = directorate.nama_directorate;
-                        directorateSelect.appendChild(option);
+            if (namaDivision.length > 0 && directorateId) {
+                // Send AJAX request to check if 'nama_division' exists within the selected 'directorate_id'
+                fetch(`{{ route('division.checkNamaDivision') }}?nama_division=${namaDivision}&directorate_id=${directorateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            // Show the error message but don't disable the button
+                            errorMsg.classList.remove('hidden');
+                        } else {
+                            // Hide the error message
+                            errorMsg.classList.add('hidden');
+                        }
                     });
+            } else {
+                // Hide the error message if input is empty or no directorate is selected
+                errorMsg.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const directorateSelect = document.getElementById('directorate_id');
+            const companySelect = document.getElementById('company_id');
+
+            // Initial check for the prefilled company
+            if (companySelect.value) {
+                fetchDirectorates(companySelect.value);
+            }
+
+            // Fetch directorates based on selected company
+            companySelect.addEventListener('change', function() {
+                const companyId = this.value;
+                if (companyId) {
+                    fetchDirectorates(companyId);
+                } else {
+                    resetDropdown(directorateSelect);
+                    resetDropdown(divisionSelect);
+                    resetDropdown(departmentSelect);
+                    resetDropdown(sectionSelect);
+                }
+            });
+
+            function fetchDirectorates(companyId) {
+                fetch(`/get-directorates/${companyId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateDropdown(directorateSelect, data, 'nama_directorate');
+                        resetDropdown(divisionSelect);
+                        resetDropdown(departmentSelect);
+                        resetDropdown(sectionSelect);
+
+                        // Automatically select the first directorate and trigger the change event
+                        if (data.length > 0) {
+                            directorateSelect.value = data[0].id;
+                            directorateSelect.dispatchEvent(new Event('change'));  // Trigger change event for the next dropdown
+                        }
+                    });
+            }
+
+            // Fetch divisions based on selected directorate
+            directorateSelect.addEventListener('change', function() {
+                const directorateId = this.value;
+                if (directorateId) {
+                    fetch(`/get-divisions/${directorateId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            populateDropdown(divisionSelect, data, 'nama_division');
+                            resetDropdown(departmentSelect);
+                            resetDropdown(sectionSelect);
+
+                            // Automatically select the first division and trigger the change event
+                            if (data.length > 0) {
+                                divisionSelect.value = data[0].id;
+                                divisionSelect.dispatchEvent(new Event('change'));
+                            }
+                        });
+                } else {
+                    resetDropdown(divisionSelect);
+                    resetDropdown(departmentSelect);
+                    resetDropdown(sectionSelect);
+                }
+            });
+
+            // Helper function to populate dropdown
+            function populateDropdown(dropdown, data, attribute) {
+                dropdown.innerHTML = '';
+                data.forEach(item => {
+                    dropdown.innerHTML += `<option value="${item.id}">${item[attribute]}</option>`;
                 });
-        }
-    });
+            }
+
+            // Helper function to reset dropdown
+            function resetDropdown(dropdown) {
+                dropdown.innerHTML = '<option value=""></option>';
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
