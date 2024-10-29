@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('appraisals_category', function (Blueprint $table) {
             $table->id();
-            $table->title('title');
+            $table->string('title');
             $table->string('description');
         });
     }

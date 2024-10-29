@@ -141,7 +141,8 @@ Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
 
-
+//APPRAISAL
+Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index');
 Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
 Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
 Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
