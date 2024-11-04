@@ -11,10 +11,18 @@
     <x-navbar />
     <x-sidebar />
 
-
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
-        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lgbg-white shadow-lg">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Pegawai</h2>
+
+            <!-- Display session error if it exists -->
+            @if (session('error'))
+                <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                    <strong>Error:</strong> {{ session('error') }}
+                </div>
+            @endif
+
+            <!-- Import Form -->
             <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
@@ -28,10 +36,6 @@
         </div>
     </div>
 
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
-

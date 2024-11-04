@@ -34,8 +34,16 @@ class User extends Authenticatable
 
     protected static function booted()
     {
+        // Apply the active scope only during login
         static::addGlobalScope('active', function (Builder $builder) {
             $builder->where('active', 1); // Only retrieve active users for login
+        });
+
+        // Set default role_id to 7 if not provided
+        static::creating(function ($user) {
+            if (is_null($user->role_id)) {
+                $user->role_id = 7;
+            }
         });
     }
 
@@ -48,6 +56,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'dept_id',
     ];
 
     /**
