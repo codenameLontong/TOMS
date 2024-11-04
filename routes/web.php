@@ -11,8 +11,10 @@ use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DirectorateController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\SectionController;use App\Http\Controllers\OvertimeController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\OvertimeController;
 use App\Models\Overtime;
+use App\Http\Controllers\AppraisalController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -31,11 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/password/update', [PegawaiController::class, 'showUpdatePassword'])->name('password.showUpdatePassword');
     Route::put('/password/update', [PegawaiController::class, 'updatePassword'])->name('password.updatePassword');
 
-
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
     Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
-
 
     Route::get('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'mutasi'])->name('pegawai.mutasi');
     Route::put('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'updateMutasi'])->name('pegawai.updateMutasi');
@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/cabang/{cabang}/view', [CabangController::class, 'view'])->name('cabang.view'); // View a single Cabang
     Route::delete('/cabang/{cabang}/delete', [CabangController::class, 'delete'])->name('cabang.delete'); // Delete Cabang
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+
+    // OVERTIME
     Route::resource('overtime', OvertimeController::class);
     Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
     Route::post('/overtime', [OvertimeController::class, 'store'])->name('overtime.store');
@@ -62,14 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/overtime/{id}', [OvertimeController::class, 'show'])->name('overtime.show');
     Route::get('/overtime/{id}/edit', [OvertimeController::class, 'edit'])->name('overtime.edit');
     Route::put('/overtime/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
-
-    // Add these routes for approval and rejection
     Route::post('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
     Route::post('/overtime/{id}/reject', [OvertimeController::class, 'reject'])->name('overtime.reject');
     Route::post('/overtime/{id}/verify', [OvertimeController::class, 'verify'])->name('overtime.verify');
     Route::post('/overtime/{id}/confirm', [OvertimeController::class, 'confirm'])->name('overtime.confirm');
-
-
 
     // VENDOR
     Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index'); // View all Vendors
@@ -91,9 +89,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/directorate/{directorate}', [DirectorateController::class, 'update'])->name('directorate.update'); // Update directorate
     Route::get('/directorate/{directorate}/view', [DirectorateController::class, 'view'])->name('directorate.view'); // View a single directorate
     Route::delete('/directorate/{directorate}/delete', [DirectorateController::class, 'delete'])->name('directorate.delete'); // Delete directorate
-    Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
     Route::get('/directorate/check-nama-directorate', [DirectorateController::class, 'checkNamaDirectorate'])->name('directorate.checkNamaDirectorate');
-
+    Route::get('/get-directorates-by-company', [DirectorateController::class, 'getDirectoratesByCompany'])->name('getDirectoratesByCompany');
 
     // DIVISION
     Route::get('/division', [DivisionController::class, 'index'])->name('division.index'); // View all divisions
@@ -104,8 +101,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/division/{division}/view', [DivisionController::class, 'view'])->name('division.view'); // View a single division
     Route::delete('/division/{division}/delete', [DivisionController::class, 'delete'])->name('division.delete'); // Delete division
     Route::get('/division/check-nama-division', [DivisionController::class, 'checkNamaDivision'])->name('division.checkNamaDivision');
-    Route::get('/get-directorates-by-company', [DivisionController::class, 'getDirectoratesByCompany'])->name('getDirectoratesByCompany');
-
 
     // DEPARTMENT
     Route::get('/department', [DepartmentController::class, 'index'])->name('department.index'); // View all departments
@@ -115,7 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/department/{department}', [DepartmentController::class, 'update'])->name('department.update'); // Update department
     Route::get('/department/{department}/view', [DepartmentController::class, 'view'])->name('department.view'); // View a single department
     Route::delete('/department/{department}/delete', [DepartmentController::class, 'delete'])->name('department.delete'); // Delete department
-
+    Route::get('/department/check-nama-department', [DepartmentController::class, 'checkNamaDepartment'])->name('department.checkNamaDepartment');
 
     // SECTION
     Route::get('/section', [SectionController::class, 'index'])->name('section.index'); // View all sections
@@ -125,6 +120,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/section/{section}', [SectionController::class, 'update'])->name('section.update'); // Update section
     Route::get('/section/{section}/view', [SectionController::class, 'view'])->name('section.view'); // View a single section
     Route::delete('/section/{section}/delete', [SectionController::class, 'delete'])->name('section.delete'); // Delete section
+    Route::get('/section/check-nama-section', [SectionController::class, 'checkNamaSection'])->name('section.checkNamaSection');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -132,10 +128,17 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::resource('pegawai', PegawaiController::class);
 
 Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('pegawai.view');
-
 Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
+// APPRAISAL
+Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
+Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
+Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
+Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
+Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
+Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
+Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index'); // View all appraisals
 
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
@@ -150,6 +153,9 @@ Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
+
+
+
 
 
 

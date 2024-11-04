@@ -6,205 +6,123 @@
     <title>Overtime - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Overtime</h2>
 
-            <!-- Search Bar and Actions -->
+            <!-- Search Bar and Create Overtime Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
-                <div class="flex items-center space-x-2">
-                    <div class="relative mt-1">
-                        <div class="absolute inset-y-0 flex items-center ps-3 pointer-events-none">
-                            {{-- <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg> --}}
-                        </div>
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
-                    <!-- Filter Options Here -->
+                <div class="relative mt-1 w-80">
+                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-                <div class="flex space-x-3 mb-4">
-                    @role('superadmin|admin|direct_superior|superior|hcs_dept_head|hc_div_head')
-                    <a href="{{ route('overtime.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        Buat SPL
-                    </a>
-                    @endrole
-                </div>
+
+                @role('superadmin|admin|direct_superior|superior|hcs_dept_head|hc_div_head')
+                <a href="{{ route('overtime.create') }}" class="flex items-center px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    Buat SPL
+                </a>
+                @endrole
             </div>
 
             <!-- Overtime Table -->
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
                 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
-                            {{-- <th scope="col" class="px-6 py-3">ID</th> --}}
-                            <th scope="col" class="px-6 py-3">NRP</th>
-                            <th scope="col" class="px-6 py-3">Name</th>
-                            <th scope="col" class="px-6 py-3">Request Date</th>
-                            <th scope="col" class="px-6 py-3">Start Time</th>
-                            <th scope="col" class="px-6 py-3">End Time</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">Actions</th>
+                            <th class="px-6 py-3">NRP</th>
+                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Request Date</th>
+                            <th class="px-6 py-3">Start Time</th>
+                            <th class="px-6 py-3">End Time</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($overtimes as $overtime)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            {{-- <td class="px-6 py-4">{{ $overtime->id }}</td> --}}
-                            <td class="px-6 py-4">{{ ($overtime->pegawai)->nrp ?? 'XX' }}</td>
-                            <td class="px-6 py-4">{{ optional($overtime->pegawai)->nama ?? 'Unknown' }}</td> <!-- Fix applied here -->
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">{{ optional($overtime->pegawai)->nrp ?? 'XX' }}</td>
+                            <td class="px-6 py-4">{{ optional($overtime->pegawai)->nama ?? 'Unknown' }}</td>
                             <td class="px-6 py-4">{{ $overtime->request_date }}</td>
                             <td class="px-6 py-4">{{ $overtime->start_time }}</td>
                             <td class="px-6 py-4">{{ $overtime->end_time }}</td>
                             <td class="px-6 py-4">{{ $overtime->status }}</td>
-                            @role('superadmin|admin|superior|hcs_dept_head|hc_div_head')
-                            <td class="flex px-6 py-4">
-                                <!-- View Icon -->
-                                <div class="relative" style="position: relative; display: inline-block;">
-                                    <a href="{{ route('overtime.show', $overtime->id) }}" class="text-blue-600 hover:text-blue-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </a>
-                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">View</span>
-                                </div>
-
-                                <!-- Edit Icon -->
-                                <div class="relative ml-4" style="position: relative; display: inline-block;">
-                                    <a href="{{ route('overtime.edit', $overtime->id) }}" class="text-blue-600 hover:text-blue-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                        </svg>
-                                    </a>
-                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Edit</span>
-                                </div>
-
-                                <!-- Delete Icon -->
-                                <div class="relative ml-4" style="position: relative; display: inline-block;">
-                                    <a href="#" class="text-red-600 hover:text-red-800" data-modal-target="deleteModal" data-url="{{ route('overtime.destroy', $overtime->id) }}" onclick="openDeleteModal(this)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                        </svg>
-                                    </a>
-                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Delete</span>
-                                </div>
+                            <td class="flex space-x-2 px-6 py-4">
+                                <a href="{{ route('overtime.show', $overtime->id) }}" class="text-blue-600 hover:text-blue-800" title="View">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </a>
+                                <a href="{{ route('overtime.edit', $overtime->id) }}" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                </a>
+                                <button type="button" class="text-red-600 hover:text-red-800" data-modal-target="#deleteModal" data-url="{{ route('overtime.destroy', $overtime->id) }}" onclick="openDeleteModal(this)" title="Delete">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                </button>
                             </td>
-                            @endrole
-
-                            @if(isset($overtime))
-                            @role('pegawai')
-                            <td class="flex px-6 py-4 space-x-2">
-                            @if ($overtime->status == 'Plan')
-                            <!-- Trigger Approve Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
-                                onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
-                            </button>
-
-                            <!-- Trigger Reject Modal -->
-                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                            </button>
-                            @else
-
-                            @endif
-                            @endrole
-                        @else
-                            <p> </p>
-                        @endif
-
-                        @if(isset($overtime))
-                            @role('direct_superior')
-                            <td class="flex px-6 py-4 space-x-2">
-                            @if ($overtime->status == 'Need Verification')
-                            <!-- Trigger Verification Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
-                                onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
-                            </button>
-
-                            <!-- Trigger Reject Modal -->
-                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                            </button>
-                            @else
-
-                            @endif
-                            @endrole
-                        @else
-                            <p> </p>
-                        @endif
-
-                        @if(isset($overtime))
-                            @role('hcs_dept_head')
-                            <td class="flex px-6 py-4 space-x-2">
-                            @if ($overtime->status == 'Need HC Approval')
-                            <!-- Trigger Confirmation Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
-                                onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
-                            </button>
-
-                            <!-- Trigger Reject Modal -->
-                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                            </button>
-                            @else
-
-                            @endif
-                            @endrole
-                        @else
-                            <p> </p>
-                        @endif
-
-
-                        </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0" aria-label="Table navigation">
-                {{ $overtimes->links() }}
+                        <!-- Pagination -->
+                        <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    of
+                    <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px" id="pagination-list">
+                    <li>
+                        <a href="#" id="prev-page" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li id="pagination-buttons" class="flex space"></li>
+                    <li>
+                        <a href="#" id="next-page" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M7.293 5.293a1 1 0 011.414 0L12.586 10l-3.879 3.707a1 1 0 01-1.414-1.414L10.586 10l-3.293-3.293a1 1 0 010-1.414z" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
             </nav>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-        <div class="relative top-1/4 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Are you sure?</h3>
-                <p class="mt-2 text-sm text-gray-500">Do you really want to delete this record? This process cannot be undone.</p>
-                <div class="mt-4">
-                    <button id="cancelButton" class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm" onclick="closeDeleteModal()">Cancel</button>
-                    <form id="deleteForm" action="" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="mt-2 px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-full shadow-sm">Delete</button>
-                    </form>
-                </div>
+    <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="relative p-5 bg-white rounded-lg shadow dark:bg-gray-700 w-96">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Are you sure?</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-300 mb-6">Do you really want to delete this record? This action cannot be undone.</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancelButton" class="px-4 py-2 bg-gray-500 text-white rounded-md" onclick="closeDeleteModal()">Cancel</button>
+                <form id="deleteForm" action="" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md">Delete</button>
+                </form>
             </div>
         </div>
     </div>
@@ -326,61 +244,39 @@
     </script>
     <script>
         function searchTable() {
-            let input, filter, table, tr, td, i, j, txtValue;
-            input = document.getElementById('table-search');
-            filter = input.value.toUpperCase();
-            table = document.querySelector('table');
-            tr = table.getElementsByTagName('tr');
+            const input = document.getElementById('table-search');
+            const filter = input.value.toUpperCase();
+            const table = document.querySelector('table');
+            const rows = table.querySelectorAll('tbody tr');
 
-            for (i = 1; i < tr.length; i++) {
-                tr[i].style.display = 'none';
-                td = tr[i].getElementsByTagName('td');
-                for (j = 0; j < td.length; j++) {
-                    if (td[j]) {
-                        txtValue = td[j].textContent || td[j].innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = '';
-                            break;
-                        }
-                    }
-                }
-            }
+            rows.forEach(row => {
+                const cells = Array.from(row.getElementsByTagName('td'));
+                const isVisible = cells.some(cell => cell.textContent.toUpperCase().includes(filter));
+                row.style.display = isVisible ? '' : 'none';
+            });
         }
-            function openDeleteModal(link) {
+
+        function openDeleteModal(link) {
             const modal = document.getElementById('deleteModal');
             const form = document.getElementById('deleteForm');
-            const url = link.getAttribute('data-url');
-            form.action = url;
+            form.action = link.getAttribute('data-url');
             modal.classList.remove('hidden');
         }
 
         function closeDeleteModal() {
-            const modal = document.getElementById('deleteModal');
-            modal.classList.add('hidden');
+            document.getElementById('deleteModal').classList.add('hidden');
         }
 
         document.getElementById('cancelButton').addEventListener('click', closeDeleteModal);
 
         function setApproveAction(action) {
-        // Set the action attribute of the approve form dynamically
-        document.getElementById('approveForm').action = action;
+            document.getElementById('approveForm').action = action;
         }
 
-        function setRejectAction(action) {
-            // Set the action attribute of the reject form dynamically
-            document.getElementById('rejectForm').action = action;
-        }
-        function setVerificationAction(action) {
-        // Set the action attribute of the verification form dynamically
-        document.getElementById('verificationForm').action = action;
-        }
-        function setConfirmationAction(action) {
-        // Set the action attribute of the confirmation form dynamically
-        document.getElementById('confirmationForm').action = action;
-        }
-
+        // Similar functions for setRejectAction, setVerificationAction, and setConfirmationAction
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>
+

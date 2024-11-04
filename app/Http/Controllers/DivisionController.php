@@ -13,7 +13,13 @@ class DivisionController extends Controller
 {
     public function index()
     {
-        $divisions = Division::all();
+        $divisions = Division::with('directorate')
+            ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id')
+            ->orderBy('directorates.nama_directorate', 'asc')
+            ->orderBy('divisions.nama_division', 'asc')
+            ->select('divisions.*')
+            ->get();
+
         return view('dashboard.division', compact('divisions'));
     }
 
@@ -37,7 +43,7 @@ class DivisionController extends Controller
 
         Division::create($request->all());
 
-        return redirect()->route('division.index')->with('success', 'Division berhasil dibuat!.');
+        return redirect()->route('division.index')->with('success', 'Division berhasil dibuat!');
     }
 
     public function view(Division $division)
@@ -53,12 +59,12 @@ class DivisionController extends Controller
     public function update(Request $request, Division $division)
     {
         $request->validate([
-            'nama_division' => 'required',
-            'directorate_id' => 'required|exists:directorates,id',
+            'nama_division' => 'required|unique:divisions,nama_division,' . $division->id,
         ]);
 
-        $division->update($request->all());
-
+        $division->update([
+            'nama_division' => $request->input('nama_division'),
+        ]);
         return redirect()->route('division.index')->with('success', 'Division berhasil di-update.');
     }
 
@@ -73,23 +79,14 @@ class DivisionController extends Controller
     {
         // Fetch the 'nama_division' from the request
         $nama_division = $request->query('nama_division');
+        $nama_directorate = $request->query('directorate_id');
 
         // Check if a division with the same 'nama_division' exists
-        $exists = Division::where('nama_division', $nama_division)->exists();
+        $exists = Division::where('nama_division', $nama_division)
+                            ->where('directorate_id', $nama_directorate)
+                            ->exists();
 
         // Return a JSON response with the result
         return response()->json(['exists' => $exists]);
-    }
-
-    public function getDirectoratesByCompany(Request $request)
-    {
-        // Fetch the 'company_id' from the request
-        $companyId = $request->query('company_id');
-
-        // Get the directorates associated with the selected company
-        $directorates = Directorate::where('company_id', $companyId)->get();
-
-        // Return a JSON response with the directorates
-        return response()->json(['directorates' => $directorates]);
     }
 }

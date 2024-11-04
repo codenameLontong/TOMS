@@ -16,6 +16,6 @@ class Division extends Model
 
     public function departments()
     {
-        return $this->hasMany(Department::class);
+        return $this->hasMany(Department::class)->orderBy('nama_department', 'asc');
     }
 }

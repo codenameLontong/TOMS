@@ -16,6 +16,6 @@ class Directorate extends Model
 
     public function divisions()
     {
-        return $this->hasMany(Division::class);
+        return $this->hasMany(Division::class)->orderBy('nama_division', 'asc');
     }
 }

@@ -13,7 +13,13 @@ class SectionController extends Controller
 {
     public function index()
     {
-        $sections = Section::all();
+        $sections = Section::with('department')
+            ->join('departments', 'sections.department_id', '=', 'departments.id')
+            ->orderBy('departments.nama_department', 'asc')
+            ->orderBy('sections.nama_section', 'asc')
+            ->select('sections.*')
+            ->get();
+
         return view('dashboard.section', compact('sections'));
     }
 
@@ -37,7 +43,7 @@ class SectionController extends Controller
 
         Section::create($request->all());
 
-        return redirect()->route('section.index')->with('success', 'Section berhasil dibuat!.');
+        return redirect()->route('section.index')->with('success', 'Section berhasil dibuat!');
     }
 
     public function view(Section $section)
@@ -53,12 +59,12 @@ class SectionController extends Controller
     public function update(Request $request, Section $section)
     {
         $request->validate([
-            'nama_section' => 'required',
-            'department_id' => 'required|exists:departments,id',
+            'nama_section' => 'required|unique:sections,nama_section,' . $section->id,
         ]);
 
-        $section->update($request->all());
-
+        $section->update([
+            'nama_section' => $request->input('nama_section'),
+        ]);
         return redirect()->route('section.index')->with('success', 'Section berhasil di-update.');
     }
 
@@ -67,5 +73,20 @@ class SectionController extends Controller
         $section->delete();
 
         return redirect()->route('section.index')->with('success', 'Section berhasil dihapus.');
+    }
+
+    public function checkNamaSection(Request $request)
+    {
+        // Fetch the 'nama_section' from the request
+        $nama_section = $request->query('nama_section');
+        $nama_department = $request->query('department_id');
+
+        // Check if a section with the same 'nama_section' exists
+        $exists = Section::where('nama_section', $nama_section)
+                            ->where('department_id', $nama_department)
+                            ->exists();
+
+        // Return a JSON response with the result
+        return response()->json(['exists' => $exists]);
     }
 }

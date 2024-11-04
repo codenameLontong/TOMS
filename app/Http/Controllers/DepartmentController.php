@@ -13,7 +13,13 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
+        $departments = Department::with('division')
+            ->join('divisions', 'departments.division_id', '=', 'divisions.id')
+            ->orderBy('divisions.nama_division', 'asc')
+            ->orderBy('departments.nama_department', 'asc')
+            ->select('departments.*')
+            ->get();
+
         return view('dashboard.department', compact('departments'));
     }
 
@@ -37,7 +43,7 @@ class DepartmentController extends Controller
 
         Department::create($request->all());
 
-        return redirect()->route('department.index')->with('success', 'Department berhasil dibuat!.');
+        return redirect()->route('department.index')->with('success', 'Department berhasil dibuat!');
     }
 
     public function view(Department $department)
@@ -53,12 +59,12 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $request->validate([
-            'nama_department' => 'required',
-            'division_id' => 'required|exists:divisions,id',
+            'nama_department' => 'required|unique:departments,nama_department,' . $department->id,
         ]);
 
-        $department->update($request->all());
-
+        $department->update([
+            'nama_department' => $request->input('nama_department'),
+        ]);
         return redirect()->route('department.index')->with('success', 'Department berhasil di-update.');
     }
 
@@ -67,5 +73,20 @@ class DepartmentController extends Controller
         $department->delete();
 
         return redirect()->route('department.index')->with('success', 'Department berhasil dihapus.');
+    }
+
+    public function checkNamaDepartment(Request $request)
+    {
+        // Fetch the 'nama_department' and 'division_id' from the request
+        $nama_department = $request->query('nama_department');
+        $nama_division = $request->query('division_id');
+
+        // Check if a department with the same 'nama_department' exists in the selected 'division_id'
+        $exists = Department::where('nama_department', $nama_department)
+                            ->where('division_id', $nama_division)
+                            ->exists();
+
+        // Return a JSON response with the result
+        return response()->json(['exists' => $exists]);
     }
 }

@@ -12,7 +12,8 @@ class UserSeeder extends Seeder
     {
         // Create Super Admin User
         $superAdmin = User::create([
-            'role_id' => '1',
+            'role_id' => 1,
+            'dept_id' => 1,
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
             'password' => bcrypt('password'),
@@ -22,7 +23,8 @@ class UserSeeder extends Seeder
 
         // Create Admin User
         $admin = User::create([
-            'role_id' => '2',
+            'role_id' => 2,
+            'dept_id' => 1,
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
@@ -32,7 +34,8 @@ class UserSeeder extends Seeder
 
         // Create Direct Superior User
         $directSuperior = User::create([
-            'role_id' => '3',
+            'role_id' => 3,
+            'dept_id' => 1,
             'name' => 'Direct Superior',
             'email' => 'directsuperior@example.com',
             'password' => bcrypt('password'),
@@ -42,7 +45,8 @@ class UserSeeder extends Seeder
 
         // Create Superior User
         $superior = User::create([
-            'role_id' => '4',
+            'role_id' => 4,
+            'dept_id' => 2,
             'name' => 'Superior',
             'email' => 'superior@example.com',
             'password' => bcrypt('password'),
@@ -52,7 +56,8 @@ class UserSeeder extends Seeder
 
         // Create HCS Dept Head User
         $hcsDeptHead = User::create([
-            'role_id' => '5',
+            'role_id' => 5,
+            'dept_id' => 2,
             'name' => 'HCS Dept Head',
             'email' => 'hcsdepthead@example.com',
             'password' => bcrypt('password'),
@@ -62,7 +67,8 @@ class UserSeeder extends Seeder
 
         // Create HC Div Head User
         $hcDivHead = User::create([
-            'role_id' => '6',
+            'role_id' => 6,
+            'dept_id' => 2,
             'name' => 'HC Div Head',
             'email' => 'hcdivhead@example.com',
             'password' => bcrypt('password'),
@@ -72,7 +78,8 @@ class UserSeeder extends Seeder
 
         // Create Pegawai User
         $pegawai = User::create([
-            'role_id' => '7',
+            'role_id' => 7,
+            'dept_id' => 1,
             'name' => 'Pegawai',
             'email' => 'pegawai@example.com',
             'password' => bcrypt('password'),
