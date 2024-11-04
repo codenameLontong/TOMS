@@ -225,6 +225,7 @@
               @csrf
               <div class="mb-3">
                   <label for="approved_note" class="form-label">Approval Note (Optional)</label>
+                  <p>{{ $overtime->approved_note ?? 'No approval note available' }}</p>
                   <textarea class="form-control" id="approved_note" name="approved_note" rows="3"></textarea>
               </div>
               <button type="submit" class="btn btn-success">Approve</button>
@@ -257,29 +258,36 @@
       </div>
     </div>
   </div>
-      <!-- Verification Modal -->
+ <!-- Verification Modal -->
 <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="verificationModalLabel">Verify Overtime</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verificationModalLabel">Verify Overtime</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display approved_note -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Approved Note:</label>
+                    <p id="approvedNoteText" class="text-muted">{{ $overtime->approved_note ?? 'No note available' }}</p>
+                </div>
+
+                <form action="" method="POST" id="verificationForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="verificationNote" class="form-label">Verification Note</label>
+                        <textarea class="form-control" id="verificationNote" name="verification_note" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Verify</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="" method="POST" id="verificationForm">
-              @csrf
-              <div class="mb-3">
-                  <label for="verification_note" class="form-label">Verify Note (Optional)</label>
-                  <textarea class="form-control" id="verification_note" name="verification_note" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-success">Verify</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
       <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">

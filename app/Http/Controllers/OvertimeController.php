@@ -210,19 +210,20 @@ class OvertimeController extends Controller
         $overtime = Overtime::findOrFail($id);
         $user = auth()->user(); // Logged-in pegawai
 
-        // Update overtime record with approved data
+        // Update the overtime record with approved data
         $overtime->update([
-            'escalation_approved_by' => auth()->user()->id,
+            'escalation_approved_by' => $user->id,
             'escalation_approved_at' => now(),
-            'escalation_approved_note' => request('verification_note'),
+            'escalation_approved_note' => request('verification_note'), // Ensure this is included in the request
             'escalation_approved_date' => $overtime->request_date,
             'escalation_approved_start_time' => $overtime->start_time,
             'escalation_approved_end_time' => $overtime->end_time,
-            'status' => 'Need HC Approval', // Or any status you'd prefer
+            'status' => 'Need HC Approval', // Update the status as needed
         ]);
 
         return redirect()->back()->with('success', 'Overtime approved successfully!');
     }
+
     public function confirm($id)
     {
         $overtime = Overtime::findOrFail($id);
