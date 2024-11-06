@@ -22,7 +22,7 @@
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-200 text-center">Jumlah Pegawai</h3>
                     </div>
                     <div class="flex-grow flex items-center justify-center">
-                        <p class="text-5xl font-bold text-gray-800 dark:text-white">1,234</p>
+                        <p class="text-5xl font-bold text-gray-800 dark:text-white">{{ $jumlahPegawai }}</p>
                     </div>
                 </div>
                 <!-- Card for Jumlah Vendor -->
@@ -31,7 +31,7 @@
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-200 text-center">Jumlah Vendor</h3>
                     </div>
                     <div class="flex-grow flex items-center justify-center">
-                        <p class="text-5xl font-bold text-gray-800 dark:text-white">1,234</p>
+                        <p class="text-5xl font-bold text-gray-800 dark:text-white">{{ $jumlahVendor }}</p>
                     </div>
                 </div>
                 <!-- Card for Overtime -->
@@ -57,13 +57,20 @@
             </div>
 
             <!-- Middle section with line chart -->
-            <div class="p-4 mb-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Total Jam Lembur Approve</h3>
+            <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
+                <div class="flex justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Jam Lembur Approve</h3>
+                    <select id="yearSelector" class="border border-gray-300 rounded px-2 py-1 text-gray-700 dark:bg-gray-700 dark:text-white">
+                        <option value="2023">2023</option>
+                        <option value="2024" selected>2024</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
                 <div id="lineChart"></div>
             </div>
 
             <!-- Second middle section with pie chart -->
-            <div class="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <div class="p-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
                 <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Appraisal Full Approve</h3>
                 <div id="pieChart"></div>
             </div>
@@ -72,10 +79,16 @@
 
     <script>
         // Line chart data
+        var chartData = {
+            2023: [30, 45, 50, 60, 70, 80, 85, 90, 100, 110, 120, 130],
+            2024: [50, 70, 80, 65, 90, 100, 120, 110, 95, 85, 105, 115],
+            2025: [40, 60, 75, 80, 85, 95, 105, 115, 120, 130, 140, 150]
+        };
+
         var optionsLine = {
             series: [{
                 name: 'Jam Lembur',
-                data: [50, 70, 80, 65, 90, 100, 120, 110, 95, 85, 105, 115] // dummy data
+                data: chartData[2024] // Default data for 2024
             }],
             chart: {
                 type: 'line',
@@ -88,6 +101,15 @@
 
         var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
         lineChart.render();
+
+        // Event listener for the year selector
+        document.getElementById('yearSelector').addEventListener('change', function() {
+            var selectedYear = this.value;
+            lineChart.updateSeries([{
+                name: 'Jam Lembur',
+                data: chartData[selectedYear] || []
+            }]);
+        });
 
         // Pie chart data
         var optionsPie = {
