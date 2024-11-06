@@ -16,69 +16,139 @@
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Overtime</h2>
-
+            <p>Role ID: {{ auth()->user()->role_id }}</p>
             <!-- Search Bar and Create Overtime Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                 <div class="relative mt-1 w-80">
                     <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
 
-                @role('superadmin|admin|direct_superior|superior|hcs_dept_head|hc_div_head')
+                @if(in_array(auth()->user()->role_id, [1, 2, 3, 4, 5, 6]))
                 <a href="{{ route('overtime.create') }}" class="flex items-center px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     Buat SPL
                 </a>
-                @endrole
+                @endif
             </div>
 
-            <!-- Overtime Table -->
-            <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
+               <!-- Overtime Table -->
+               <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th class="px-6 py-3">NRP</th>
-                            <th class="px-6 py-3">Name</th>
-                            <th class="px-6 py-3">Request Date</th>
-                            <th class="px-6 py-3">Start Time</th>
-                            <th class="px-6 py-3">End Time</th>
-                            <th class="px-6 py-3">Status</th>
-                            <th class="px-6 py-3">Actions</th>
+                            <th scope="col" class="px-6 py-3">NRP</th>
+                            <th scope="col" class="px-6 py-3">Name</th>
+                            <th scope="col" class="px-6 py-3">Request Date</th>
+                            <th scope="col" class="px-6 py-3">Start Time</th>
+                            <th scope="col" class="px-6 py-3">End Time</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($overtimes as $overtime)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ optional($overtime->pegawai)->nrp ?? 'XX' }}</td>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">{{ $overtime->pegawai->nrp ?? 'XX' }}</td>
                             <td class="px-6 py-4">{{ optional($overtime->pegawai)->nama ?? 'Unknown' }}</td>
                             <td class="px-6 py-4">{{ $overtime->request_date }}</td>
                             <td class="px-6 py-4">{{ $overtime->start_time }}</td>
                             <td class="px-6 py-4">{{ $overtime->end_time }}</td>
                             <td class="px-6 py-4">{{ $overtime->status }}</td>
-                            <td class="flex space-x-2 px-6 py-4">
-                                <a href="{{ route('overtime.show', $overtime->id) }}" class="text-blue-600 hover:text-blue-800" title="View">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                </a>
-                                <a href="{{ route('overtime.edit', $overtime->id) }}" class="text-blue-600 hover:text-blue-800" title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                    </svg>
-                                </a>
-                                <button type="button" class="text-red-600 hover:text-red-800" data-modal-target="#deleteModal" data-url="{{ route('overtime.destroy', $overtime->id) }}" onclick="openDeleteModal(this)" title="Delete">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                </button>
+
+                            <!-- Superadmin, admin, superior, hcs_dept_head, hc_div_head actions -->
+                            @if(in_array(auth()->user()->role_id, [1, 2]))
+                            <td class="flex px-6 py-4">
+                                <!-- View Icon -->
+                                <div class="relative" style="position: relative; display: inline-block;">
+                                    <a href="{{ route('overtime.show', $overtime->id) }}" class="text-blue-600 hover:text-blue-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
+                                    </a>
+                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">View</span>
+                                </div>
+
+                                <!-- Edit Icon -->
+                                <div class="relative ml-4" style="position: relative; display: inline-block;">
+                                    <a href="{{ route('overtime.edit', $overtime->id) }}" class="text-blue-600 hover:text-blue-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                        </svg>
+                                    </a>
+                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Edit</span>
+                                </div>
+
+                                <!-- Delete Icon -->
+                                <div class="relative ml-4" style="position: relative; display: inline-block;">
+                                    <a href="#" class="text-red-600 hover:text-red-800" data-modal-target="deleteModal" data-url="{{ route('overtime.destroy', $overtime->id) }}" onclick="openDeleteModal(this)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                    </a>
+                                    <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Delete</span>
+                                </div>
                             </td>
+                            @endif
+
+                            <!-- Pegawai actions -->
+                            @if(auth()->user()->role_id === 7 && $overtime->status === 'Plan')
+                            <td class="flex px-6 py-4 space-x-2">
+                                <!-- Trigger Approve Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
+                            onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
+                        </button>
+
+                        <!-- Trigger Reject Modal -->
+                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                        </button>
+                            </td>
+                            @endif
+
+                            <!-- Direct Superior & Superior actions (role_id 3 and 4) -->
+                            @if(in_array(auth()->user()->role_id, [3, 4]) && $overtime->status === 'Need Verification')
+                            <td class="flex px-6 py-4 space-x-2">
+                                 <!-- Trigger Verification Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
+                            onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
+                        </button>
+
+                        <!-- Trigger Reject Modal -->
+                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                        </button>
+                            </td>
+                            @endif
+
+                            <!-- HCS Dept Head actions -->
+                            @if(auth()->user()->role_id === 5 && $overtime->status === 'Need HC Approval')
+                            <td class="flex px-6 py-4 space-x-2">
+                                <!-- Trigger Confirmation Modal -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
+                            onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
+                        </button>
+
+                        <!-- Trigger Reject Modal -->
+                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                        </button>
+                            </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+
 
                         <!-- Pagination -->
                         <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
@@ -187,14 +257,14 @@
                 </button>
             </div>
             <div class="modal-body">
+                <form action="" method="POST" id="verificationForm">
+                    @csrf
                 <!-- Display approved_note -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Approved Note:</label>
                     <p id="approvedNoteText" class="text-muted">{{ $overtime->approved_note ?? 'No note available' }}</p>
                 </div>
 
-                <form action="" method="POST" id="verificationForm">
-                    @csrf
                     <div class="mb-3">
                         <label for="verificationNote" class="form-label">Verification Note</label>
                         <textarea class="form-control" id="verificationNote" name="verification_note" rows="3"></textarea>
@@ -272,6 +342,20 @@
         function setApproveAction(action) {
             document.getElementById('approveForm').action = action;
         }
+
+        function setRejectAction(url) {
+            document.getElementById('rejectForm').action = url;
+        }
+        function setVerificationAction(url) {
+            // Set the form action to the correct route
+            document.getElementById('verificationForm').action = url;
+        }
+        function setConfirmationAction(url) {
+            // Set the form action to the correct route
+            document.getElementById('confirmationForm').action = url;
+        }
+
+
 
         // Similar functions for setRejectAction, setVerificationAction, and setConfirmationAction
     </script>

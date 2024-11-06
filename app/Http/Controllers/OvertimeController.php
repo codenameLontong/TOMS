@@ -17,38 +17,43 @@ use Spatie\Permission\Models\Role;
 class OvertimeController extends Controller
 {
     public function index()
-    {
-        // Get the logged-in user's email and ID
-        $userEmail = auth()->user()->email;
-        $userId = auth()->user()->id;
+{
+    // Get the logged-in user's ID, email, role_id, and dept_id
+    $user = auth()->user();
+    $userId = $user->id;
+    $userEmail = $user->email;
+    $userRoleId = $user->role_id;
 
-        // Check if the user is the special user with ID 5
-        if ($userId == 5) {
-            // For user with ID 5, show only overtimes with statuses 'Need HC Approval' and 'Confirmed'
-            $overtimes = Overtime::with('pegawai')
-                ->where('is_deleted', false)
-                ->whereIn('status', ['Need HC Approval', 'Confirmed']) // Include both statuses
-                ->paginate(10);
-        } elseif (!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('admin')) {
-            // For regular users who are not superadmin/admin, apply email and order_by conditions
-            $overtimes = Overtime::with('pegawai')
-                ->where('is_deleted', false)
-                ->where(function ($query) use ($userEmail, $userId) {
-                    $query->whereHas('pegawai', function ($subQuery) use ($userEmail) {
-                        $subQuery->where('alamat_email', $userEmail);
-                    })
-                    ->orWhere('order_by', $userId); // Check if order_by matches the logged-in user's ID
+    // Check if the user is the special user with role 'hcs_dept_head' (role_id 5)
+    if ($userRoleId == 5) {
+        // For 'hcs_dept_head', show only overtimes with statuses 'Need HC Approval' and 'Confirmed'
+        $overtimes = Overtime::with('pegawai')
+            ->where('is_deleted', false)
+            ->whereIn('status', ['Need HC Approval', 'Confirmed']) // Include both statuses
+            ->paginate(10);
+    } elseif (!in_array($userRoleId, [1, 2])) { // For non-superadmin (role_id 1) and admin (role_id 2)
+        // Regular users who are not superadmin/admin, apply email and order_by conditions
+        $overtimes = Overtime::with('pegawai')
+            ->where('is_deleted', false)
+            ->where(function ($query) use ($userEmail, $userId) {
+                $query->whereHas('pegawai', function ($subQuery) use ($userEmail) {
+                    $subQuery->where('alamat_email', $userEmail);
                 })
-                ->paginate(10);
-        } else {
-            // For superadmin/admin users, show all non-deleted overtimes
-            $overtimes = Overtime::with('pegawai')
-                ->where('is_deleted', false)
-                ->paginate(10);
-        }
-
-        return view('dashboard.overtime', compact('overtimes'));
+                ->orWhere('order_by', $userId); // Check if order_by matches the logged-in user's ID
+            })
+            ->paginate(10);
+    } elseif (auth()->user()->role_id === 3 || auth()->user()->role_id === 4) {
+        $overtimes = Overtime::where('status', 'Need Verification')->get();
+    } else {
+        // For superadmin/admin users, show all non-deleted overtimes
+        $overtimes = Overtime::with('pegawai')
+            ->where('is_deleted', false)
+            ->paginate(10);
     }
+
+    return view('dashboard.overtime', compact('overtimes'));
+}
+
 
 
 

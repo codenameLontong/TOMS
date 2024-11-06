@@ -42,6 +42,16 @@ class UserSeeder extends Seeder
         ]);
         // Assign the direct_superior role to this user
         $directSuperior->assignRole('direct_superior');
+        // Create Direct Superior User
+        $directSuperior = User::create([
+            'role_id' => 3,
+            'dept_id' => 4,
+            'name' => 'Direct Superior 4',
+            'email' => 'directsuperior4@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        // Assign the direct_superior role to this user
+        $directSuperior->assignRole('direct_superior');
 
         // Create Superior User
         $superior = User::create([
