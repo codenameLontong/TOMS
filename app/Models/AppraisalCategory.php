@@ -17,6 +17,6 @@ class AppraisalCategory extends Model
         'id',
         'title',
         'description',
-        'isactive'
+        'isactive',
     ];
 }

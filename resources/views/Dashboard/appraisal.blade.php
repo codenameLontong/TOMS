@@ -11,115 +11,79 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Appraisal</h2>
 
-            <!-- Search Bar and Actions -->
+            <!-- Search Bar and Add Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
-                <div class="flex items-center space-x-2">
-                    <div class="relative mt-1">
-                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
-                        </div>
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
-                    <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                <div class="relative mt-1">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
-                        Filter
-                    </button>
-                    <div id="filterDropdown" class="hidden z-10 w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose Division</h6>
-                        <ul class="space-y-2 text-sm">
-                            <li class="flex items-center">
-                                <input id="hr" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="hr" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">HR</label>
-                            </li>
-                            <li class="flex items-center">
-                                <input id="it" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="it" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">IT</label>
-                            </li>
-                            <li class="flex items-center">
-                                <input id="finance" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600">
-                                <label for="finance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Finance</label>
-                            </li>
-                        </ul>
                     </div>
+                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-            </div>
-            <div class="flex space-x-3 mb-4">
+                <div class="flex space-x-3" @if($role == 7) style="display:none;" @else "" @endif>
                     <a href="{{ route('appraisal.create') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         Tambah Appraisal
                     </a>
                 </div>
             </div>
-            <!-- Appraisal Table -->
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table id="pegawaiTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
+            <!-- Appraisal Table-->
+            <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
+                <table id="appraisalTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
-                            <th class="px-6 py-3">NRP</th>
-                            <th class="px-6 py-3">Nama</th>
-                            <th class="px-6 py-3">COY</th>
-                            <th class="px-6 py-3">Cabang</th>
-                            <th class="px-6 py-3">Jabatan</th>
-                            <th class="px-6 py-3">Department</th>
+                            <th class="px-6 py-3">ID</th>
+                            <th class="px-6 py-3">Periode Appraisal</th>
+                            <th class="px-6 py-3">Created At</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Pegawai_Fill_At</th>
+                            <th class="px-6 py-3">Superior_Fill_At</th>
+                            <th class="px-6 py-3">Rata-Rata</th>
+                            <th class="px-6 py-3">Nilai_Akhir</th>
                             <th class="px-6 py-3">Actions</th>
-                            <th class="px-6 py-3">Periode</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!--@foreach($appraisals as $appraisal)-->
+                        @foreach($appraisals as $appraisal)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ $pegawai->nrp }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->nama }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->coy }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->cabang }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->jabatan }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->department }}</td>
-                            <td class="flex px-6 py-4">
-                                <a href="{{ route('pegawai.view', $pegawai->id) }}" class="text-blue-600 hover:text-blue-800">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                </a>
-                                <a href="{{ route('pegawai.showupdate', $pegawai->id) }}" class="text-blue-600 hover:text-blue-800 ml-4">
+                            <td class="px-6 py-4">{{ $appraisal->id }}</td>
+                            <td class="px-6 py-4">{{ $appraisal->appraisal_period }}</td>
+                            <td class="px-6 py-4">{{ $appraisal->created_at }}</td>
+                            <td class="px-6 py-4">@if($appraisal->appraisal_status==1) Aktif @else Tidak Aktif @endif</td>
+                            <td class="px-6 py-4">{{ $appraisal->pegawai_fill_at }}</td>
+                            <td class="px-6 py-4">{{ $appraisal->superior_approved_at }}</td>
+                            <td class="px-6 py-4">{{ $appraisal->rata_rata }}</td>
+                            <td class="px-6 py-4">{{ $appraisal->nilai_final }}</td>
+                            @if($role == 7)
+                            <td class="px-6 py-4 flex justify-center">
+                                <a href="{{ route('appraisal.createappraisalemployee', $appraisal->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                     </svg>
                                 </a>
-                                <a href="{{ route('pegawai.mutasi', $pegawai->id) }}" class="text-red-600 hover:text-red-800 ml-4">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                                    </svg>
-                                </a>
-                                <a href="" class="text-red-600 hover:text-red-800 ml-4" data-modal-target="terminateModal-{{ $pegawai->id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                </a>
                             </td>
+                            @endif
                         </tr>
-                        <!--@endforeach-->
+                        @endforeach
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination -->
-            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    <span id="current-range" class="font-semibold text-gray-900 dark:text-white">1-10</span>
                     of
-                    <span class="font-semibold text-gray-900 dark:text-white">100</span>
+                    <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
@@ -138,9 +102,6 @@
                     </li>
                     <li>
                         <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">...</a>
                     </li>
                     <li>
                         <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
@@ -177,7 +138,7 @@
         function searchTable() {
             const input = document.getElementById('table-search');
             const filter = input.value.toLowerCase();
-            const table = document.getElementById('pegawaiTable');
+            const table = document.getElementById('appraisalTable');
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 1; i < rows.length; i++) {
@@ -196,21 +157,62 @@
         }
 
         document.querySelectorAll('[data-dismiss-target]').forEach((button) => {
-        button.addEventListener('click', function () {
-            const target = document.querySelector(this.getAttribute('data-dismiss-target'));
-            if (target) {
-                target.classList.add('hidden');
-            }
+            button.addEventListener('click', function () {
+                const target = document.querySelector(this.getAttribute('data-dismiss-target'));
+                if (target) {
+                    target.classList.add('hidden');
+                }
             });
         });
 
-    // Automatically hide the toast after 3 seconds (3000 milliseconds)
+        // Automatically hide the toast after 4 seconds
         setTimeout(() => {
             const toast = document.getElementById('toast-success');
             if (toast) {
                 toast.classList.add('hidden');
             }
         }, 4000);
+
+        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Change the icons inside the button based on previous settings
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        var themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function() {
+
+            // toggle icons inside button
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+
+            // if NOT set via local storage previously
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

@@ -20,15 +20,12 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
 
     Route::get('/password/update', [PegawaiController::class, 'showUpdatePassword'])->name('password.showUpdatePassword');
     Route::put('/password/update', [PegawaiController::class, 'updatePassword'])->name('password.updatePassword');
@@ -131,14 +128,24 @@ Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('
 Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
-// APPRAISAL
+
+//APPRAISAL
+Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index');
 Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
 Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
 Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
 Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
 Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
 Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
-Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index'); // View all appraisals
+Route::post('/appraisal/storeappraisal', [AppraisalController::class, 'storeappraisal'])->name('appraisal.storeappraisal');
+Route::get('/appraisal/{appraisal}/createappraisalemployee', [AppraisalController::class, 'createappraisalemployee'])->name('appraisal.createappraisalemployee');
+Route::post('/appraisal/storeappraisalemployee', [AppraisalController::class, 'storeappraisalemployee'])->name('appraisal.storeappraisalemployee');
+Route::get('/appraisal/{appraisal}/showappraisalemployee', [AppraisalController::class, 'createappraisalemployee'])->name('appraisal.showappraisalemployee');
+Route::get('/appraisal/{appraisalsEmployee}/updateappraisalemployee', [AppraisalController::class, 'updateappraisalemployee'])->name('appraisal.updateappraisalemployee');
+
+Route::put('appraisal/{appraisal}/updateappraisalitem', [AppraisalController::class, 'updateappraisalitem'])->name('appraisal.updateappraisalitem');
+
+
 
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
