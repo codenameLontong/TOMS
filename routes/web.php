@@ -141,9 +141,16 @@ Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('a
 Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
 Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
 Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
-
 Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
 Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
+Route::post('/appraisal/storeappraisal', [AppraisalController::class, 'storeappraisal'])->name('appraisal.storeappraisal');
+Route::get('/appraisal/{appraisal}/createappraisalemployee', [AppraisalController::class, 'createappraisalemployee'])->name('appraisal.createappraisalemployee');
+Route::post('/appraisal/storeappraisalemployee', [AppraisalController::class, 'storeappraisalemployee'])->name('appraisal.storeappraisalemployee');
+Route::get('/appraisal/{appraisal}/showappraisalemployee', [AppraisalController::class, 'createappraisalemployee'])->name('appraisal.showappraisalemployee');
+Route::get('/appraisal/{appraisalsEmployee}/updateappraisalemployee', [AppraisalController::class, 'updateappraisalemployee'])->name('appraisal.updateappraisalemployee');
+
+Route::put('appraisal/{appraisal}/updateappraisalitem', [AppraisalController::class, 'updateappraisalitem'])->name('appraisal.updateappraisalitem');
+
 
 
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');

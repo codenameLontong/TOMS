@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 
 
-class AppraisalCategory extends Model
+class AppraisalScore extends Model
 {
     use HasFactory;
 
-    protected $table = 'appraisals_category'; // Ganti jika tabelmu memiliki nama berbeda
+    protected $table = 'appraisals_score'; // Ganti jika tabelmu memiliki nama berbeda
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'title',
-        'description',
-        'isactive',
+        'min',
+        'max',
+        'score_value',
     ];
 }
