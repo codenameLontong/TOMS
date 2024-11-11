@@ -16,7 +16,6 @@
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Overtime</h2>
-            <p>Role ID: {{ auth()->user()->role_id }}</p>
             <!-- Search Bar and Create Overtime Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                 <div class="relative mt-1 w-80">
@@ -109,7 +108,6 @@
                         </button>
                             </td>
                             @endif
-
                             <!-- Direct Superior & Superior actions (role_id 3 and 4) -->
                             @if(in_array(auth()->user()->role_id, [3, 4]) && $overtime->status === 'Need Verification')
                             <td class="flex px-6 py-4 space-x-2">

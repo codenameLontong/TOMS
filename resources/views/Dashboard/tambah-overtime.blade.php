@@ -39,7 +39,7 @@
                         <button id="clear-search" class="bg-red-500 text-white px-4 py-2 rounded-lg ml-2 mt-5">Clear</button>
                     </div>
                     <ul id="search-results" class="bg-white border border-gray-300 rounded-lg mt-2 w-full hidden"></ul>
-                </div>
+                    </div>
 
                 <!-- Loading Spinner -->
                 <div id="loading-spinner" class="hidden flex justify-center items-center mt-4">
@@ -125,8 +125,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Function to check if "Name" field is filled and hide search results
+            function checkNameField() {
+                if ($('#nama').val().trim().length > 0) {
+                    $('#search-results').empty().addClass('hidden');
+                    return true;
+                }
+                return false;
+            }
+
+            // Listen for keyup event on search input
             $('#search').on('keyup', function() {
                 var query = $(this).val();
+
+                // Check if "Name" field is filled and hide results
+                if (checkNameField()) {
+                    return;
+                }
+
+                // Display search results only if query is at least 2 characters long
                 if (query.length >= 2) {
                     $('#loading-spinner').removeClass('hidden');
                     $.ajax({
@@ -135,6 +152,12 @@
                         data: { query: query },
                         success: function(response) {
                             $('#loading-spinner').addClass('hidden');
+
+                            // Double-check if "Name" field is filled after the AJAX call
+                            if (checkNameField()) {
+                                return;
+                            }
+
                             $('#search-results').empty().removeClass('hidden');
                             if (response.length > 0) {
                                 $.each(response, function(index, pegawai) {
@@ -183,6 +206,9 @@
             });
         });
         </script>
+
+
+
 
 
 </body>

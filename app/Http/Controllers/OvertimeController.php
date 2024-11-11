@@ -54,9 +54,6 @@ class OvertimeController extends Controller
     return view('dashboard.overtime', compact('overtimes'));
 }
 
-
-
-
     public function create()
     {
         // Fetch only active reasons (is_active = true)
@@ -125,19 +122,19 @@ class OvertimeController extends Controller
         return redirect()->route('overtime.index')->with('success', 'Overtime data marked as deleted.');
     }
     public function search(Request $request)
-{
-    $query = $request->input('query');
+    {
+        $query = $request->input('query');
 
-    // Fetch pegawais where employment_status is active
-    $pegawais = Pegawai::where('employment_status', 'active')
-        ->where(function ($queryBuilder) use ($query) {
-            $queryBuilder->where('nrp', 'LIKE', "%{$query}%")
-                         ->orWhere('nama', 'LIKE', "%{$query}%");
-        })
-        ->get(['id', 'nrp', 'nama', 'department', 'division', 'alamat_email']);
+        // Fetch pegawais where employment_status is active
+        $pegawais = Pegawai::where('employment_status', 'active')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('nrp', 'LIKE', "%{$query}%")
+                            ->orWhere('nama', 'LIKE', "%{$query}%");
+            })
+            ->get(['id', 'nrp', 'nama', 'department', 'division', 'alamat_email']);
 
-    return response()->json($pegawais);
-}
+        return response()->json($pegawais);
+    }
 
 
     public function show($id)
