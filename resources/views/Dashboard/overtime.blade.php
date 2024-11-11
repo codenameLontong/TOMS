@@ -35,6 +35,7 @@
                     </div>
                     <!-- Filter Options Here -->
                 </div>
+            
                 <div class="flex space-x-3 mb-4">
                     @role('superadmin|admin|direct_superior|superior|hcs_dept_head|hc_div_head')
                     <a href="{{ route('overtime.create') }}" class="flex items-center px-3 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
@@ -370,6 +371,75 @@
         // Set the action attribute of the confirmation form dynamically
         document.getElementById('confirmationForm').action = action;
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dropdown toggle for export options
+            document.getElementById('exportDropdownButton').addEventListener('click', function () {
+                const dropdown = document.getElementById('exportDropdown');
+                dropdown.classList.toggle('hidden');
+            });
+
+            // Export XLSX functionality (excluding "Actions" column)
+            document.getElementById('export-xlsx').addEventListener('click', function () {
+                const table = document.getElementById('pegawaiTable');
+                // Create a new table array excluding the last column (Actions column)
+                const data = [];
+                const rows = table.querySelectorAll('tr');
+
+                rows.forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td, th').forEach((cell, index) => {
+                        if (index !== row.cells.length - 1) { // Exclude last column (Actions)
+                            rowData.push(cell.innerText);
+                        }
+                    });
+                    data.push(rowData);
+                });
+
+                // Create the workbook and worksheet
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, 'Pegawai Data');
+
+                // Export the XLSX file
+                XLSX.writeFile(wb, 'Pegawai_Export.xlsx');
+            });
+
+            document.getElementById('export-pdf').addEventListener('click', function () {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Get the table element
+                const table = document.getElementById('pegawaiTable');
+
+                // Define the columns to be included (all except the last one, assuming "Actions" is the last column)
+                const columnsToInclude = Array.from(table.querySelectorAll('thead th')).map((th, index) => {
+                    if (index !== 6) { // Exclude the "Actions" column (index 6)
+                        return th.innerText;
+                    }
+                }).filter(Boolean);
+
+                // Extract table data and exclude the "Actions" column from each row
+                const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+                    return Array.from(row.querySelectorAll('td')).map((td, index) => {
+                        if (index !== 6) { // Exclude the "Actions" column (index 6)
+                            return td.innerText;
+                        }
+                    }).filter(Boolean);
+                });
+
+                // Generate the PDF with autoTable
+                doc.autoTable({
+                    head: [columnsToInclude],
+                    body: rows,
+                    theme: 'grid',
+                    styles: { fontSize: 10 },
+                    margin: { top: 10 },
+                });
+
+                doc.save('Pegawai_Export.pdf');
+            });
+        });
 
     </script>
 

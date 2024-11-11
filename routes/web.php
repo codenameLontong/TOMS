@@ -33,11 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/password/update', [PegawaiController::class, 'showUpdatePassword'])->name('password.showUpdatePassword');
     Route::put('/password/update', [PegawaiController::class, 'updatePassword'])->name('password.updatePassword');
 
-
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
     Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
-
 
     Route::get('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'mutasi'])->name('pegawai.mutasi');
     Route::put('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'updateMutasi'])->name('pegawai.updateMutasi');
@@ -130,20 +128,17 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::resource('pegawai', PegawaiController::class);
 
 Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('pegawai.view');
-
 Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
-
-
+// APPRAISAL
 Route::get('/appraisal/create', [AppraisalController::class, 'create'])->name('appraisal.create');
 Route::get('/appraisal/category', [AppraisalController::class, 'category'])->name('appraisal.category');
 Route::get('/appraisal/createcategory', [AppraisalController::class, 'createcategory'])->name('appraisal.createcategory');
 Route::post('/appraisal/storecategory', [AppraisalController::class, 'storecategory'])->name('appraisal.storecategory');
-
 Route::put('appraisal/{appraisalcategorys}/updatecategory', [AppraisalController::class, 'updatecategory'])->name('appraisal.updatecategory');
 Route::get('/appraisal/{appraisalcategorys}/showupdatecategory', [AppraisalController::class, 'showupdatecategory'])->name('appraisal.showupdatecategory');
-
+Route::get('/appraisal', [AppraisalController::class, 'index'])->name('appraisal.index'); // View all appraisals
 
 Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show']);
@@ -159,11 +154,7 @@ Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
 
+    
 
 
-
-
-
-
-
-require __DIR__ . '/auth.php';
+require __DIR__. '/auth.php';
