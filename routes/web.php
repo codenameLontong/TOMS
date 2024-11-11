@@ -20,24 +20,19 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/superadmin/dashboard', [HomeController::class, 'index'])->name('superadmin.dashboard');
 
     Route::get('/password/update', [PegawaiController::class, 'showUpdatePassword'])->name('password.showUpdatePassword');
     Route::put('/password/update', [PegawaiController::class, 'updatePassword'])->name('password.updatePassword');
 
-
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/check-email', [PegawaiController::class, 'checkEmail'])->name('pegawai.checkEmail');
     Route::get('/pegawai/showimport', [PegawaiController::class, 'showimport'])->name('pegawai.showimport');
-
 
     Route::get('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'mutasi'])->name('pegawai.mutasi');
     Route::put('pegawai/{pegawai}/mutasi', [PegawaiController::class, 'updateMutasi'])->name('pegawai.updateMutasi');
@@ -130,7 +125,6 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::resource('pegawai', PegawaiController::class);
 
 Route::get('pegawai/{pegawai}/view', [PegawaiController::class, 'view'])->name('pegawai.view');
-
 Route::get('pegawai/{pegawai}/update', [PegawaiController::class, 'showupdate'])->name('pegawai.showupdate');
 Route::put('pegawai/{pegawai}/update', [PegawaiController::class, 'update'])->name('pegawai.update');
 
