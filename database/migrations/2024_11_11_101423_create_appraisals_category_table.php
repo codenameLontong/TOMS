@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('appraisals_category', function (Blueprint $table) {
-            $table->id();
+            $table->id();  // Automatically creates an `unsignedBigInteger` primary key
             $table->string('title');
             $table->string('description');
             $table->boolean('isactive')->default(1);
