@@ -58,6 +58,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'dept_id',
+        'pegawai_id',
     ];
 
     /**
@@ -81,5 +82,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+        /**
+     * Define the relationship between User and Pegawai.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
     }
 }

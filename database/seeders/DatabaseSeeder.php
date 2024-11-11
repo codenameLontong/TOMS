@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             StructureSeeder::class,
             UserSeeder::class,
+            TypeCoaSeeder::class,
         ]);
     }
 }

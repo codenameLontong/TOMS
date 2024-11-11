@@ -117,6 +117,7 @@ class PegawaiImport implements ToCollection
             'email' => $pegawai->alamat_email,
             'password' => bcrypt('password'),  // Default password
             'dept_id' => $department->id, // Set dept_id based on the retrieved department ID
+            'pegawai_id' => $pegawai->id, // Set the user's pegawai_id
         ]);
 
         // Assign the "pegawai" role to the user

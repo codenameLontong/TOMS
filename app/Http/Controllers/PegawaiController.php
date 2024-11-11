@@ -176,8 +176,10 @@ class PegawaiController extends Controller
                 'email' => $pegawai->alamat_email,
                 'password' => bcrypt('password'),  // Default password, hashed
                 'dept_id' => $department->id, // Set dept_id from the Pegawai record
+                'pegawai_id' => $pegawai->id, // Link User to Pegawai
             ]);
 
+            
             // Assign the 'pegawai' role to the user
             $pegawaiRole = Role::where('name', 'pegawai')->first();
             $user->assignRole($pegawaiRole);
@@ -197,7 +199,6 @@ class PegawaiController extends Controller
 
         }
     }
-
 
     public function view(Pegawai $pegawai)
     {
@@ -401,6 +402,7 @@ class PegawaiController extends Controller
                         'email' => $pegawai->alamat_email,
                         'password' => bcrypt('password'), // Default password
                         'dept_id' => $department->id, // Set dept_id from the retrieved department ID
+                        'pegawai_id' => $pegawai->id, // Link User to Pegawai
                     ]);
 
                     // Assign the "pegawai" role to the new User
@@ -418,7 +420,59 @@ class PegawaiController extends Controller
         }
     }
 
+    public function terminate(Request $request, Pegawai $pegawai)
+    {
+        try {
+            // Store the original state before updating the pegawai
+            $originalData = $pegawai->getOriginal();
 
+            // Update the employment status to 'terminated'
+            $pegawai->employment_status = 'terminated';
+            $pegawai->save();
+
+            // Find the related user by the email of the pegawai, if it exists
+            $user = \App\Models\User::where('email', $pegawai->alamat_email)->first();
+
+            // If a user exists in the 'users' table, set 'active' to false
+            if ($user) {
+                $user->active = false;
+                $user->remember_token = null; // Clear remember token
+                $user->save();
+            }
+
+            // Detect the changes for logging in the history
+            $changedAttributes = [];
+            foreach ($pegawai->getChanges() as $key => $newValue) {
+                if (isset($originalData[$key]) && $originalData[$key] != $newValue) {
+                    $changedAttributes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from {$originalData[$key]} to {$newValue}";
+                }
+            }
+
+            // Build the description based on changed fields
+            $description = implode(', ', $changedAttributes);
+
+            if (!empty($description)) {
+                // Log the termination action in PegawaiHistory
+                PegawaiHistory::create([
+                    'pegawai_nrp' => $pegawai->nrp,  // Connect with pegawai using NRP
+                    'action_type' => 'termination',
+                    'description' => $description,
+                    'user_id' => auth()->id(), // Record the user who performed the action
+                    'action_date' => now(),    // Record the current date/time of the action
+                ]);
+            }
+
+            // Redirect back with success message
+            return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dinonaktifkan.');
+
+        } catch (\Exception $e) {
+            // Catch any errors and dump the error message for debugging
+            dd($e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'Failed to terminate the Pegawai. Please try again.');
+        }
+    }
 
     public function checkEmail(Request $request)
     {
@@ -455,7 +509,4 @@ class PegawaiController extends Controller
             dd($e->getMessage(), $e->getFile(), $e->getLine());
         }
     }
-
-
-
 }
