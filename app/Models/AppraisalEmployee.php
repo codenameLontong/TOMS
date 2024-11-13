@@ -14,7 +14,7 @@ class AppraisalEmployee extends Model
     protected $fillable = [
         'id',
         'id_appraisal',
-        'id_pegawai',
+        'pegawai_id',
         'appraisal_period',
         'created_at',
         'appraisal_status',

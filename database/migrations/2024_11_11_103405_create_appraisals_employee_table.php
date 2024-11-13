@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('appraisals_employee', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->unsignedBigInteger('id_appraisal'); // Foreign key to appraisals table
-            $table->unsignedBigInteger('id_pegawai'); // Foreign key to employees table, or another appropriate table
+            $table->unsignedBigInteger('pegawai_id'); // Foreign key to employees table, or another appropriate table
             $table->string('appraisal_period'); // Appraisal period
-            $table->timestamp('created_at')->nullable(); // Created at timestamp
+            $table->timestamp('created_at'); // Created at timestamp
             $table->string('appraisal_status'); // Status of the appraisal
-            $table->timestamp('pegawai_fill_at')->nullable(); // Timestamp when filled by employee
-            $table->timestamp('superior_approved_at')->nullable(); // Timestamp when approved by superior
+            $table->timestamp('pegawai_fill_at'); // Timestamp when filled by employee
+            $table->timestamp('superior_approved_at'); // Timestamp when approved by superior
             $table->integer('rata_rata')->nullable(); // Average rating (adjust scale as necessary)
             $table->string('nilai_final')->nullable(); // Final score (adjust scale as necessary)
 
@@ -26,7 +26,7 @@ return new class extends Migration
                   ->on('appraisals')
                   ->onDelete('cascade'); // Cascade delete if an appraisal is deleted
 
-            $table->foreign('id_pegawai')
+            $table->foreign('pegawai_id')
                   ->references('id')
                   ->on('pegawais') // Change 'employees' to the actual related table
                   ->onDelete('cascade'); // Cascade delete if an employee is deleted

@@ -54,7 +54,7 @@
                             <td class="px-6 py-4">{{ $appraisalsEmployee->superior_approved_at }}</td>
                             <td class="px-6 py-4">{{ $appraisalsEmployee->rata_rata }}</td>
                             <td class="px-6 py-4">{{ $appraisalsEmployee->nilai_final }}</td>
-                            @if($role == 4)
+                            @if($role == 3)
                             <td class="px-6 py-4 flex justify-center">
                                 <a href="{{ route('appraisal.updateappraisalemployee', $appraisalsEmployee->id_appraisal_employee) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

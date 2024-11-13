@@ -43,12 +43,15 @@
                             <th class="px-6 py-3">ID</th>
                             <th class="px-6 py-3">Periode Appraisal</th>
                             <th class="px-6 py-3">Created At</th>
-                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Status Appraisal</th>
+                            @if($role == 7)
                             <th class="px-6 py-3">Pegawai_Fill_At</th>
                             <th class="px-6 py-3">Superior_Fill_At</th>
                             <th class="px-6 py-3">Rata-Rata</th>
                             <th class="px-6 py-3">Nilai_Akhir</th>
+                            <th class="px-6 py-3">Status Pengajuan</th>
                             <th class="px-6 py-3">Actions</th>
+                        @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -58,11 +61,14 @@
                             <td class="px-6 py-4">{{ $appraisal->appraisal_period }}</td>
                             <td class="px-6 py-4">{{ $appraisal->created_at }}</td>
                             <td class="px-6 py-4">@if($appraisal->appraisal_status==1) Aktif @else Tidak Aktif @endif</td>
+                            @if($role == 7)
                             <td class="px-6 py-4">{{ $appraisal->pegawai_fill_at }}</td>
                             <td class="px-6 py-4">{{ $appraisal->superior_approved_at }}</td>
                             <td class="px-6 py-4">{{ $appraisal->rata_rata }}</td>
                             <td class="px-6 py-4">{{ $appraisal->nilai_final }}</td>
-                            @if($role == 7)
+                            
+                            @if($appraisal->pegawai_fill_at == 0)
+                            <td class="px-6 py-4">Open</td>
                             <td class="px-6 py-4 flex justify-center">
                                 <a href="{{ route('appraisal.createappraisalemployee', $appraisal->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -70,6 +76,10 @@
                                     </svg>
                                 </a>
                             </td>
+                            @else
+                            <td class="px-6 py-4">{{ $appraisal->appraisal_status_name }}</td>
+                            <td class="px-6 py-4"></td>
+                            @endif
                             @endif
                         </tr>
                         @endforeach
