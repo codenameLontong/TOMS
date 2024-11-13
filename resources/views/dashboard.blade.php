@@ -1,3 +1,5 @@
+DASHBOARD MAP
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pegawai - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
@@ -17,25 +21,27 @@
             <!-- First row of the grid -->
             <div class="grid grid-cols-3 gap-4 mb-4">
                 <!-- Card for Jumlah Pegawai -->
-                <div class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                <a href="{{ route('pegawai.index') }}" class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow">
                     <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-indigo-100 dark:bg-indigo-800 rounded-t-lg">
                         <h3 class="text-sm font-medium text-indigo-800 dark:text-indigo-200 text-center">Jumlah Pegawai</h3>
                     </div>
                     <div class="flex-grow flex items-center justify-center">
                         <p class="text-5xl font-bold text-indigo-900 dark:text-indigo-300">{{ $jumlahPegawai }}</p>
                     </div>
-                </div>
+                </a>
+
                 <!-- Card for Jumlah Vendor -->
-                <div class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                <a href="{{ route('vendor.index') }}" class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow">
                     <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-teal-100 dark:bg-teal-800 rounded-t-lg">
                         <h3 class="text-sm font-medium text-teal-800 dark:text-teal-200 text-center">Jumlah Vendor</h3>
                     </div>
                     <div class="flex-grow flex items-center justify-center">
                         <p class="text-5xl font-bold text-teal-900 dark:text-teal-300">{{ $jumlahVendor }}</p>
                     </div>
-                </div>
+                </a>
+
                 <!-- Card for Overtime -->
-                <div class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                <a href="{{ route('overtime.index') }}" class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow">
                     <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-white-100 rounded-t-lg">
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-700 text-center">Overtime</h3>
                     </div>
@@ -57,6 +63,45 @@
                             <h4 class="text-xs font-medium text-green-800 dark:text-green-200">Approved</h4>
                             <p class="text-4xl font-bold text-green-900 dark:text-green-300">123</p>
                         </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Middle section with demographic -->
+            <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Peta Persebaran Pegawai</h3>
+                <div id="indonesiaMap" class="w-full h-96 rounded-lg"></div>
+            </div>
+
+            <!-- Middle section with pie charts -->
+            <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Gender Pie Chart -->
+                <div class="flex flex-col justify-between h-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                    <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-indigo-100 dark:bg-indigo-800 rounded-t-lg">
+                        <h3 class="text-sm font-medium text-indigo-800 dark:text-indigo-200 text-center">Jumlah Pegawai berdasarkan Gender</h3>
+                    </div>
+                    <div class="flex-grow p-4">
+                        <div id="genderPieChart" class="h-60"></div>
+                    </div>
+                </div>
+
+                <!-- Company Pie Chart -->
+                <div class="flex flex-col justify-between h-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                    <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-teal-100 dark:bg-teal-800 rounded-t-lg">
+                        <h3 class="text-sm font-medium text-teal-800 dark:text-teal-200 text-center">Jumlah Pegawai berdasarkan Company</h3>
+                    </div>
+                    <div class="flex-grow p-4">
+                        <div id="companyPieChart" class="h-60"></div>
+                    </div>
+                </div>
+
+                <!-- Education Pie Chart -->
+                <div class="flex flex-col justify-between h-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800">
+                    <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-pink-100 dark:bg-pink-800 rounded-t-lg">
+                        <h3 class="text-sm font-medium text-pink-800 dark:text-pink-200 text-center">Jumlah Pegawai berdasarkan Pendidikan</h3>
+                    </div>
+                    <div class="flex-grow p-4">
+                        <div id="educationPieChart" class="h-60"></div>
                     </div>
                 </div>
             </div>
@@ -129,6 +174,78 @@
         var pieChart = new ApexCharts(document.querySelector("#pieChart"), optionsPie);
         pieChart.render();
 
+        // Gender Pie Chart Data
+        var genderData = @json($genderData);
+        var genderOptions = {
+            series: Object.values(genderData),
+            chart: {
+                type: 'pie',
+                height: 240
+            },
+            labels: Object.keys(genderData),
+            colors: ['#1E90FF', '#FF69B4'],
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#1E90FF', '#FF69B4'],
+                    usePointStyle: true
+                }
+            }
+        };
+        var genderChart = new ApexCharts(document.querySelector("#genderPieChart"), genderOptions);
+        genderChart.render();
+
+        // Company Pie Chart Data
+        var companyData = @json($companyData);
+
+        // Map full company names to abbreviations for the labels
+        var companyLabels = {
+            'TRAKTOR NUSANTARA': 'TN',
+            'SWADAYA HARAPAN NUSANTARA': 'SHN'
+        };
+
+        // Update options to use abbreviations
+        var companyOptions = {
+            series: Object.values(companyData),
+            chart: {
+                type: 'pie',
+                height: 240
+            },
+            labels: Object.keys(companyData).map(key => companyLabels[key] || key), // Use abbreviations or fallback to original
+            colors: ['#e31d1a', '#191f6c'], // Colors for each company
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#e31d1a', '#191f6c'], // Match colors to chart slices
+                    usePointStyle: true
+                }
+            }
+        };
+
+        var companyChart = new ApexCharts(document.querySelector("#companyPieChart"), companyOptions);
+        companyChart.render();
+
+        // Education Pie Chart Data
+        var educationData = @json($educationData);
+        var educationOptions = {
+            series: Object.values(educationData),
+            chart: {
+                type: 'pie',
+                height: 240
+            },
+            labels: Object.keys(educationData),
+            colors: ['#7FFFD4', '#8A2BE2', '#5F9EA0', '#D2691E', '#6495ED', '#DC143C', '#00FA9A', '#FF6347', '#8B4513'],
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#7FFFD4', '#8A2BE2', '#5F9EA0', '#D2691E', '#6495ED', '#DC143C', '#00FA9A', '#FF6347', '#8B4513'],
+                    usePointStyle: true
+                }
+            }
+        };
+        var educationChart = new ApexCharts(document.querySelector("#educationPieChart"), educationOptions);
+        educationChart.render();
+
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
@@ -168,6 +285,54 @@
                 }
             }
 
+        });
+
+        // Initialize map
+        var map = L.map('indonesiaMap').setView([-2.5489, 118.0149], 5); // Coordinates for Indonesia's center
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Locations and their coordinates
+        var locations = [
+            { name: "BANDAR LAMPUNG", coords: [-5.4296, 105.2625], key: "BANDAR LAMPUNG" },
+            { name: "BANDUNG", coords: [-6.9175, 107.6191], key: "BANDUNG" },
+            { name: "BANJARMASIN", coords: [-3.3167, 114.5908], key: "BANJARMASIN" },
+            { name: "JAKARTA", coords: [-6.2088, 106.8456], key: "JAKARTA" },
+            { name: "JAMBI", coords: [-1.6100, 103.6107], key: "JAMBI" },
+            { name: "JAYAPURA", coords: [-2.5337, 140.7181], key: "JAYAPURA" },
+            { name: "MAKASSAR", coords: [-5.1477, 119.4327], key: "MAKASSAR" },
+            { name: "MEDAN", coords: [3.5952, 98.6722], key: "MEDAN" },
+            { name: "PADANG", coords: [-0.9471, 100.4172], key: "PADANG" },
+            { name: "PALEMBANG", coords: [-2.9761, 104.7754], key: "PALEMBANG" },
+            { name: "PEKANBARU", coords: [0.5071, 101.4478], key: "PEKANBARU" },
+            { name: "PONTIANAK", coords: [-0.0263, 109.3425], key: "PONTIANAK" },
+            { name: "SAMARINDA", coords: [-0.5022, 117.1536], key: "SAMARINDA" },
+            { name: "SAMPIT", coords: [-2.5322, 112.9492], key: "SAMPIT" },
+            { name: "SEMARANG", coords: [-6.9667, 110.4167], key: "SEMARANG" }
+        ];
+
+        // Map data passed from the controller
+        var mapData = @json($mapData);
+
+        // Add markers for each location
+        locations.forEach(location => {
+            var locationData = mapData[location.key] || { MALE: 0, FEMALE: 0, total: 0 };
+
+            // Create a popup with male, female, and total counts
+            var popupContent = `
+                <strong>${location.name}</strong><br>
+                Laki-laki: ${locationData.MALE}<br>
+                Perempuan: ${locationData.FEMALE}<br>
+                Total: ${locationData.total}
+            `;
+
+            L.marker(location.coords)
+                .addTo(map)
+                .bindPopup(popupContent);
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
