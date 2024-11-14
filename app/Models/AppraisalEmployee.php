@@ -5,17 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appraisal extends Model
+class AppraisalEmployee extends Model
 {
     use HasFactory;
     public $timestamps = false; // Menonaktifkan otomatis `created_at` dan `updated_at`
 
-    protected $table = 'appraisals'; // Ganti jika tabelmu memiliki nama berbeda
+    protected $table = 'appraisals_employee'; // Ganti jika tabelmu memiliki nama berbeda
     protected $fillable = [
         'id',
+        'id_appraisal',
+        'pegawai_id',
         'appraisal_period',
         'created_at',
         'appraisal_status',
-        'id_appraisals_kategori'
+        'pegawai_fill_at',
+        'superior_approved_at',
+        'rata_rata',
+        'nilai_final'
+        
     ];
 }

@@ -13,7 +13,7 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Appraisal</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Appraisal Approval</h2>
 
             <!-- Search Bar and Add Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
@@ -25,14 +25,6 @@
                     </div>
                     <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-                <div class="flex space-x-3" @if($role == 7) style="display:none;" @else "" @endif>
-                    <a href="{{ route('appraisal.create') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        Tambah Appraisal
-                    </a>
-                </div>
             </div>
 
             <!-- Appraisal Table-->
@@ -40,46 +32,36 @@
                 <table id="appraisalTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
-                            <th class="px-6 py-3">ID</th>
+                            <th class="px-6 py-3">NRP</th>
+                            <th class="px-6 py-3">Nama</th>
+                            <th class="px-6 py-3">Jabatan</th>
                             <th class="px-6 py-3">Periode Appraisal</th>
-                            <th class="px-6 py-3">Created At</th>
-                            <th class="px-6 py-3">Status Appraisal</th>
-                            @if($role == 7)
                             <th class="px-6 py-3">Pegawai_Fill_At</th>
                             <th class="px-6 py-3">Superior_Fill_At</th>
                             <th class="px-6 py-3">Rata-Rata</th>
                             <th class="px-6 py-3">Nilai_Akhir</th>
-                            <th class="px-6 py-3">Status Pengajuan</th>
-                            <th class="px-6 py-3">Actions</th>
-                        @endif
+                            <th class="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($appraisals as $appraisal)
+                        @foreach($appraisalsEmployee as $appraisalsEmployee)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ $appraisal->id }}</td>
-                            <td class="px-6 py-4">{{ $appraisal->appraisal_period }}</td>
-                            <td class="px-6 py-4">{{ $appraisal->created_at }}</td>
-                            <td class="px-6 py-4">@if($appraisal->appraisal_status==1) Aktif @else Tidak Aktif @endif</td>
-                            @if($role == 7)
-                            <td class="px-6 py-4">{{ $appraisal->pegawai_fill_at }}</td>
-                            <td class="px-6 py-4">{{ $appraisal->superior_approved_at }}</td>
-                            <td class="px-6 py-4">{{ $appraisal->rata_rata }}</td>
-                            <td class="px-6 py-4">{{ $appraisal->nilai_final }}</td>
-                            
-                            @if($appraisal->pegawai_fill_at == 0)
-                            <td class="px-6 py-4">Open</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->nrp }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->nama }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->jabatan }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->appraisal_period }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->pegawai_fill_at }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->superior_approved_at }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->rata_rata }}</td>
+                            <td class="px-6 py-4">{{ $appraisalsEmployee->nilai_final }}</td>
+                            @if($role == 3)
                             <td class="px-6 py-4 flex justify-center">
-                                <a href="{{ route('appraisal.createappraisalemployee', $appraisal->id) }}" class="text-blue-600 hover:text-blue-800">
+                                <a href="{{ route('appraisal.updateappraisalemployee', $appraisalsEmployee->id_appraisal_employee) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                     </svg>
                                 </a>
                             </td>
-                            @else
-                            <td class="px-6 py-4">{{ $appraisal->appraisal_status_name }}</td>
-                            <td class="px-6 py-4"></td>
-                            @endif
                             @endif
                         </tr>
                         @endforeach
@@ -182,47 +164,6 @@
                 toast.classList.add('hidden');
             }
         }, 4000);
-
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-        // Change the icons inside the button based on previous settings
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            themeToggleDarkIcon.classList.remove('hidden');
-        }
-
-        var themeToggleBtn = document.getElementById('theme-toggle');
-
-        themeToggleBtn.addEventListener('click', function() {
-
-            // toggle icons inside button
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-
-            // if set via local storage previously
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                }
-
-            // if NOT set via local storage previously
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                }
-            }
-
-        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
