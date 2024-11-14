@@ -37,27 +37,37 @@
                 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3">NRP</th>
-                            <th scope="col" class="px-6 py-3">Name</th>
-                            <th scope="col" class="px-6 py-3">Request Date</th>
-                            <th scope="col" class="px-6 py-3">Start Time</th>
-                            <th scope="col" class="px-6 py-3">End Time</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">NRP <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(1, this)">Name <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(2, this)">Request Date <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(3, this)">Start Time <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(4, this)">End Time <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(5, this)">Status <span>&#9650;</span></th>
                             <th scope="col" class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="overtimeTableBody">
                         @foreach($overtimes as $overtime)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr class=" border-b dark:bg-gray-800 dark:border-gray-700 {{ $overtime->is_holiday == 1 ? 'bg-yellow-200' : 'bg-white' }}">
                             <td class="px-6 py-4">{{ $overtime->pegawai->nrp ?? 'XX' }}</td>
                             <td class="px-6 py-4">{{ optional($overtime->pegawai)->nama ?? 'Unknown' }}</td>
                             <td class="px-6 py-4">{{ $overtime->request_date }}</td>
-                            <td class="px-6 py-4">{{ $overtime->start_time }}</td>
-                            <td class="px-6 py-4">{{ $overtime->end_time }}</td>
+                            <td class="px-6 py-4">
+                                @if($overtime->status == 'Need HC Approval' || $overtime->status == 'Approved')
+                                    {{ $overtime->escalation_approved_start_time }}
+                                @else
+                                    {{ $overtime->start_time }}
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($overtime->status == 'Need HC Approval' || $overtime->status == 'Approved')
+                                    {{ $overtime->escalation_approved_end_time }}
+                                @else
+                                    {{ $overtime->end_time }}
+                                @endif
+                            </td>
                             <td class="px-6 py-4">{{ $overtime->status }}</td>
-
-                            <!-- Superadmin, admin, superior, hcs_dept_head, hc_div_head actions -->
-                            @if(in_array(auth()->user()->role_id, [1, 2]))
+                            @role('superadmin|admin|superior|hcs_dept_head|hc_div_head')
                             <td class="flex px-6 py-4">
                                 <!-- View Icon -->
                                 <div class="relative" style="position: relative; display: inline-block;">
@@ -90,63 +100,89 @@
                                     <span style="position: absolute; bottom: 25px; left: 0; background-color: #E5E7EB; color: #1F2937; padding: 2px 6px; border-radius: 4px; display: none; white-space: nowrap;">Delete</span>
                                 </div>
                             </td>
-                            @endif
+                            @endrole
 
-                            <!-- Pegawai actions -->
-                            @if(auth()->user()->role_id === 7 && $overtime->status === 'Plan')
+                            @if(isset($overtime))
+                            @role('pegawai')
                             <td class="flex px-6 py-4 space-x-2">
-                                <!-- Trigger Approve Modal -->
+                            @if ($overtime->status == 'Plan')
+                            <!-- Trigger Approve Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
-                            onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
-                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
-                        </button>
+                                onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
+                            </button>
 
-                        <!-- Trigger Reject Modal -->
-                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                        </button>
-                            </td>
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
                             @endif
-                            <!-- Direct Superior & Superior actions (role_id 3 and 4) -->
-                            @if(in_array(auth()->user()->role_id, [3, 4]) && $overtime->status === 'Need Verification')
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
+
+                        @if(isset($overtime))
+                            @role('direct_superior')
                             <td class="flex px-6 py-4 space-x-2">
-                                 <!-- Trigger Verification Modal -->
+                            @if ($overtime->status == 'Need Verification')
+                            <!-- Trigger Verification Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
-                            onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
-                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
-                        </button>
+                                onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
+                            </button>
 
-                        <!-- Trigger Reject Modal -->
-                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                        </button>
-                            </td>
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
                             @endif
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
 
-                            <!-- HCS Dept Head actions -->
-                            @if(auth()->user()->role_id === 5 && $overtime->status === 'Need HC Approval')
+                        @if(isset($overtime))
+                            @role('hcs_dept_head')
                             <td class="flex px-6 py-4 space-x-2">
-                                <!-- Trigger Confirmation Modal -->
+                            @if ($overtime->status == 'Need HC Approval')
+                            <!-- Trigger Confirmation Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
-                            onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
-                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
-                        </button>
+                                onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
+                            </button>
 
-                        <!-- Trigger Reject Modal -->
-                        <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
-                            onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                            <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
-                        </button>
-                            </td>
+                            <!-- Trigger Reject Modal -->
+                            <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
+                                onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                            </button>
+                            @else
+
                             @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                            @endrole
+                        @else
+                            <p> </p>
+                        @endif
 
+
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex items-center space-x-2 mt-4">
+            <span class="w-4 h-4 bg-yellow-200 inline-block"></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Outside Work Days</span>
+        </div>
 
                         <!-- Pagination -->
                         <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
@@ -209,11 +245,6 @@
         <div class="modal-body">
           <form action="" method="POST" id="approveForm">
               @csrf
-              <div class="mb-3">
-                  <label for="approved_note" class="form-label">Approval Note (Optional)</label>
-                  <p>{{ $overtime->approved_note ?? 'No approval note available' }}</p>
-                  <textarea class="form-control" id="approved_note" name="approved_note" rows="3"></textarea>
-              </div>
               <button type="submit" class="btn btn-success">Approve</button>
           </form>
         </div>
@@ -257,18 +288,31 @@
             <div class="modal-body">
                 <form action="" method="POST" id="verificationForm">
                     @csrf
-                <!-- Display approved_note -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Approved Note:</label>
-                    <p id="approvedNoteText" class="text-muted">{{ $overtime->approved_note ?? 'No note available' }}</p>
-                </div>
+                    <!-- Display approved_note -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Approved Note:</label>
+                        <p id="approvedNoteText" class="text-muted">{{ $overtime->approved_note ?? 'No note available' }}</p>
+                    </div>
 
                     <div class="mb-3">
                         <label for="verificationNote" class="form-label">Verification Note</label>
                         <textarea class="form-control" id="verificationNote" name="verification_note" rows="3"></textarea>
                     </div>
+
+                    <!-- Fillable start and end times -->
+                    <div class="mb-3">
+                        <label for="approvedStartTime" class="form-label">Approved Start Time</label>
+                        <input type="time" class="form-control" id="approvedStartTime" name="approved_start_time" value="{{ $overtime->approved_start_time ?? '' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="approvedEndTime" class="form-label">Approved End Time</label>
+                        <input type="time" class="form-control" id="approvedEndTime" name="approved_end_time" value="{{ $overtime->approved_end_time ?? '' }}">
+                    </div>
+
                     <button type="submit" class="btn btn-success">Verify</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -287,6 +331,10 @@
         <div class="modal-body">
           <form action="" method="POST" id="confirmationForm">
               @csrf
+              <div class="mb-3">
+                <label class="form-label fw-bold">Approved Note:</label>
+                <p id="approvedNoteText" class="text-muted">{{ $overtime->escalation_approved_note ?? 'No note available' }}</p>
+            </div>
               <div class="mb-3">
                   <label for="confirmation_note" class="form-label">Confirm Note (Optional)</label>
                   <textarea class="form-control" id="confirmation_note" name="confirmation_note" rows="3"></textarea>
@@ -396,7 +444,33 @@
                 }
             }
 
+        })
+        function sortTable(columnIndex, headerElement) {
+        const tableBody = document.getElementById("overtimeTableBody");
+        const rows = Array.from(tableBody.querySelectorAll("tr"));
+        const currentSortOrder = headerElement.getAttribute("data-sort");
+        const isAscending = currentSortOrder === "asc";
+
+        // Sort rows based on the selected column and current order
+        const sortedRows = rows.sort((a, b) => {
+            const aText = a.cells[columnIndex].innerText.trim();
+            const bText = b.cells[columnIndex].innerText.trim();
+
+            if (isNaN(aText) || isNaN(bText)) {
+                return isAscending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            } else {
+                return isAscending ? aText - bText : bText - aText;
+            }
         });
+
+        // Toggle the sort order attribute and update arrow
+        headerElement.setAttribute("data-sort", isAscending ? "desc" : "asc");
+        headerElement.querySelector("span").innerHTML = isAscending ? "&#9660;" : "&#9650;"; // ▼ for desc, ▲ for asc
+
+        // Clear current table body and re-add sorted rows
+        tableBody.innerHTML = "";
+        sortedRows.forEach(row => tableBody.appendChild(row));
+    }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

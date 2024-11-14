@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('overtime', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('person_id');
+            $table->unsignedBigInteger('pegawai_id');
             $table->string('state')->nullable();
             $table->integer('seq')->nullable();
             $table->integer('order_by')->nullable();
