@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Department;
+use App\Models\Section;
 
 class Pegawai extends Authenticatable
 {
@@ -134,5 +136,20 @@ class Pegawai extends Authenticatable
     public function overtimes()
     {
         return $this->hasMany(Overtime::class, 'person_id', 'id');
+    }
+
+    public function costCenter()
+    {
+        return $this->belongsTo(CostCenter::class, 'cost_center_id'); // Adjust foreign key if needed
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'section_id');
     }
 }

@@ -158,7 +158,7 @@
                             <option value="Katolik">Katolik</option>
                             <option value="Hindu">Hindu</option>
                             <option value="Buddha">Buddha</option>
-                            <option value="Khonghuchu">Khonghuchu</option>
+                            <option value="Khonghucu">Khonghucu</option>
                         </select>
                     </div>
                 </div>

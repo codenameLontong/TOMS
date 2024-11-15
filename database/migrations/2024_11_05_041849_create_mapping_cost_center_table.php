@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mapping_cost_center', function (Blueprint $table) {
+        Schema::create('mapping_cost_centers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cost_center_id'); // Foreign key reference to Cost Center
             $table->unsignedBigInteger('department_id'); // Foreign key reference to Department
+            $table->unsignedBigInteger('section_id')->nullable(); // Allow NULL values for Section
             $table->timestamps();
 
             // Foreign key constraints
-            $table->foreign('cost_center_id')->references('id')->on('cost_center')->onDelete('cascade');
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('cost_center_id')->references('id')->on('cost_centers')->onDelete('cascade');
+            // $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            // $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
         });
     }
 

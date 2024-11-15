@@ -42,16 +42,6 @@ class UserSeeder extends Seeder
         ]);
         // Assign the direct_superior role to this user
         $directSuperior->assignRole('direct_superior');
-        // Create Direct Superior User
-        $directSuperior = User::create([
-            'role_id' => 3,
-            'dept_id' => 4,
-            'name' => 'Direct Superior 4',
-            'email' => 'directsuperior4@example.com',
-            'password' => bcrypt('password'),
-        ]);
-        // Assign the direct_superior role to this user
-        $directSuperior->assignRole('direct_superior');
 
         // Create Superior User
         $superior = User::create([
@@ -86,15 +76,32 @@ class UserSeeder extends Seeder
         // Assign the hc_div_head role to this user
         $hcDivHead->assignRole('hc_div_head');
 
+
+
+
+
+        
+        // Create Direct Superior User
+        $directSuperior = User::create([
+            'role_id' => 3,
+            'dept_id' => 4,
+            'name' => 'Budi',
+            'email' => 'budi@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        // Assign the direct_superior role to this user
+        $directSuperior->assignRole('direct_superior');
+
         // Create Pegawai User
         $pegawai = User::create([
             'role_id' => 7,
-            'dept_id' => 1,
+            'dept_id' => 4,
             'name' => 'Pegawai',
             'email' => 'pegawai@example.com',
             'password' => bcrypt('password'),
         ]);
         // Assign the pegawai role to this user
         $pegawai->assignRole('pegawai');
+
     }
 }

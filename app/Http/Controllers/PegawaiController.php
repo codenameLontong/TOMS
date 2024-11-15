@@ -22,6 +22,10 @@ use App\Http\Controllers\CabangController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\StructureController;
 use Illuminate\Support\Facades\Log;
+use App\Models\MappingCostCenter;
+use App\Models\CostCenter;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 
 
 class PegawaiController extends Controller
@@ -179,7 +183,7 @@ class PegawaiController extends Controller
                 'pegawai_id' => $pegawai->id, // Link User to Pegawai
             ]);
 
-            
+
             // Assign the 'pegawai' role to the user
             $pegawaiRole = Role::where('name', 'pegawai')->first();
             $user->assignRole($pegawaiRole);
@@ -509,4 +513,78 @@ class PegawaiController extends Controller
             dd($e->getMessage(), $e->getFile(), $e->getLine());
         }
     }
+
+    public function exportXlsx()
+    {
+        $pegawaiData = Pegawai::all()->map(function ($pegawai) {
+            // Step 1: Retrieve department ID based on nama_department
+            $department = Department::where('nama_department', $pegawai->department)->first();
+            $departmentId = $department?->id; // Get the ID or null if not found
+
+            // Step 2: Retrieve section ID based on nama_section
+            $section = Section::where('nama_section', $pegawai->section)->first();
+            $sectionId = $section?->id; // Get the ID or null if not found
+
+            // Step 3: Find the mapping in the MappingCostCenter table
+            $mapping = MappingCostCenter::query()
+                ->where('department_id', $departmentId) // Match department_id
+                ->when($sectionId, function ($query, $sectionId) {
+                    return $query->where('section_id', $sectionId); // Match section_id if exists
+                })
+                ->first();
+
+            // Step 4: Retrieve the cost center details
+            $kodeCostCenter = $mapping?->costCenter->kode ?? 'N/A'; // Retrieve kode_cost_center
+            $typeCoa = $mapping?->costCenter?->coaId?->type_coa ?? 'N/A'; // Retrieve type_coa if available
+
+            // Step 5: Return all Pegawai attributes along with the cost center data
+            return [
+                'nrp' => $pegawai->nrp,
+                'nrp_vendor' => $pegawai->nrp_vendor,
+                'nama' => $pegawai->nama,
+                'coy' => $pegawai->coy,
+                'cabang' => $pegawai->cabang,
+                'kode_cabang' => $pegawai->kode_cabang,
+                'jabatan' => $pegawai->jabatan,
+                'directorate' => $pegawai->directorate,
+                'division' => $pegawai->division,
+                'department' => $pegawai->department,
+                'section' => $pegawai->section,
+                'jenis_kelamin' => $pegawai->jenis_kelamin,
+                'agama' => $pegawai->agama,
+                'pendidikan' => $pegawai->pendidikan,
+                'status' => $pegawai->status,
+                'tanggal_lahir' => $pegawai->tanggal_lahir,
+                'umur' => $pegawai->umur,
+                'tanggal_masuk_tn_shn' => $pegawai->tanggal_masuk_tn_shn,
+                'tanggal_masuk_vendor' => $pegawai->tanggal_masuk_vendor,
+                'masa_kerja_tn_shn' => $pegawai->masa_kerja_tn_shn,
+                'masa_kerja_vendor' => $pegawai->masa_kerja_vendor,
+                'jenis_kontrak_kerjasama' => $pegawai->jenis_kontrak_kerjasama,
+                'implementasi_kontrak_kerjasama' => $pegawai->implementasi_kontrak_kerjasama,
+                'vendor' => $pegawai->vendor,
+                'lokasi_kerja' => $pegawai->lokasi_kerja,
+                'project_site' => $pegawai->project_site,
+                'alamat_email' => $pegawai->alamat_email,
+                'no_hp' => $pegawai->no_hp,
+                'kode_cost_center' => $kodeCostCenter, // Retrieved from MappingCostCenter logic
+                'type_coa' => $typeCoa, // Retrieved from MappingCostCenter logic
+            ];
+        });
+
+        $filename = 'pegawai_data_export.xlsx';
+
+        return Excel::download(new class($pegawaiData) implements \Maatwebsite\Excel\Concerns\FromCollection {
+            private $data;
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+            public function collection()
+            {
+                return collect($this->data);
+            }
+        }, $filename);
+    }
+
 }

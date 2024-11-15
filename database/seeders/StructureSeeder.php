@@ -26,7 +26,8 @@ class StructureSeeder extends Seeder
                     "BRANCH SUPPORT" => [
                         "SURABAYA - BRANCH" => [
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ]
                     ]
                 ],
@@ -71,19 +72,22 @@ class StructureSeeder extends Seeder
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "BANDUNG - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "BANJARMASIN - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "BRANCH SUPPORT & IMPROVEMENT" => [
                             "BRANCH SUPPORT & IMPROVEMENT"
@@ -99,73 +103,85 @@ class StructureSeeder extends Seeder
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "JAYAPURA - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "MAKASSAR - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "MEDAN - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "PADANG - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "PALEMBANG - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "PEKANBARU - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "PONTIANAK - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "SAMARINDA - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "SAMPIT - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "SEMARANG - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ],
                         "SURABAYA - BRANCH" => [
                             "ADMINISTRATION",
                             "PARTS",
                             "SALES",
-                            "SERVICE"
+                            "SERVICE MAINTENANCE CONTRACT",
+                            "SERVICE NON MAINTENANCE CONTRACT",
                         ]
                     ]
                 ],
@@ -277,7 +293,7 @@ class StructureSeeder extends Seeder
                         "AGRO SALES" => [
                             "AGRO SALES"
                         ],
-                        "CONSTRUCTION SALES" => [
+                        "CONSTRUCTION & CRANE SALES" => [
                             "CONSTRUCTION SALES",
                             "CRANE SALES"
                         ]
@@ -301,9 +317,14 @@ class StructureSeeder extends Seeder
                     ],
                     "POWER GENERATION & AIR SOLUTION SALES" => [
                         "AIR SOLUTION SALES" => [
-                            "POWER GENERATION SALES GROUP 1",
+                            "AIR SOLUTION SALES"
+                        ],
+                        "POWER GENERATION SALES GROUP 1" => [
+                            "POWER GENERATION SALES GROUP 1"
+                        ],
+                        "POWER GENERATION SALES GROUP 2" => [
                             "POWER GENERATION SALES GROUP 2"
-                        ]
+                        ],
                     ],
                     "PRODUCT SUPPORT" => [
                         "PARTS LOGISTIC & WAREHOUSE" => [

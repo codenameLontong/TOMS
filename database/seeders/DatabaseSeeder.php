@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             StructureSeeder::class,
             UserSeeder::class,
             TypeCoaSeeder::class,
+            CostCenterSeeder::class,
+            MappingCostCenterSeeder::class,
         ]);
     }
 }

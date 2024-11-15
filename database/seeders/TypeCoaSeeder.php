@@ -13,11 +13,12 @@ class TypeCoaSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            ['type_name' => 'Cost'],
-            ['type_name' => 'Selling'],
-            ['type_name' => 'General'],
+            ['type_coa' => 'Cost'],
+            ['type_coa' => 'Selling Expense'],
+            ['type_coa' => 'General Expense'],
         ];
 
-        DB::table('type_coa')->insert($types);
+        // Insert the types into the COA table
+        DB::table('coas')->insert($types);
     }
 }

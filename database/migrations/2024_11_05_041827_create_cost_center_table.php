@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cost_center', function (Blueprint $table) {
+        Schema::create('cost_centers', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // Name of the Cost Center
+            $table->string('kode')->unique(); // Unique identifier for cost center
             $table->unsignedBigInteger('coa_id'); // Foreign key reference to COA
+            $table->string('nama'); // Name of the Cost Center
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('coa_id')->references('id')->on('coa')->onDelete('cascade');
+            $table->foreign('coa_id')->references('id')->on('coas')->onDelete('cascade');
         });
     }
 

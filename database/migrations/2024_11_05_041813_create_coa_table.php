@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coa', function (Blueprint $table) {
+        Schema::create('coas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('type_coa_id'); // Foreign key reference to Type COA
-            $table->string('name'); // COA name or details
-            $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('type_coa_id')->references('id')->on('type_coa')->onDelete('cascade');
+            $table->string('type_coa'); // Foreign key reference to Type COA
         });
     }
 

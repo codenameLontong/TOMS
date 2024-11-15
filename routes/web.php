@@ -118,7 +118,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/section/{section}/view', [SectionController::class, 'view'])->name('section.view'); // View a single section
     Route::delete('/section/{section}/delete', [SectionController::class, 'delete'])->name('section.delete'); // Delete section
     Route::get('/section/check-nama-section', [SectionController::class, 'checkNamaSection'])->name('section.checkNamaSection');
-});
+
+    Route::get('/pegawai/export/xlsx', [PegawaiController::class, 'exportXlsx'])->name('pegawai.export.xlsx');
+    Route::get('/pegawai/export/pdf', [PegawaiController::class, 'exportPdf'])->name('pegawai.export.pdf');
+    });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -160,12 +163,5 @@ Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
-
-
-
-
-
-
-
 
 require __DIR__ . '/auth.php';
