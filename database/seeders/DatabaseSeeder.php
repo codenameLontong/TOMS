@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             StructureSeeder::class,
             UserSeeder::class,
             TypeCoaSeeder::class,
+            AppraisalStatusSeeder::class,
             CostCenterSeeder::class,
             MappingCostCenterSeeder::class,
         ]);

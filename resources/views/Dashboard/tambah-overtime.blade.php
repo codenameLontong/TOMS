@@ -78,8 +78,8 @@
                             <input type="text" id="division" name="division" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
                         </div>
 
-                        <!-- Hidden field for person_id -->
-                        <input type="hidden" id="person_id" name="person_id">
+                        <!-- Hidden field for pegawai_id -->
+                        <input type="hidden" id="pegawai_id" name="pegawai_id">
 
                         <!-- Hidden field for person_email -->
                         <input type="hidden" id="person_email" name="person_email">
@@ -186,7 +186,7 @@
                 var division = $(this).data('division');
                 var email = $(this).data('email');
 
-                $('#person_id').val(id);
+                $('#pegawai_id').val(id);
                 $('#nrp').val(nrp);
                 $('#nama').val(name);
                 $('#department').val(department);
@@ -202,7 +202,7 @@
                 $('#search').val('').prop('disabled', false);  // Clear and enable search input
                 $('#search-results').empty().addClass('hidden');  // Hide search results
                 $('#nrp, #nama, #department, #division').val('');  // Clear auto-filled fields
-                $('#person_id, #person_email').val('');  // Clear hidden fields
+                $('#pegawai_id, #person_email').val('');  // Clear hidden fields
             });
         });
         </script>

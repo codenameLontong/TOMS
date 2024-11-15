@@ -14,7 +14,7 @@ class Overtime extends Model
     protected $table = 'overtime';
 
     protected $fillable = [
-        'person_id',
+        'pegawai_id',
         'state',
         'seq',
         'order_by',
@@ -103,8 +103,8 @@ class Overtime extends Model
 
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class, 'person_id', 'id');
-    }   
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
+    }
     public function overtimeReason() {
         return $this->belongsTo(OvertimeReasonOrder::class, 'overtime_reason_order_id');
     }

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\PegawaiHistory;
 use App\Models\Overtime;
 use App\Models\OvertimeReasonOrder;
+use App\Models\Exception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Excel;
@@ -26,12 +27,11 @@ class OvertimeController extends Controller
 
     // Check if the user is the special user with role 'hcs_dept_head' (role_id 5)
     if ($userRoleId == 5) {
-        // For 'hcs_dept_head', show only overtimes with statuses 'Need HC Approval' and 'Confirmed'
         $overtimes = Overtime::with('pegawai')
             ->where('is_deleted', false)
-            ->whereIn('status', ['Need HC Approval', 'Confirmed']) // Include both statuses
+            ->whereIn('status', ['Need HC Approval', 'Approved'])
             ->paginate(10);
-    } elseif (!in_array($userRoleId, [1, 2])) { // For non-superadmin (role_id 1) and admin (role_id 2)
+    } elseif (!in_array($userRoleId, [1, 2])) {
         // Regular users who are not superadmin/admin, apply email and order_by conditions
         $overtimes = Overtime::with('pegawai')
             ->where('is_deleted', false)
@@ -51,8 +51,22 @@ class OvertimeController extends Controller
             ->paginate(10);
     }
 
+    // Check and update is_holiday for each overtime record
+    foreach ($overtimes as $overtime) {
+        $isWeekend = in_array(Carbon::parse($overtime->request_date)->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
+        $isExceptionHoliday = Exception::where('holiday_date', $overtime->request_date)->exists();
+
+        $isHoliday = $isWeekend || $isExceptionHoliday;
+
+        // Update the is_holiday column if necessary
+        if ($overtime->is_holiday != $isHoliday) {
+            $overtime->update(['is_holiday' => $isHoliday ? 1 : 0]);
+        }
+    }
+
     return view('dashboard.overtime', compact('overtimes'));
 }
+
 
     public function create()
     {
@@ -72,43 +86,52 @@ class OvertimeController extends Controller
 
     public function store(Request $request)
     {
-        // Validate incoming data (removing email validation)
+        // Validate incoming data
         $request->validate([
-            'person_id' => 'required|exists:pegawais,id',  // Validate the person_id exists in the pegawais table
-            'request_date' => 'required',
+            'pegawai_id' => 'required|exists:pegawais,id',
+            'request_date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
             'overtime_reason_order_id' => 'required',
             'todo_list' => 'required',
         ]);
 
-        // Find Pegawai by person_id
-        $pegawai = Pegawai::find($request->person_id);
+        // Find Pegawai by pegawai_id
+        $pegawai = Pegawai::find($request->pegawai_id);
 
         if (!$pegawai) {
-            return redirect()->back()->withErrors(['person_id' => 'Pegawai with this ID not found.']);
+            return redirect()->back()->withErrors(['pegawai_id' => 'Pegawai with this ID not found.']);
         }
+
+        // Check if the request_date is a weekend
+        $isWeekend = in_array(Carbon::parse($request->request_date)->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
+
+        // Check if the request_date is in the exceptions table
+        $isExceptionHoliday = Exception::where('holiday_date', $request->request_date)->exists();
+
+        // Set is_holiday to 1 if it's a weekend or an exception holiday
+        $isHoliday = $isWeekend || $isExceptionHoliday;
 
         // Create the overtime record
         Overtime::create([
-            'person_id' => $pegawai->id,  // Save Pegawai's person_id
+            'pegawai_id' => $pegawai->id,
             'request_date' => $request->request_date,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'overtime_reason_order_id' => $request->overtime_reason_order_id,
             'todo_list' => $request->todo_list,
-            'name' => $pegawai->nama,  // Retrieve name from Pegawai
-            'department' => $pegawai->department, // Retrieve department from Pegawai
-            'status' => 'Plan', // Default status is "Plan"
-            'email' => $pegawai->alamat_email, // Retrieve email from Pegawai
-            'order_by' => auth()->user()->id, // Get logged-in user's ID
-            'order_at' => now(), // Set current datetime
+            'name' => $pegawai->nama,
+            'department' => $pegawai->department,
+            'status' => 'Plan',
+            'email' => $pegawai->alamat_email,
+            'order_by' => auth()->user()->id,
+            'order_at' => now(),
+            'is_holiday' => $isHoliday ? 1 : 0, // Set is_holiday based on the checks
         ]);
 
         // Redirect or return a response
         return redirect()->route('overtime.index')->with('success', 'Overtime request created successfully.');
     }
-
 
     public function destroy($id)
     {
@@ -207,24 +230,30 @@ class OvertimeController extends Controller
 
         return redirect()->back()->with('error', 'Overtime rejected.');
     }
-    public function verify($id)
-    {
-        $overtime = Overtime::findOrFail($id);
-        $user = auth()->user(); // Logged-in pegawai
+    public function verify(Request $request, $id)
+{
+    $overtime = Overtime::findOrFail($id); // Retrieve the specific overtime record
+    $user = auth()->user(); // Get the currently logged-in user
 
-        // Update the overtime record with approved data
-        $overtime->update([
-            'escalation_approved_by' => $user->id,
-            'escalation_approved_at' => now(),
-            'escalation_approved_note' => request('verification_note'), // Ensure this is included in the request
-            'escalation_approved_date' => $overtime->request_date,
-            'escalation_approved_start_time' => $overtime->start_time,
-            'escalation_approved_end_time' => $overtime->end_time,
-            'status' => 'Need HC Approval', // Update the status as needed
-        ]);
+    // Check if the start and end times have been provided by the user.
+    // If they haven't been modified, fall back to the current values in the $overtime object.
+    $approvedStartTime = $request->input('approved_start_time') ?? $overtime->approved_start_time;
+    $approvedEndTime = $request->input('approved_end_time') ?? $overtime->approved_end_time;
 
-        return redirect()->back()->with('success', 'Overtime approved successfully!');
-    }
+    // Update the overtime record with the verification and approval data
+    $overtime->update([
+        'escalation_approved_by' => $user->id,
+        'escalation_approved_at' => now(),
+        'escalation_approved_note' => $request->input('verification_note'), // Store verification note
+        'escalation_approved_date' => $overtime->request_date, // Keep original request date
+        'escalation_approved_start_time' => $approvedStartTime, //  Use either modified or original start time
+        'escalation_approved_end_time' => $approvedEndTime, // Use either modified or original end time
+        'status' => 'Need HC Approval', // Update the status
+    ]);
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Overtime approved successfully!');
+}
 
     public function confirm($id)
     {
@@ -233,12 +262,12 @@ class OvertimeController extends Controller
 
         // Update overtime record with approved data
         $overtime->update([
-            'confirm_by' => auth()->user()->id,
-            'confirm_at' => now(),
-            'confirm_note' => request('verification_note'),
-            'confirm_date' => $overtime->request_date,
-            'confirm_start_time' => $overtime->start_time,
-            'confirm_end_time' => $overtime->end_time,
+            'hc_head_confirmed_by' => auth()->user()->id,
+            'hc_head_confirmed_at' => now(),
+            'hc_head_confirmed_note' => request('confirmation_note'),
+            'hc_head_confirmed_date' => $overtime->request_date,
+            'hc_head_confirmed_start_time' => $overtime->start_time,
+            'hc_head_confirmed_end_time' => $overtime->end_time,
             'status' => 'Approved', // Or any status you'd prefer
         ]);
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\OvertimeController;
 use App\Models\Overtime;
 use App\Http\Controllers\AppraisalController;
+use App\Http\Controllers\ExceptionController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -163,5 +164,13 @@ Route::post('/vendor/import', [VendorController::class, 'import'])->name('vendor
 
 Route::get('/cabang/check-kode', [CabangController::class, 'checkKodeCabang'])->name('cabang.checkKodeCabang');
 Route::get('/vendor/check-kode', [VendorController::class, 'checkKodeVendor'])->name('vendor.checkKodeVendor');
+
+// EXCEPTION
+Route::resource('exceptions', ExceptionController::class);
+Route::get('/exceptions/create', [ExceptionController::class, 'create'])->name('exceptions.create');
+Route::post('/exceptions', [ExceptionController::class, 'store'])->name('exceptions.store');
+Route::get('/exceptions/{id}', [ExceptionController::class, 'show'])->name('exceptions.show');
+Route::get('/exceptions/{id}/edit', [ExceptionController::class, 'edit'])->name('exceptions.edit');
+Route::put('/exceptions/{id}', [ExceptionController::class, 'update'])->name('exceptions.update');
 
 require __DIR__ . '/auth.php';

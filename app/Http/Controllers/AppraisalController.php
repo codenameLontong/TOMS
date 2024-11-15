@@ -21,27 +21,30 @@ class AppraisalController extends Controller
     {
         $userEmail = auth()->user()->email;
         $role = auth()->user()->role_id;
-        $department = auth()->user()->department_id;
+        $departmentUser = auth()->user()->dept_id;
         $appraisals = DB::table('appraisals')
         ->leftJoin('appraisals_employee', 'appraisals.id', '=', 'appraisals_employee.id_appraisal')
-        ->select('appraisals.*', 'appraisals_employee.pegawai_fill_at','appraisals_employee.superior_approved_at',
-                'appraisals_employee.rata_rata','appraisals_employee.nilai_final')
+        ->select('appraisals.*','appraisals_employee.id as appraisal_employee_id', 'appraisals_employee.pegawai_fill_at','appraisals_employee.superior_approved_at',
+                'appraisals_employee.rata_rata','appraisals_employee.nilai_final','appraisals_employee.appraisal_status as appraisal_employee_status ',
+                DB::raw("(SELECT status FROM appraisal_status WHERE appraisal_status.id = appraisals_employee.appraisal_status) as appraisal_status_name")
+                )
         ->get();  
         
         $appraisalsEmployee = DB::table('appraisals_employee')
-        ->join('pegawais', 'appraisals_employee.id_pegawai', '=', 'pegawais.id')
-        ->whereIn('pegawais.id', function ($query) use ($department) {
-            $query->select('id')
-                  ->from('pegawais')
-                  ->where('department', $department);
+        ->join('pegawais', 'appraisals_employee.pegawai_id', '=', 'pegawais.id')
+        ->whereIn('pegawais.id', function ($query) use ($departmentUser) {
+            $query->select('pegawai_id')
+                  ->from('users')
+                  ->where('dept_id', $departmentUser);
         })
-        ->select('appraisals_employee.id as id_appraisal_employee','appraisals_employee.*', 'pegawais.*')
+        ->select('appraisals_employee.id as id_appraisal_employee', 'appraisals_employee.*', 'pegawais.*')
         ->get();
-
-        if($role==4){
+        
+        if($role==3){
         return view('dashboard.appraisal-approval', compact('appraisals','role','appraisalsEmployee'));
         }else{
-        return view('dashboard.appraisal', compact('appraisals','role'));
+            return view('dashboard.appraisal', compact('appraisals','role'));
+        
 
     }
     }
@@ -72,9 +75,9 @@ class AppraisalController extends Controller
 
     public function updateappraisalemployee(AppraisalEmployee $appraisalsEmployee)
     {
-        $id_pegawai = $appraisalsEmployee->id_pegawai;
+        $pegawai_id = $appraisalsEmployee->pegawai_id;
         $cek_appraisal_employee = AppraisalEmployee::where('id_appraisal', $appraisalsEmployee->id_appraisal)
-                                           ->where('id_pegawai', $id_pegawai)
+                                           ->where('pegawai_id', $pegawai_id)
                                            ->first();
             
         $appraisal = $appraisalsEmployee;
@@ -89,9 +92,9 @@ class AppraisalController extends Controller
 
     public function createappraisalemployee(Appraisal $appraisal)
     {
-        $id_pegawai = auth()->user()->id;
+        $pegawai_id = auth()->user()->id;
         $cek_appraisal_employee = AppraisalEmployee::where('id_appraisal', $appraisal->id)
-                                           ->where('id_pegawai', $id_pegawai)
+                                           ->where('pegawai_id', $pegawai_id)
                                            ->get();
         $appraisal_employee=$cek_appraisal_employee->toArray();
         if($cek_appraisal_employee->isEmpty())
@@ -162,7 +165,7 @@ class AppraisalController extends Controller
     {
     
     $appraisal_status='1';
-    $id_pegawai = auth()->user()->id;
+    $pegawai_id = auth()->user()->pegawai_id;
     $input=$request->all();
     $data=[];
     foreach ($input as $key => $value) {
@@ -183,7 +186,7 @@ class AppraisalController extends Controller
         // Insert ke tabel appraisal_employee
         $appraisalEmployee = AppraisalEmployee::create([
                     'id_appraisal' => $data['id_appraisal'],
-                    'id_pegawai' => $id_pegawai,
+                    'pegawai_id' => $pegawai_id,
                     'appraisal_period' => $data['appraisal_period'],
                     'appraisal_status' =>'1'
                 ]);
@@ -252,7 +255,7 @@ class AppraisalController extends Controller
         $superior_approved_at = Carbon::now()->toDateString();
         $rata_rata = $average;
 
-        $score_value = DB::table('appraisal_score')
+        $score_value = DB::table('appraisals_score')
         ->where('min', '<=', $rata_rata) // Cek apakah rata_rata lebih besar atau sama dengan min
         ->where('max', '>=', $rata_rata) // Cek apakah rata_rata lebih kecil atau sama dengan max
         ->pluck('score_value');
@@ -268,6 +271,7 @@ class AppraisalController extends Controller
             'superior_approved_at' => $superior_approved_at,
             'rata_rata' => $rata_rata,
             'nilai_final' => $score_value,
+            'appraisal_status' =>'2'
         ]);
 
           foreach ($filteredArray as $key => $value) {
@@ -296,7 +300,7 @@ class AppraisalController extends Controller
 
 
 // $appraisal_status='1';
-//     $id_pegawai = auth()->user()->id;
+//     $pegawai_id = auth()->user()->id;
 //     $input=$request->all();
 //     $data=[];
 //     foreach ($input as $key => $value) {
@@ -317,7 +321,7 @@ class AppraisalController extends Controller
 //         // Insert ke tabel appraisal_employee
 //         $appraisalEmployee = AppraisalEmployee::create([
 //                     'id_appraisal' => $data['id_appraisal'],
-//                     'id_pegawai' => $id_pegawai,
+//                     'pegawai_id' => $pegawai_id,
 //                     'appraisal_period' => $data['appraisal_period'],
 //                     'appraisal_status' =>'1'
 //                 ]);
