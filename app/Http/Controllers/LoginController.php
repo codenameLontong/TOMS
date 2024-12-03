@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Role;
 
 
 class LoginController extends Controller
@@ -44,23 +45,35 @@ class LoginController extends Controller
     }
 
 
-    protected function redirectBasedOnRole()
+    protected function authenticated(Request $request, $user)
     {
-        $user = Auth::user();
-
-        // Handle role-based redirects
-        switch ($user->role->name) {
-            case 'superadmin':
-                return redirect()->intended('/superadmin/dashboard');
-            case 'admin':
-                return redirect()->intended('/admin/dashboard');
-            case 'direct_superior':
-                return redirect()->intended('/direct_superior/dashboard');
-            case 'pegawai':
-                return redirect()->intended('/pegawai/dashboard'); // Add Pegawai redirect
-            // Add other roles if needed
-            default:
-                return redirect()->intended('/home');  // Default redirect
+        // Check if the user has the 'pegawai' role
+        if ($user->hasRole('pegawai')) {
+            // Redirect to the overtime page for 'pegawai' role
+            return redirect()->route('overtime.index');  // Replace 'overtime.index' with your actual route name
         }
+
+        // Default redirection for other roles
+        return redirect()->route('home');  // Or the default route you want for other roles
     }
+
+    // protected function redirectBasedOnRole()
+    // {
+    //     $user = Auth::user();
+
+    //     // Handle role-based redirects
+    //     switch ($user->role->name) {
+    //         case 'superadmin':
+    //             return redirect()->intended('/superadmin/dashboard');
+    //         case 'admin':
+    //             return redirect()->intended('/admin/dashboard');
+    //         case 'direct_superior':
+    //             return redirect()->intended('/direct_superior/dashboard');
+    //         case 'pegawai':
+    //             return redirect()->intended('/pegawai/overtime'); // Add Pegawai redirect
+    //         // Add other roles if needed
+    //         default:
+    //             return redirect()->intended('/home');  // Default redirect
+    //     }
+    // }
 }

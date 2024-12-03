@@ -30,9 +30,9 @@ class Vendor extends Model
         'is_active' => 'boolean',
     ];
 
-    // Define any relationships here, for example:
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class);
-    // }
+    // Relationship to PICs
+    public function pics()
+    {
+        return $this->hasMany(Pic::class);
+    }
 }

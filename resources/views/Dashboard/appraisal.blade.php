@@ -17,13 +17,40 @@
 
             <!-- Search Bar and Add Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
-                <div class="relative mt-1">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                        </svg>
+                <div class="flex items-center space-x-2">
+
+                    <div class="relative mt-1">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
-                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                    <div class="flex space-x-2">
+                        <div id="exportDropdownButton" data-dropdown-toggle="exportDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
+                            Export
+                            <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" />
+                            </svg>
+                        </div>
+
+                        <div id="exportDropdown" class="hidden z-10 w-52 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-center">
+                                    <a href="{{ route('appraisal.export.xlsx') }}" id="export-xlsx" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-green-300 bg-green-200">
+                                        Export XLSX
+                                    </a>
+                                </li>
+                                <li class="flex items-center">
+                                    <a href="{{ route('appraisal.export.pdf') }}" id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
+                                        Export PDF
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex space-x-3" @if($role == 7) style="display:none;" @else "" @endif>
                     <a href="{{ route('appraisal.create') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
@@ -60,14 +87,15 @@
                             <td class="px-6 py-4">{{ $appraisal->id }}</td>
                             <td class="px-6 py-4">{{ $appraisal->appraisal_period }}</td>
                             <td class="px-6 py-4">{{ $appraisal->created_at }}</td>
-                            <td class="px-6 py-4">@if($appraisal->appraisal_status==1) Aktif @else Tidak Aktif @endif</td>
+                            <td class="px-6 py-4">@if($appraisal->appraisal_status == 1) Aktif @else Tidak Aktif @endif</td>
                             @if($role == 7)
                             <td class="px-6 py-4">{{ $appraisal->pegawai_fill_at }}</td>
                             <td class="px-6 py-4">{{ $appraisal->superior_approved_at }}</td>
                             <td class="px-6 py-4">{{ $appraisal->rata_rata }}</td>
                             <td class="px-6 py-4">{{ $appraisal->nilai_final }}</td>
-                            
+
                             @if($appraisal->pegawai_fill_at == 0)
+                            <!-- When pegawai_fill_at is 0, show the pencil icon for editing -->
                             <td class="px-6 py-4">Open</td>
                             <td class="px-6 py-4 flex justify-center">
                                 <a href="{{ route('appraisal.createappraisalemployee', $appraisal->id) }}" class="text-blue-600 hover:text-blue-800">
@@ -77,8 +105,16 @@
                                 </a>
                             </td>
                             @else
+                            <!-- When pegawai_fill_at is not 0, show the eye icon for viewing -->
                             <td class="px-6 py-4">{{ $appraisal->appraisal_status_name }}</td>
-                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4 flex justify-center">
+                                <a href="{{ route('appraisal.updateappraisalemployee', $appraisal->id) }}" class="text-blue-600 hover:text-blue-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </a>
+                            </td>
                             @endif
                             @endif
                         </tr>
@@ -88,33 +124,25 @@
             </div>
 
             <!-- Pagination -->
-            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
+            <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span id="current-range" class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                    <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
                     of
                     <span id="total-records" class="font-semibold text-gray-900 dark:text-white">100</span>
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px">
+                <ul class="inline-flex items-stretch -space-x-px" id="pagination-list">
                     <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="prev-page" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
+                    <li id="pagination-buttons" class="flex space"></li>
                     <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">2</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
+                        <a href="#" id="next-page" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M7.293 5.293a1 1 0 011.414 0L12.586 10l-3.879 3.707a1 1 0 01-1.414-1.414L10.586 10l-3.293-3.293a1 1 0 010-1.414z" />
@@ -182,6 +210,92 @@
                 toast.classList.add('hidden');
             }
         }, 4000);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pagination variables
+            const rows = document.querySelectorAll('#appraisalTable tbody tr'); // Select all rows from the table
+            const recordsPerPage = 15; // Number of records per page
+            let currentPage = 1; // Start on the first page
+
+            // Pagination elements
+            const paginationList = document.getElementById('pagination-list');
+            const paginationButtons = document.getElementById('pagination-buttons');
+            const prevPageButton = document.getElementById('prev-page');
+            const nextPageButton = document.getElementById('next-page');
+            const currentRange = document.getElementById('current-range');
+            const totalRecordsElement = document.getElementById('total-records');
+
+            const totalRecords = rows.length; // Total number of rows in the table
+            const totalPages = Math.ceil(totalRecords / recordsPerPage); // Calculate total pages
+
+            // Update total records count in the UI
+            totalRecordsElement.textContent = totalRecords;
+
+            // Function to show the correct rows based on the current page
+            function showPage(page) {
+                const startRecord = (page - 1) * recordsPerPage;
+                const endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
+
+                rows.forEach((row, index) => {
+                    if (index >= startRecord && index < endRecord) {
+                        row.style.display = ''; // Show the row
+                    } else {
+                        row.style.display = 'none'; // Hide the row
+                    }
+                });
+
+                // Update the current page range text
+                currentRange.textContent = `${startRecord + 1}-${endRecord}`;
+
+                // Disable/Enable prev/next buttons as necessary
+                prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
+                nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
+
+                // Render pagination buttons
+                renderPaginationButtons();
+            }
+
+            // Function to render pagination buttons
+            function renderPaginationButtons() {
+                paginationButtons.innerHTML = ''; // Clear existing buttons
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
+                    pageButton.textContent = i;
+
+                    pageButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+
+                    paginationButtons.appendChild(pageButton);
+                }
+            }
+
+            // Handle previous page button click
+            prevPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+
+            // Handle next page button click
+            nextPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+
+            // Initial page setup
+            showPage(currentPage);
+        });
 
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');

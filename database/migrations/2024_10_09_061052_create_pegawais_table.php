@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->string('section')->nullable();
             $table->enum('jenis_kelamin', ['MALE', 'FEMALE']);
             $table->enum('agama', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
-            $table->enum('pendidikan', ['SD', 'SMP', 'SLTP', 'SMA', 'SMK', 'S1', 'D1', 'D3', 'D4']);
-            $table->enum('status', ['TK', 'K1', 'K2', 'K3', 'K4', 'K5']); // keep this 'status' enum column
+            $table->enum('pendidikan', ['SD', 'SMP/Sederajat', 'SMA/Sederajat', 'S1', 'D1', 'D2', 'D3', 'D4']);
+            $table->enum('status', ['TK', 'K0','K1', 'K2', 'K3', 'K4', 'K5']); // keep this 'status' enum column
             $table->date('tanggal_lahir');
             $table->string('umur')->nullable(); // Calculated field
             $table->date('tanggal_masuk_tn_shn');

@@ -62,7 +62,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'ensure-json-response' => \App\Http\Middleware\EnsureJsonResponse::class,
+        'pegawai.redirect' => \App\Http\Middleware\RedirectIfPegawai::class
     ];
 }

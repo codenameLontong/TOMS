@@ -13,10 +13,16 @@ return new class extends Migration
             $table->unsignedBigInteger('id_appraisal'); // Foreign key to appraisals table
             $table->unsignedBigInteger('pegawai_id'); // Foreign key to employees table, or another appropriate table
             $table->string('appraisal_period'); // Appraisal period
-            $table->timestamp('created_at'); // Created at timestamp
+
+            // Use `timestamps()` for `created_at` and `updated_at` fields if needed
+            $table->timestamp('created_at')->useCurrent(); // Set default to current timestamp
+
             $table->string('appraisal_status'); // Status of the appraisal
-            $table->timestamp('pegawai_fill_at'); // Timestamp when filled by employee
-            $table->timestamp('superior_approved_at'); // Timestamp when approved by superior
+
+            // Set `pegawai_fill_at` and `superior_approved_at` to allow nulls or default to current timestamp
+            $table->timestamp('pegawai_fill_at')->nullable(); // Allow null if it won't be immediately filled
+            $table->timestamp('superior_approved_at')->nullable(); // Allow null if it won't be immediately filled
+
             $table->integer('rata_rata')->nullable(); // Average rating (adjust scale as necessary)
             $table->string('nilai_final')->nullable(); // Final score (adjust scale as necessary)
 

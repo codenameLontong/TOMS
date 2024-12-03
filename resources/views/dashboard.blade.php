@@ -1,5 +1,3 @@
-DASHBOARD MAP
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +9,26 @@ DASHBOARD MAP
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    @if(auth()->check() && auth()->user()->hasRole('pegawai'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
+    @if(auth()->check() && auth()->user()->hasRole('direct_superior'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
+    @if(auth()->check() && auth()->user()->hasRole('superior'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
+    @if(auth()->check() && auth()->user()->hasRole('hcs_dept_head'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
 </head>
 <body>
     <x-navbar />
@@ -46,30 +64,43 @@ DASHBOARD MAP
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-700 text-center">Overtime</h3>
                     </div>
                     <div class="flex-grow grid grid-cols-3 divide-x divide-gray-300 dark:divide-gray-600">
-                        <!-- Plan Section -->
+                        <!-- Need Verification Section -->
                         <div class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900">
-                            <h4 class="text-xs font-medium text-blue-800 dark:text-blue-200">Plan</h4>
-                            <p class="text-4xl font-bold text-blue-900 dark:text-blue-300">23</p>
+                            <h4 class="text-xs font-medium text-blue-800 dark:text-blue-200">Need Verification</h4>
+                            <p class="text-4xl font-bold text-blue-900 dark:text-blue-300">{{ $overtimeStatuses['Need Verification'] }}</p>
                         </div>
 
-                        <!-- Need Approve Section -->
+                        <!-- Need HC Approval Section -->
                         <div class="flex flex-col items-center justify-center bg-yellow-50 dark:bg-yellow-900">
-                            <h4 class="text-xs font-medium text-yellow-800 dark:text-yellow-200">Need Approve</h4>
-                            <p class="text-4xl font-bold text-yellow-900 dark:text-yellow-300">90</p>
+                            <h4 class="text-xs font-medium text-yellow-800 dark:text-yellow-200">Need HC Approval</h4>
+                            <p class="text-4xl font-bold text-yellow-900 dark:text-yellow-300">{{ $overtimeStatuses['Need HC Approval'] }}</p>
                         </div>
 
                         <!-- Approved Section -->
                         <div class="flex flex-col items-center justify-center bg-green-50 dark:bg-green-900">
                             <h4 class="text-xs font-medium text-green-800 dark:text-green-200">Approved</h4>
-                            <p class="text-4xl font-bold text-green-900 dark:text-green-300">123</p>
+                            <p class="text-4xl font-bold text-green-900 dark:text-green-300">{{ $overtimeStatuses['Approved'] }}</p>
                         </div>
                     </div>
                 </a>
+
             </div>
 
             <!-- Middle section with demographic -->
             <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Peta Persebaran Pegawai</h3>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Peta Persebaran Pegawai</h3>
+                    <div class="flex items-center space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="companyFilter" value="TRAKTOR NUSANTARA" class="form-radio h-5 w-5 text-blue-600" onchange="filterMapData()">
+                            <span class="ml-2 text-gray-700 dark:text-gray-200">TN</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="companyFilter" value="SWADAYA HARAPAN NUSANTARA" class="form-radio h-5 w-5 text-blue-600" onchange="filterMapData()">
+                            <span class="ml-2 text-gray-700 dark:text-gray-200">SHN</span>
+                        </label>
+                    </div>
+                </div>
                 <div id="indonesiaMap" class="w-full h-96 rounded-lg"></div>
             </div>
 
@@ -111,9 +142,7 @@ DASHBOARD MAP
                 <div class="flex justify-between mb-2">
                     <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Jam Lembur Approve</h3>
                     <select id="yearSelector" class="border border-gray-300 rounded px-2 py-1 text-gray-700 dark:bg-gray-700 dark:text-white">
-                        <option value="2023">2023</option>
-                        <option value="2024" selected>2024</option>
-                        <option value="2025">2025</option>
+                        <!-- Dynamic years will be added here -->
                     </select>
                 </div>
                 <div id="lineChart"></div>
@@ -128,47 +157,18 @@ DASHBOARD MAP
     </div>
 
     <script>
-        // Line chart data
-        var chartData = {
-            2023: [30, 45, 50, 60, 70, 80, 85, 90, 100, 110, 120, 130],
-            2024: [50, 70, 80, 65, 90, 100, 120, 110, 95, 85, 105, 115],
-            2025: [40, 60, 75, 80, 85, 95, 105, 115, 120, 130, 140, 150]
-        };
 
-        var optionsLine = {
-            series: [{
-                name: 'Jam Lembur',
-                data: chartData[2024] // Default data for 2024
-            }],
-            chart: {
-                type: 'line',
-                height: 350
-            },
-            xaxis: {
-                categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-            }
-        };
+        // Pie chart data from the controller
+        var appraisalStatuses = @json($appraisalStatuses); // Get the status counts from the controller
 
-        var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
-        lineChart.render();
-
-        // Event listener for the year selector
-        document.getElementById('yearSelector').addEventListener('change', function() {
-            var selectedYear = this.value;
-            lineChart.updateSeries([{
-                name: 'Jam Lembur',
-                data: chartData[selectedYear] || []
-            }]);
-        });
-
-        // Pie chart data
+        // Prepare the series for the pie chart
         var optionsPie = {
-            series: [44, 33, 23], // dummy data
+            series: [appraisalStatuses[1], appraisalStatuses[2]], // Data for 'Need Superior Approval' and 'Approved'
             chart: {
                 type: 'pie',
                 height: 350
             },
-            labels: ['Approved', 'Pending', 'Rejected']
+            labels: ['Need Superior Approval', 'Approved']
         };
 
         var pieChart = new ApexCharts(document.querySelector("#pieChart"), optionsPie);
@@ -312,29 +312,140 @@ DASHBOARD MAP
             { name: "PONTIANAK", coords: [-0.0263, 109.3425], key: "PONTIANAK" },
             { name: "SAMARINDA", coords: [-0.5022, 117.1536], key: "SAMARINDA" },
             { name: "SAMPIT", coords: [-2.5322, 112.9492], key: "SAMPIT" },
-            { name: "SEMARANG", coords: [-6.9667, 110.4167], key: "SEMARANG" }
+            { name: "SEMARANG", coords: [-6.9667, 110.4167], key: "SEMARANG" },
+            { name: "SURABAYA", coords: [-7.2575, 112.7521], key: "SURABAYA" }
         ];
 
         // Map data passed from the controller
-        var mapData = @json($mapData);
+        var originalMapData = @json($mapData);
+        var currentMarkers = [];
 
-        // Add markers for each location
-        locations.forEach(location => {
-            var locationData = mapData[location.key] || { MALE: 0, FEMALE: 0, total: 0 };
+        // Function to clear markers
+        function clearMarkers() {
+            currentMarkers.forEach(marker => map.removeLayer(marker));
+            currentMarkers = [];
+        }
 
-            // Create a popup with male, female, and total counts
-            var popupContent = `
-                <strong>${location.name}</strong><br>
-                Laki-laki: ${locationData.MALE}<br>
-                Perempuan: ${locationData.FEMALE}<br>
-                Total: ${locationData.total}
-            `;
+        // Function to add markers to the map
+        function addMarkers(filteredData) {
+            clearMarkers();
+            locations.forEach(location => {
+                var locationData = filteredData[location.key] || { MALE: 0, FEMALE: 0, total: 0 };
 
-            L.marker(location.coords)
-                .addTo(map)
-                .bindPopup(popupContent);
+                // Create a popup with male, female, and total counts
+                var popupContent = `
+                    <strong>${location.name}</strong><br>
+                    Laki-laki: ${locationData.MALE}<br>
+                    Perempuan: ${locationData.FEMALE}<br>
+                    Total: ${locationData.total}
+                `;
+
+                var marker = L.marker(location.coords)
+                    .addTo(map)
+                    .bindPopup(popupContent);
+
+                currentMarkers.push(marker);
+            });
+        }
+
+        // Function to filter map data
+        function filterMapData() {
+            const selectedCompany = document.querySelector('input[name="companyFilter"]:checked')?.value;
+
+            if (selectedCompany) {
+                fetch(`/filter-map-data?company=${selectedCompany}`)
+                    .then(response => response.json())
+                    .then(filteredData => {
+                        addMarkers(filteredData);
+                    });
+            } else {
+                addMarkers(originalMapData); // Show all data if no filter is selected
+            }
+        }
+
+        // Add initial markers
+        addMarkers(originalMapData);
+
+        // Fetch available years dynamically from the server (e.g., based on overtime data)
+        function fetchAvailableYears() {
+            $.ajax({
+                url: "{{ route('home.getAvailableYears') }}",  // Create this route to fetch years from overtime records
+                method: 'GET',
+                success: function (data) {
+                    populateYearSelector(data.years);
+                }
+            });
+        }
+
+        // Populate the year dropdown with available years
+        function populateYearSelector(years) {
+            var yearSelector = $('#yearSelector');
+            yearSelector.empty();  // Clear existing options
+
+            // Add a default option (current year)
+            yearSelector.append('<option value="' + new Date().getFullYear() + '">Current Year</option>');
+
+            // Populate years dynamically
+            years.forEach(function(year) {
+                yearSelector.append('<option value="' + year + '">' + year + '</option>');
+            });
+
+            // Set the selected year to the current year if not set
+            yearSelector.val(new Date().getFullYear());
+        }
+
+        // Function to fetch overtime data from the server and update the line chart
+        function fetchOvertimeData(year) {
+            $.ajax({
+                url: "{{ route('home.getOvertimeData') }}",  // Make sure you define the route correctly
+                method: 'GET',
+                data: { year: year },
+                success: function (data) {
+                    updateLineChart(data);
+                }
+            });
+        }
+
+        // Function to update the line chart
+        function updateLineChart(data) {
+            var optionsLine = {
+                series: [{
+                    name: 'Jam Lembur',
+                    data: Object.values(data) // Use the values from the response to update chart data
+                }],
+                chart: {
+                    type: 'line',
+                    height: 350
+                },
+                xaxis: {
+                    categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                }
+            };
+
+            var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
+            lineChart.render();
+        }
+
+        // Event listener for year selector change
+        $('#yearSelector').change(function() {
+            var selectedYear = $(this).val();
+            fetchOvertimeData(selectedYear);  // Fetch and update the chart with new data
         });
+
+        // Initialize the page with the available years and chart for the current year
+        $(document).ready(function() {
+            fetchAvailableYears();  // Get available years from server
+            fetchOvertimeData(new Date().getFullYear());  // Default year is the current year
+        });
+
+
     </script>
+
+    <!-- @if(auth()->check() && auth()->user()->hasRole('pegawai'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>

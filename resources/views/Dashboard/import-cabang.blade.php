@@ -13,8 +13,27 @@
 
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
-        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-lg">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-lg">
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Import Cabang</h2>
+
+            <!-- Display session error if it exists -->
+            @if (session('error'))
+                <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                    <strong>Error:</strong> {{ session('error') }}
+                </div>
+            @endif
+
+            <!-- Download Excel Template -->
+            <div class="mb-4 flex items-center">
+                <a href="{{ route('cabang.downloadTemplate') }}" class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v4a2 2 0 002 2h12a2 2 0 002-2v-4m-4-4l-4-4m0 0l-4 4m4-4v12" />
+                    </svg>
+                    Download Template Cabang
+                </a>
+            </div>
+
+            <!-- Upload Form -->
             <form action="{{ route('cabang.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
@@ -27,6 +46,7 @@
             </form>
         </div>
     </div>
+
 
     <script>
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');

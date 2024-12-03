@@ -28,8 +28,8 @@ class AppraisalController extends Controller
                 'appraisals_employee.rata_rata','appraisals_employee.nilai_final','appraisals_employee.appraisal_status as appraisal_employee_status ',
                 DB::raw("(SELECT status FROM appraisal_status WHERE appraisal_status.id = appraisals_employee.appraisal_status) as appraisal_status_name")
                 )
-        ->get();  
-        
+        ->get();
+
         $appraisalsEmployee = DB::table('appraisals_employee')
         ->join('pegawais', 'appraisals_employee.pegawai_id', '=', 'pegawais.id')
         ->whereIn('pegawais.id', function ($query) use ($departmentUser) {
@@ -39,22 +39,20 @@ class AppraisalController extends Controller
         })
         ->select('appraisals_employee.id as id_appraisal_employee', 'appraisals_employee.*', 'pegawais.*')
         ->get();
-        
+
         if($role==3){
         return view('dashboard.appraisal-approval', compact('appraisals','role','appraisalsEmployee'));
         }else{
             return view('dashboard.appraisal', compact('appraisals','role'));
-        
-
-    }
+        }
     }
 
     public function category()
     {
         $appraisalcategorys = AppraisalCategory::all();
         return view('dashboard.appraisalcategory', compact('appraisalcategorys'));
-    } 
-    
+    }
+
     public function showupdatecategory(AppraisalCategory $appraisalcategorys)
     {
         return view('dashboard.edit-appraisalcategory', compact('appraisalcategorys'));
@@ -69,26 +67,10 @@ class AppraisalController extends Controller
     {
         $appraisalcategorys = AppraisalCategory::where('isactive', '1')->get();
 
-        
+
         return view('dashboard.tambah-appraisal', compact('appraisalcategorys'));
     }
 
-    public function updateappraisalemployee(AppraisalEmployee $appraisalsEmployee)
-    {
-        $pegawai_id = $appraisalsEmployee->pegawai_id;
-        $cek_appraisal_employee = AppraisalEmployee::where('id_appraisal', $appraisalsEmployee->id_appraisal)
-                                           ->where('pegawai_id', $pegawai_id)
-                                           ->first();
-            
-        $appraisal = $appraisalsEmployee;
-        $appraisal_item = DB::table('appraisals_item')
-        ->join('appraisals_category', 'appraisals_item.id_appraisals_kategori', '=', 'appraisals_category.id')
-        ->select('appraisals_item.*','appraisals_category.*')
-        ->where('appraisals_item.id_appraisals_employee', $cek_appraisal_employee->id)
-        ->get();    
-
-        return view('dashboard.edit-appraisalemployee', compact('appraisal','appraisal_item'));  
-    }
 
     public function createappraisalemployee(Appraisal $appraisal)
     {
@@ -99,7 +81,7 @@ class AppraisalController extends Controller
         $appraisal_employee=$cek_appraisal_employee->toArray();
         if($cek_appraisal_employee->isEmpty())
         {
-        
+
         $get_id_appraisal_category = $appraisal->id_appraisals_kategori;
         $id_appraisal_category = array_map('intval', explode(',', $get_id_appraisal_category));
         $appraisalcategorys = AppraisalCategory::whereIn('id', $id_appraisal_category)->get();
@@ -107,21 +89,56 @@ class AppraisalController extends Controller
        return view('dashboard.tambah-appraisalemployee', compact('appraisal','appraisalcategorys'));
 
         }else{
-        
+
         $appraisal_item = DB::table('appraisals_item')
         ->join('appraisals_category', 'appraisals_item.id_appraisals_kategori', '=', 'appraisals_category.id')
         ->select('appraisals_item.*','appraisals_category.*')
         ->where('appraisals_item.id_appraisals_employee', $appraisal_employee[0])
-        ->get(); 
-        
-        
+        ->get();
+
+
         // AppraisalItem::where('id_appraisals_employee', $appraisal_employee[0])->get();
         return view('dashboard.view-appraisalemployee', compact('appraisal','appraisal_item'));
-        
+
         }
-        
-        
+
     }
+
+    public function updateappraisalemployee(Appraisal $appraisal)
+    {
+        $pegawai_id = auth()->user()->pegawai_id;
+
+        $cek_appraisal_employee = AppraisalEmployee::where('id_appraisal', $appraisal->id)
+                ->where('pegawai_id', $pegawai_id)
+                ->get();
+        $appraisal_employee=$cek_appraisal_employee->toArray();
+        $appraisal_item = DB::table('appraisals_item')
+                ->join('appraisals_category', 'appraisals_item.id_appraisals_kategori', '=', 'appraisals_category.id')
+                ->select('appraisals_item.*','appraisals_category.*')
+                ->where('appraisals_item.id_appraisals_employee', $appraisal_employee[0])
+                ->get();
+
+        return view('dashboard.view-appraisalemployee', compact('appraisal','appraisal_item'));
+    }
+
+    public function updateappraisalemployeeapproval(AppraisalEmployee $appraisalsEmployee)
+    {
+        $pegawai_id = $appraisalsEmployee->pegawai_id;
+
+        $cek_appraisal_employee = AppraisalEmployee::where('id_appraisal', $appraisalsEmployee->id_appraisal)
+                ->where('pegawai_id', $pegawai_id)
+                ->first();
+
+        $appraisal = $appraisalsEmployee;
+        $appraisal_item = DB::table('appraisals_item')
+                ->join('appraisals_category', 'appraisals_item.id_appraisals_kategori', '=', 'appraisals_category.id')
+                ->select('appraisals_item.*','appraisals_category.*')
+                ->where('appraisals_item.id_appraisals_employee', $cek_appraisal_employee->id)
+                ->get();
+        return view('dashboard.edit-appraisalemployee', compact('appraisal','appraisal_item'));
+    }
+
+
 
     public function storecategory(Request $request)
     {
@@ -144,7 +161,7 @@ class AppraisalController extends Controller
     {
     $appraisalcategorys = AppraisalCategory::where('isactive', '1')->get();
         // Gabungkan ID kategori appraisal yang aktif menjadi satu string yang dipisahkan koma
-    $appraisalcategorysid = $appraisalcategorys->pluck('id')->implode(',');  
+    $appraisalcategorysid = $appraisalcategorys->pluck('id')->implode(',');
     $monthperiod = $request->input('monthperiod');
     $yearperiod = $request->input('yearperiod');
     $period = $monthperiod . '-' . $yearperiod;
@@ -156,62 +173,66 @@ class AppraisalController extends Controller
         'appraisal_status' => '1',
     ]);
 
-    
+
     // Redirect dengan pesan sukses
     return redirect()->route('appraisal.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function storeappraisalemployee(Request $request)
     {
-    
-    $appraisal_status='1';
-    $pegawai_id = auth()->user()->pegawai_id;
-    $input=$request->all();
-    $data=[];
-    foreach ($input as $key => $value) {
-        $data[$key] = $value; // Menyimpan setiap input dalam array $data
-    }
+        $pegawai_id = auth()->user()->pegawai_id;
+        $input = $request->all();
+        $data = [];
 
-    $filteredArray = [];
-    foreach ($input as $key => $value) {
-    if (is_numeric($key) && $key >= 1) {
-        $filteredArray[$key] = $value;
-    }
-    }
-
-    // Mulai transaksi
-    DB::beginTransaction();
-
-    try {
-        // Insert ke tabel appraisal_employee
-        $appraisalEmployee = AppraisalEmployee::create([
-                    'id_appraisal' => $data['id_appraisal'],
-                    'pegawai_id' => $pegawai_id,
-                    'appraisal_period' => $data['appraisal_period'],
-                    'appraisal_status' =>'1'
-                ]);
-
-        // Insert ke tabel appraisal_item dengan menggunakan id dari appraisal_employee
-        foreach ($filteredArray as $key => $value) {
-            AppraisalItem::create([
-                'id_appraisals_employee' => $appraisalEmployee->id, // Menggunakan id dari appraisal_employee
-                'id_appraisals_kategori' => $key, // Menggunakan key sebagai id kategori
-                'pegawai_score' => $value, // Menggunakan value sebagai score
-            ]);
+        foreach ($input as $key => $value) {
+            $data[$key] = $value;
         }
 
-        // Commit transaksi
-        DB::commit();
-        // Redirect dengan pesan sukses
-        return redirect()->route('appraisal.index')->with('success', 'Data berhasil ditambahkan!');
+        $filteredArray = [];
+        foreach ($input as $key => $value) {
+            if (is_numeric($key) && $key >= 1) {
+                $filteredArray[$key] = $value;
+            }
+        }
 
-    } catch (\Exception $e) {
-        // Rollback jika terjadi error
-        DB::rollBack();
-    }
+        // Start transaction
+        DB::beginTransaction();
+
+        try {
+
+            $pegawai_fill_at = Carbon::now('Asia/Jakarta'); // <-- Using WIB time here
+
+            // Insert into the appraisal_employee table
+            $appraisalEmployee = AppraisalEmployee::create([
+                'id_appraisal' => $data['id_appraisal'],
+                'pegawai_id' => $pegawai_id,
+                'appraisal_period' => $data['appraisal_period'],
+                'appraisal_status' => '1',
+                'pegawai_fill_at' => Carbon::now(),  // <-- Set the pegawai_fill_at timestamp here
+            ]);
+
+            // Insert into the appraisal_item table
+            foreach ($filteredArray as $key => $value) {
+                AppraisalItem::create([
+                    'id_appraisals_employee' => $appraisalEmployee->id, // Using the id from appraisal_employee
+                    'id_appraisals_kategori' => $key, // Using the key as the category ID
+                    'pegawai_score' => $value, // Using the value as the score
+                ]);
+            }
+
+            // Commit transaction
+            DB::commit();
+
+            // Redirect with success message
+            return redirect()->route('appraisal.index')->with('success', 'Data berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            DB::rollBack();
+        }
     }
 
-    
+
+
     public function updatecategory(Request $request,AppraisalCategory $appraisalcategorys)
     {
         $request->validate([
@@ -220,19 +241,19 @@ class AppraisalController extends Controller
             'isactive' => 'required',
         ]);
 
-       
+
         $appraisalcategorys->update([
             'title' => $request->title,
             'description' => $request->description,
             'isactive' => $request->isactive,
         ]);
-        
+
         return redirect()->route('appraisal.category')->with('success', 'Data berhasil diupdate!');
     }
 
     public function updateappraisalitem(Request $request,AppraisalEmployee $appraisalemployee, AppraisalItem $appraisalitem)
     {
-        
+
         $input=$request->all();
         $data=[];
         foreach ($input as $key => $value) {
@@ -251,7 +272,7 @@ class AppraisalController extends Controller
         } else {
             $average = 0; // Jika tidak ada elemen, rata-rata diset ke 0
         }
-        
+
         $superior_approved_at = Carbon::now()->toDateString();
         $rata_rata = $average;
 
@@ -259,10 +280,10 @@ class AppraisalController extends Controller
         ->where('min', '<=', $rata_rata) // Cek apakah rata_rata lebih besar atau sama dengan min
         ->where('max', '>=', $rata_rata) // Cek apakah rata_rata lebih kecil atau sama dengan max
         ->pluck('score_value');
-             
+
         //Mulai transaksi
         DB::beginTransaction();
-        
+
 
         try {
         // Update ke tabel appraisal_employee
@@ -278,7 +299,7 @@ class AppraisalController extends Controller
             $appraisalitem = AppraisalItem::where('id_appraisals_employee', $input['id_appraisal'])
                                           ->where('id_appraisals_kategori', $key)
                                           ->first();  // Ambil record pertama yang ditemukan
-                            
+
             $appraisalitem->update([
                     'final_score_bysuperior' => $value // Update nilai score
                 ]);
@@ -295,53 +316,63 @@ class AppraisalController extends Controller
         DB::rollBack();
     }
     }
+
+    public function exportXlsx()
+    {
+        $appraisalData = AppraisalEmployee::with(['pegawai', 'appraisal', 'appraisalItems'])->get()->map(function ($appraisalEmployee) {
+            $pegawai = $appraisalEmployee->pegawai;
+            $appraisalItems = $appraisalEmployee->appraisalItems->pluck('pegawai_score', 'id_appraisals_kategori');
+
+            return [
+                'NRP' => $pegawai->nrp ?? 'N/A',
+                'NAMA KARYAWAN' => $pegawai->nama ?? 'N/A',
+                'COY' => $pegawai->coy ?? 'N/A',
+                'CABANG' => $pegawai->cabang ?? 'N/A',
+                'JABATAN' => $pegawai->jabatan ?? 'N/A',
+                'TANGGAL MASUK TN-SHN' => $pegawai->tanggal_masuk_tn_shn ?? 'N/A',
+                '1. Kualitas Kerja' => $appraisalItems[1] ?? 'N/A', // Assuming category ID 1 is Kualitas Kerja
+                '2. Kuantitas Kerja' => $appraisalItems[2] ?? 'N/A', // Assuming category ID 2 is Kuantitas Kerja
+                '3. Kerjasama' => $appraisalItems[3] ?? 'N/A', // Assuming category ID 3 is Kerjasama
+                '4. Kepuasan Hasil Kerja' => $appraisalItems[4] ?? 'N/A', // Assuming category ID 4 is Kepuasan Hasil Kerja
+                '5. Disiplin' => $appraisalItems[5] ?? 'N/A', // Assuming category ID 5 is Disiplin
+                'NILAI RATA2' => $appraisalEmployee->rata_rata ?? 'N/A',
+                'NILAI USER' => $appraisalEmployee->nilai_final ?? 'N/A',
+            ];
+        });
+
+        $filename = 'appraisal_data_export.xlsx';
+
+        return Excel::download(new class($appraisalData) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+            private $data;
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function collection()
+            {
+                return collect($this->data);
+            }
+
+            public function headings(): array
+            {
+                return [
+                    'NRP',
+                    'NAMA KARYAWAN',
+                    'COY',
+                    'CABANG',
+                    'JABATAN',
+                    'TANGGAL MASUK TN-SHN',
+                    '1. Kualitas Kerja',
+                    '2. Kuantitas Kerja',
+                    '3. Kerjasama',
+                    '4. Kepuasan Hasil Kerja',
+                    '5. Disiplin',
+                    'NILAI RATA2',
+                    'NILAI USER',
+                ];
+            }
+        }, $filename);
+    }
+
 }
-
-
-
-// $appraisal_status='1';
-//     $pegawai_id = auth()->user()->id;
-//     $input=$request->all();
-//     $data=[];
-//     foreach ($input as $key => $value) {
-//         $data[$key] = $value; // Menyimpan setiap input dalam array $data
-//     }
-
-//     $filteredArray = [];
-//     foreach ($input as $key => $value) {
-//     if (is_numeric($key) && $key >= 1) {
-//         $filteredArray[$key] = $value;
-//     }
-//     }
-
-//     // Mulai transaksi
-//     DB::beginTransaction();
-
-//     try {
-//         // Insert ke tabel appraisal_employee
-//         $appraisalEmployee = AppraisalEmployee::create([
-//                     'id_appraisal' => $data['id_appraisal'],
-//                     'pegawai_id' => $pegawai_id,
-//                     'appraisal_period' => $data['appraisal_period'],
-//                     'appraisal_status' =>'1'
-//                 ]);
-
-//         // Insert ke tabel appraisal_item dengan menggunakan id dari appraisal_employee
-//         foreach ($filteredArray as $key => $value) {
-//             AppraisalItem::create([
-//                 'id_appraisals_employee' => $appraisalEmployee->id, // Menggunakan id dari appraisal_employee
-//                 'id_appraisals_kategori' => $key, // Menggunakan key sebagai id kategori
-//                 'pegawai_score' => $value, // Menggunakan value sebagai score
-//             ]);
-//         }
-
-//         // Commit transaksi
-//         DB::commit();
-//         // Redirect dengan pesan sukses
-//         return redirect()->route('appraisal.index')->with('success', 'Data berhasil ditambahkan!');
-
-//     } catch (\Exception $e) {
-//         // Rollback jika terjadi error
-//         DB::rollBack();
-//     }
-//     }

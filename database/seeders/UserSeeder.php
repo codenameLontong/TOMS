@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
@@ -76,11 +77,6 @@ class UserSeeder extends Seeder
         // Assign the hc_div_head role to this user
         $hcDivHead->assignRole('hc_div_head');
 
-
-
-
-
-        
         // Create Direct Superior User
         $directSuperior = User::create([
             'role_id' => 3,
@@ -103,5 +99,41 @@ class UserSeeder extends Seeder
         // Assign the pegawai role to this user
         $pegawai->assignRole('pegawai');
 
+        // Create Permissions
+        $permissions = [
+            'view dashboard',
+            'view pegawai',
+            'view vendor',
+            'view cabang',
+            'view overtime',
+            'view exception',
+            'view appraisal',
+            'view struktur_organisasi',
+            // Add more permissions as needed
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        // Assign permissions to roles
+        $superAdmin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo([
+            'view pegawai',
+            'view overtime',
+            'view exception',
+            'view appraisal',
+            'view struktur_organisasi'
+        ]);
+        $directSuperior->givePermissionTo([
+            'view pegawai',
+            'view overtime',
+            'view exception',
+            'view appraisal',
+            'view struktur_organisasi'
+        ]);
+
     }
+
+
 }

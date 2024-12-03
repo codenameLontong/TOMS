@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             AppraisalStatusSeeder::class,
             CostCenterSeeder::class,
             MappingCostCenterSeeder::class,
+            AppraisalsScoreSeeder::class,
         ]);
     }
 }

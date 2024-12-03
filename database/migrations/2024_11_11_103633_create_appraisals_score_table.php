@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('appraisals_score', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->integer('min'); // Minimum score
-            $table->integer('max'); // Maximum score
-            $table->string('score_value'); // The score value, stored as decimal (adjust precision as needed)
+            $table->decimal('min', 3, 2); // Minimum score with precision (3 digits total, 2 decimals)
+            $table->decimal('max', 3, 2); // Maximum score with precision
+            $table->string('score_value'); // The score value, stored as string
         });
     }
 

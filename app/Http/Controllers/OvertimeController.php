@@ -274,4 +274,102 @@ class OvertimeController extends Controller
         return redirect()->back()->with('success', 'Overtime approved successfully!');
     }
 
+    public function exportXlsx()
+    {
+        $overtimeData = Overtime::with(['pegawai', 'overtimeReason'])->get()->map(function ($overtime) {
+            return [
+                'id' => $overtime->id,
+                'pegawai_name' => $overtime->pegawai->nama ?? 'N/A',
+                'directorate' => $overtime->pegawai->directorate ?? 'N/A',
+                'division' => $overtime->pegawai->division ?? 'N/A',
+                'department' => $overtime->pegawai->department ?? 'N/A',
+                'section' => $overtime->pegawai->section ?? 'N/A',
+                'order_by' => $overtime->order_by,
+                'order_at' => $overtime->order_at,
+                'is_holiday' => $overtime->is_holiday ? 'Yes' : 'No',
+                'request_date' => $overtime->request_date,
+                'start_time' => $overtime->start_time,
+                'end_time' => $overtime->end_time,
+                'overtime_reason' => $overtime->overtimeReason->reason ?? 'N/A',
+                'todo_list' => $overtime->todo_list,
+                'note' => $overtime->note,
+                'status' => $overtime->status,
+                'approved_by' => $overtime->approved_by,
+                'approved_at' => $overtime->approved_at,
+                'approved_note' => $overtime->approved_note,
+                'approved_date' => $overtime->approved_date,
+                'approved_start_time' => $overtime->approved_start_time,
+                'approved_end_time' => $overtime->approved_end_time,
+                'escalation_approved_by' => $overtime->escalation_approved_by,
+                'escalation_approved_at' => $overtime->escalation_approved_at,
+                'escalation_approved_note' => $overtime->escalation_approved_note,
+                'escalation_approved_date' => $overtime->escalation_approved_date,
+                'escalation_approved_start_time' => $overtime->escalation_approved_start_time,
+                'escalation_approved_end_time' => $overtime->escalation_approved_end_time,
+                'hc_head_confirmed_by' => $overtime->hc_head_confirmed_by,
+                'hc_head_confirmed_at' => $overtime->hc_head_confirmed_at,
+                'hc_head_confirmed_note' => $overtime->hc_head_confirmed_note,
+                'hc_head_confirmed_date' => $overtime->hc_head_confirmed_date,
+                'hc_head_confirmed_start_time' => $overtime->hc_head_confirmed_start_time,
+                'hc_head_confirmed_end_time' => $overtime->hc_head_confirmed_end_time,
+            ];
+        });
+
+        $filename = 'overtime_data_export.xlsx';
+
+        return Excel::download(new class($overtimeData) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+            private $data;
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function collection()
+            {
+                return collect($this->data);
+            }
+
+            public function headings(): array
+            {
+                return [
+                    'ID',
+                    'Pegawai Name',
+                    'Directorate',
+                    'Division',
+                    'Department',
+                    'Section',
+                    'Order By',
+                    'Order At',
+                    'Is Holiday',
+                    'Request Date',
+                    'Start Time',
+                    'End Time',
+                    'Overtime Reason',
+                    'To-Do List',
+                    'Note',
+                    'Status',
+                    'Approved By',
+                    'Approved At',
+                    'Approved Note',
+                    'Approved Date',
+                    'Approved Start Time',
+                    'Approved End Time',
+                    'Escalation Approved By',
+                    'Escalation Approved At',
+                    'Escalation Approved Note',
+                    'Escalation Approved Date',
+                    'Escalation Approved Start Time',
+                    'Escalation Approved End Time',
+                    'HC Head Confirmed By',
+                    'HC Head Confirmed At',
+                    'HC Head Confirmed Note',
+                    'HC Head Confirmed Date',
+                    'HC Head Confirmed Start Time',
+                    'HC Head Confirmed End Time',
+                ];
+            }
+        }, $filename);
+    }
+
+
 }

@@ -39,7 +39,7 @@
                             <th class="px-6 py-3">Kategori</th>
                             <th class="px-6 py-3">Description</th>
                             <th class="px-6 py-3">Nilai Self Assessment</th>
-                            <th class="px-6 py-3">Nilai Final By Superior</th>                            
+                            <th class="px-6 py-3">Nilai Final By Superior</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,10 +49,10 @@
                             <td class="px-6 py-4"><b>{{ $appraisal_items->title }}</b></td>
                             <td class="px-6 py-4">{{ $appraisal_items->description }}</td>
                             <td class="px-6 py-4">
-                                <input type="number" value="{{ $appraisal_items->pegawai_score  }}" min="10" max="100" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>                 
+                                <input type="number" value="{{ $appraisal_items->pegawai_score  }}" min="10" max="100" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
                             </td>
                             <td class="px-6 py-4">
-                                <input type="number" min="10" max="100" id="{{ $appraisal_items->id }}" name="{{ $appraisal_items->id }}" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">                 
+                                <input type="number" min="1" max="5" id="{{ $appraisal_items->id }}" name="{{ $appraisal_items->id }}" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </td>
                         </tr>
                         @endforeach
@@ -62,8 +62,8 @@
             <div class="mb-4">
                 <input type="submit" value="Simpan" class="w-full text-white bg-blue-700 hover:bg-primary-800 rounded-lg px-5 py-2.5">
             </div>
-                
-                <!-- Tombol Input -->   
+
+                <!-- Tombol Input -->
             </form>
         </div>
     </div>

@@ -11,9 +11,9 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Kategori Appraisal</h2>
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-lg">
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Edit Kategori Appraisal</h2>
 
             <form method="POST" action="{{ route('appraisal.updatecategory', $appraisalcategorys->id) }}">
                 @csrf
@@ -26,9 +26,13 @@
 
                 <!-- Description Kategori Appraisal -->
                 <div class="mb-4">
-                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi Kategori Appraisal</label>
-                        <input type="text" id="description" name="description" value="{{$appraisalcategorys->description}}" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi Kategori Appraisal</label>
+                    <textarea id="description" name="description" required
+                            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            oninput="autoResize(this)"
+                            >{{$appraisalcategorys->description}}</textarea>
                 </div>
+
 
                 <div class="mb-8">
                     <label for="isactive" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi Kategori Appraisal</label>
@@ -86,6 +90,20 @@
                 }
             }
 
+        });
+
+        // Function to automatically resize the textarea based on its content
+        function autoResize(textarea) {
+            // Reset the height to 'auto' to calculate the new scroll height
+            textarea.style.height = 'auto';
+            // Set the height to the scrollHeight (the full height of the content)
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Ensure the textarea resizes correctly when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('description');
+            autoResize(textarea);
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

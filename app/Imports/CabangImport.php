@@ -23,6 +23,7 @@ class CabangImport implements ToCollection
             Cabang::create([
                 'kode_cabang' => $row[0],  // Assuming column 0 is 'kode_cabang'
                 'lokasi_cabang' => $row[1],  // Assuming column 1 is 'lokasi_cabang'
+                'alamat_cabang' => $row[2],  // Assuming column 2 is 'alamat_cabang'
             ]);
         }
     }

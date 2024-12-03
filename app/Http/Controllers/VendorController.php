@@ -22,19 +22,28 @@ class VendorController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'nama_vendor' => 'required',
-                'kode_vendor' => 'required|unique:vendors',
-                'astra_non_astra' => 'required|in:Astra,Non Astra',
-            ]);
+        $request->validate([
+            'nama_vendor' => 'required',
+            'kode_vendor' => 'required|unique:vendors',
+            'astra_non_astra' => 'required|in:Astra,Non Astra',
+            'pics.*.nama' => 'required|string',
+            'pics.*.no_hp' => 'required|string',
+            'pics.*.email' => 'required|email|',
+            'pics.*.jabatan' => 'required|string',
+        ]);
 
-            Vendor::create($request->all());
+        try {
+            // Create the vendor
+            $vendor = Vendor::create($request->only('nama_vendor', 'kode_vendor', 'astra_non_astra'));
+
+            // Create the PICs
+            foreach ($request->input('pics', []) as $picData) {
+                $vendor->pics()->create($picData);
+            }
 
             return redirect()->route('vendor.index')->with('success', 'Vendor berhasil dibuat.');
         } catch (\Exception $e) {
-            // Dump the error message and stop execution
-            dd($e->getMessage());
+            return redirect()->back()->with('error', 'Gagal membuat vendor: ' . $e->getMessage());
         }
     }
 
@@ -51,16 +60,79 @@ class VendorController extends Controller
 
     public function update(Request $request, Vendor $vendor)
     {
-        $request->validate([
-            'nama_vendor' => 'required',
-            'kode_vendor' => 'required|unique:vendors,kode_vendor,'.$vendor->id,
-            'astra_non_astra' => 'required|in:Astra,Non Astra',
-        ]);
+        try {
+            // Validate general vendor data
+            $validatedData = $request->validate([
+                'nama_vendor' => 'required|string|max:255',
+                'kode_vendor' => 'required|string|unique:vendors,kode_vendor,' . $vendor->id,
+                'astra_non_astra' => 'required|in:Astra,Non Astra',
+                'pics.*.id' => 'nullable|exists:pics,id', // Ensure existing PICs have valid IDs
+                'pics.*.nama' => 'required|string|max:255',
+                'pics.*.no_hp' => 'required|string|max:20',
+                'pics.*.email' => 'required|email',
+                'pics.*.jabatan' => 'required|string|max:255',
+            ]);
 
-        $vendor->update($request->all());
+            // Update the vendor
+            $vendor->update([
+                'nama_vendor' => $validatedData['nama_vendor'],
+                'kode_vendor' => $validatedData['kode_vendor'],
+                'astra_non_astra' => $validatedData['astra_non_astra'],
+            ]);
 
-        return redirect()->route('vendor.index')->with('success', 'Vendor berhasil di-update.');
+            $existingPicIds = $vendor->pics()->pluck('id')->toArray(); // Get all existing PIC IDs for the vendor
+            $incomingPicIds = array_column($validatedData['pics'], 'id'); // Get all incoming PIC IDs from the request
+
+            // Loop through all incoming PICs
+            foreach ($validatedData['pics'] as $picData) {
+                if (isset($picData['id'])) {
+                    // Update existing PICs
+                    $pic = $vendor->pics()->find($picData['id']);
+
+                    if ($pic) {
+                        // Only validate email uniqueness if it's being changed
+                        if ($pic->email !== $picData['email']) {
+                            $request->validate([
+                                "pics.*.email" => "unique:pics,email," . $picData['id'],
+                            ]);
+                        }
+
+                        // Update PIC
+                        $pic->update([
+                            'nama' => $picData['nama'],
+                            'no_hp' => $picData['no_hp'],
+                            'email' => $picData['email'],
+                            'jabatan' => $picData['jabatan'],
+                        ]);
+                    }
+                } else {
+                    // Create new PIC if no ID is provided
+                    $vendor->pics()->create([
+                        'nama' => $picData['nama'],
+                        'no_hp' => $picData['no_hp'],
+                        'email' => $picData['email'],
+                        'jabatan' => $picData['jabatan'],
+                    ]);
+                }
+            }
+
+            // Delete removed PICs
+            $deletedPicIds = array_diff($existingPicIds, $incomingPicIds);
+            if (!empty($deletedPicIds)) {
+                $vendor->pics()->whereIn('id', $deletedPicIds)->delete();
+            }
+
+            return redirect()->route('vendor.index')->with('success', 'Vendor successfully updated!');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            dd($e->getMessage());
+
+            // Return to the previous page with an error message
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
+
+
 
     public function delete(Vendor $vendor)
     {
@@ -89,5 +161,15 @@ class VendorController extends Controller
     {
         $exists = Vendor::where('kode_vendor', $request->input('kode_vendor'))->exists();
         return response()->json(['exists' => $exists]);
+    }
+
+    public function downloadTemplate()
+    {
+        $filePath = public_path('Template Vendor Import.xlsx'); // Ensure the file is placed in the public folder
+        if (!file_exists($filePath)) {
+            abort(404, 'Template file not found.');
+        }
+
+        return response()->download($filePath, 'Template Vendor Import.xlsx');
     }
 }

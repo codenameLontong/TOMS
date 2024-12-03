@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Appraisal;
 
 class AppraisalEmployee extends Model
 {
@@ -22,6 +23,11 @@ class AppraisalEmployee extends Model
         'superior_approved_at',
         'rata_rata',
         'nilai_final'
-        
+
     ];
+
+    public function appraisal()
+    {
+        return $this->belongsTo(Appraisal::class, 'id_appraisal');
+    }
 }

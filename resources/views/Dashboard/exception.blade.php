@@ -30,7 +30,7 @@
 
                <!-- Exception Table -->
                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table id="exceptionTable" class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">Id <span>&#9650;</span></th>
@@ -83,8 +83,8 @@
             </table>
         </div>
 
-                        <!-- Pagination -->
-                        <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
+            <!-- Pagination -->
+            <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
                     <span id="current-range"class="font-semibold text-gray-900 dark:text-white">1-10</span>
@@ -142,6 +142,92 @@
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.add('hidden');
         }
+
+    document.addEventListener('DOMContentLoaded', function() {
+            // Pagination variables
+            const rows = document.querySelectorAll('#exceptionTable tbody tr'); // Select all rows from the table
+            const recordsPerPage = 15; // Number of records per page
+            let currentPage = 1; // Start on the first page
+
+            // Pagination elements
+            const paginationList = document.getElementById('pagination-list');
+            const paginationButtons = document.getElementById('pagination-buttons');
+            const prevPageButton = document.getElementById('prev-page');
+            const nextPageButton = document.getElementById('next-page');
+            const currentRange = document.getElementById('current-range');
+            const totalRecordsElement = document.getElementById('total-records');
+
+            const totalRecords = rows.length; // Total number of rows in the table
+            const totalPages = Math.ceil(totalRecords / recordsPerPage); // Calculate total pages
+
+            // Update total records count in the UI
+            totalRecordsElement.textContent = totalRecords;
+
+            // Function to show the correct rows based on the current page
+            function showPage(page) {
+                const startRecord = (page - 1) * recordsPerPage;
+                const endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
+
+                rows.forEach((row, index) => {
+                    if (index >= startRecord && index < endRecord) {
+                        row.style.display = ''; // Show the row
+                    } else {
+                        row.style.display = 'none'; // Hide the row
+                    }
+                });
+
+                // Update the current page range text
+                currentRange.textContent = `${startRecord + 1}-${endRecord}`;
+
+                // Disable/Enable prev/next buttons as necessary
+                prevPageButton.classList.toggle('pointer-events-none', currentPage === 1);
+                nextPageButton.classList.toggle('pointer-events-none', currentPage === totalPages);
+
+                // Render pagination buttons
+                renderPaginationButtons();
+            }
+
+            // Function to render pagination buttons
+            function renderPaginationButtons() {
+                paginationButtons.innerHTML = ''; // Clear existing buttons
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.className = `flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${i === currentPage ? 'bg-gray-200' : ''}`;
+                    pageButton.textContent = i;
+
+                    pageButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+
+                    paginationButtons.appendChild(pageButton);
+                }
+            }
+
+            // Handle previous page button click
+            prevPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+
+            // Handle next page button click
+            nextPageButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+
+            // Initial page setup
+            showPage(currentPage);
+        });
 </script>
 </html>
 

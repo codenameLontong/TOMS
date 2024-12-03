@@ -65,7 +65,8 @@ class Pegawai extends Authenticatable
         'alamat_email',
         'no_hp',
         'employment_status',
-        'password'
+        'password',
+        'cabang_id',
     ];
 
     // Hide sensitive fields from JSON outputs
@@ -151,5 +152,10 @@ class Pegawai extends Authenticatable
     public function section()
     {
         return $this->belongsTo(Section::class, 'section_id');
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class, 'cabang_id', 'id');
     }
 }

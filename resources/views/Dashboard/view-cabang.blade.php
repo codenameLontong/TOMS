@@ -30,6 +30,32 @@
                     <label for="lokasi_cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lokasi Cabang</label>
                     <input type="text" id="lokasi_cabang" name="lokasi_cabang" value="{{ $cabang->lokasi_cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                 </div>
+
+                <!-- Alamat Cabang -->
+                <div class="mb-4">
+                    <label for="alamat_cabang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat Cabang</label>
+                    <input type="text" id="alamat_cabang" name="alamat_cabang" value="{{ $cabang->alamat_cabang }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                </div>
+
+                <!-- Jumlah Pegawai -->
+                <div class="mb-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Jumlah Pegawai</h3>
+                    <div class="mt-4 grid grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                        <div>
+                            <span class="font-semibold">Total:</span>
+                            <span>{{ $jumlahPegawai }}</span>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Laki-laki:</span>
+                            <span>{{ $jumlahLakiLaki }}</span>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Perempuan:</span>
+                            <span>{{ $jumlahPerempuan }}</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </form>

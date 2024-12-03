@@ -17,6 +17,7 @@ class Cabang extends Model
     protected $fillable = [
         'kode_cabang',
         'lokasi_cabang',
+        'alamat_cabang',
         'is_active',
     ];
 
@@ -29,10 +30,15 @@ class Cabang extends Model
         'is_active' => 'boolean',
     ];
 
-    // Define any relationships here, for example:
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class);
-    // }
+    // Scope for active cabang
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'cabang_id', 'id');
+    }
 }
 

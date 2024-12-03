@@ -45,10 +45,20 @@ class PegawaiController extends Controller
             $pegawais = Pegawai::where('employment_status', 'active')->get();
         }
 
+        // Fetch related data for filters
+        $departments = Pegawai::select('department')->distinct()->pluck('department');
+
         $jumlahVendor = Vendor::count();
         $jumlahPegawai = Pegawai::where('employment_status', 'active')->count();
 
-        return view('dashboard.pegawai', compact('pegawais', 'status'));
+        return view('dashboard.pegawai', [
+            'pegawais' => $pegawais,
+            'status' => $status,
+            'departments' => $departments,
+            'jumlahVendor' => $jumlahVendor,
+            'jumlahPegawai' => $jumlahPegawai,
+            'role' => auth()->user()->role, // Add this line to pass the role
+        ]);
     }
 
     public function create()
@@ -517,27 +527,28 @@ class PegawaiController extends Controller
     public function exportXlsx()
     {
         $pegawaiData = Pegawai::all()->map(function ($pegawai) {
-            // Step 1: Retrieve department ID based on nama_department
+            // Retrieve department ID based on nama_department
             $department = Department::where('nama_department', $pegawai->department)->first();
-            $departmentId = $department?->id; // Get the ID or null if not found
+            $departmentId = $department?->id;
 
-            // Step 2: Retrieve section ID based on nama_section
-            $section = Section::where('nama_section', $pegawai->section)->first();
-            $sectionId = $section?->id; // Get the ID or null if not found
+            // Retrieve section ID based on nama_section and department_id
+            $section = Section::where('nama_section', $pegawai->section)
+                ->where('department_id', $departmentId)
+                ->first();
+            $sectionId = $section?->id;
 
-            // Step 3: Find the mapping in the MappingCostCenter table
+            // Find the mapping in the MappingCostCenter table
             $mapping = MappingCostCenter::query()
-                ->where('department_id', $departmentId) // Match department_id
+                ->where('department_id', $departmentId)
                 ->when($sectionId, function ($query, $sectionId) {
-                    return $query->where('section_id', $sectionId); // Match section_id if exists
+                    return $query->where('section_id', $sectionId);
                 })
                 ->first();
 
-            // Step 4: Retrieve the cost center details
-            $kodeCostCenter = $mapping?->costCenter->kode ?? 'N/A'; // Retrieve kode_cost_center
-            $typeCoa = $mapping?->costCenter?->coaId?->type_coa ?? 'N/A'; // Retrieve type_coa if available
+            // Retrieve the cost center details
+            $kodeCostCenter = $mapping?->costCenter->kode ?? 'N/A';
+            $typeCoa = $mapping?->costCenter?->coaId?->type_coa ?? 'N/A';
 
-            // Step 5: Return all Pegawai attributes along with the cost center data
             return [
                 'nrp' => $pegawai->nrp,
                 'nrp_vendor' => $pegawai->nrp_vendor,
@@ -567,24 +578,73 @@ class PegawaiController extends Controller
                 'project_site' => $pegawai->project_site,
                 'alamat_email' => $pegawai->alamat_email,
                 'no_hp' => $pegawai->no_hp,
-                'kode_cost_center' => $kodeCostCenter, // Retrieved from MappingCostCenter logic
-                'type_coa' => $typeCoa, // Retrieved from MappingCostCenter logic
+                'kode_cost_center' => $kodeCostCenter,
+                'type_coa' => $typeCoa,
             ];
         });
 
         $filename = 'pegawai_data_export.xlsx';
 
-        return Excel::download(new class($pegawaiData) implements \Maatwebsite\Excel\Concerns\FromCollection {
+        return Excel::download(new class($pegawaiData) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
             private $data;
             public function __construct($data)
             {
                 $this->data = $data;
             }
+
             public function collection()
             {
                 return collect($this->data);
             }
+
+            public function headings(): array
+            {
+                return [
+                    'NRP',
+                    'NRP Vendor',
+                    'Nama',
+                    'Coy',
+                    'Cabang',
+                    'Kode Cabang',
+                    'Jabatan',
+                    'Directorate',
+                    'Division',
+                    'Department',
+                    'Section',
+                    'Jenis Kelamin',
+                    'Agama',
+                    'Pendidikan',
+                    'Status',
+                    'Tanggal Lahir',
+                    'Umur',
+                    'Tanggal Masuk TN/SHN',
+                    'Tanggal Masuk Vendor',
+                    'Masa Kerja TN/SHN',
+                    'Masa Kerja Vendor',
+                    'Jenis Kontrak Kerjasama',
+                    'Implementasi Kontrak Kerjasama',
+                    'Vendor',
+                    'Lokasi Kerja',
+                    'Project Site',
+                    'Alamat Email',
+                    'No HP',
+                    'Kode Cost Center',
+                    'Type CoA',
+                ];
+            }
         }, $filename);
     }
+
+    public function downloadTemplate()
+    {
+        $filePath = public_path('Template Pegawai Import.xlsx'); // File in the root of the public folder
+
+        if (!file_exists($filePath)) {
+            abort(404, 'Template file not found.');
+        }
+
+        return response()->download($filePath, 'Template Pegawai Import.xlsx');
+    }
+
 
 }

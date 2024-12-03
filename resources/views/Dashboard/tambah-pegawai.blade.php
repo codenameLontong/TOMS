@@ -41,37 +41,34 @@
                 </div>
 
                 <!-- COY and Directorate -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="COY" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
-                        <select id="COY" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            @foreach($companies as $company)
-                                <option value="{{ $company->id }}">{{ $company->coy }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
-                        <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value=""></option>
-                        </select>
-                    </div>
+                <div class="mb-4">
+                    <label for="COY" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY</label>
+                    <select id="COY" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value="" disabled selected>Pilih company</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->coy }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                    <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
+                    </select>
                 </div>
 
                 <!-- Division and Department -->
-                <div class="flex space-x-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
-                        <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value=""></option>
-                        </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
-                        <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value=""></option>
-                        </select>
-                    </div>
+                <div class="mb-4">
+                    <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
+                    <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
+                    <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value=""></option>
+                    </select>
                 </div>
 
                 <!-- Section -->
@@ -169,18 +166,37 @@
                         <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pendidikan</label>
                         <select id="pendidikan" name="pendidikan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                             <option value="SD">SD</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SLTP">SLTP</option>
-                            <option value="SMA">SMA</option>
-                            <option value="SMK">SMK</option>
+                            <option value="SMP">SMP/Sederajat</option>
+                            <option value="SMA">SMA/Sederajat</option>
                             <option value="D1">D1</option>
+                            <option value="D2">D2</option>
                             <option value="D3">D3</option>
                             <option value="D4">D4</option>
                             <option value="S1">S1</option>
                         </select>
                     </div>
-                    <div class="w-1/2">
-                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                    <div class="w-1/2 relative">
+                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white flex items-center">
+                            Status
+                            <span
+                                class="ml-2 text-gray-400 hover:text-gray-600 cursor-pointer relative group"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12" y2="8"></line>
+                                </svg>
+                                <div class="absolute left-0 top-6 bg-white text-gray-700 border border-gray-200 rounded shadow-lg p-2 text-sm w-64 hidden group-hover:block dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
+                                    <p><strong>TK:</strong> Belum Kawin</p>
+                                    <p><strong>K0:</strong> Kawin Tanggungan 0</p>
+                                    <p><strong>K1:</strong> Kawin Tanggungan 1</p>
+                                    <p><strong>K2:</strong> Kawin Tanggungan 2</p>
+                                    <p><strong>K3:</strong> Kawin Tanggungan 3</p>
+                                    <p><strong>K4:</strong> Kawin Tanggungan 4</p>
+                                    <p><strong>K5:</strong> Kawin Tanggungan 5</p>
+                                </div>
+                            </span>
+                        </label>
                         <select id="status" name="status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                             <option value="TK">TK</option>
                             <option value="K0">K0</option>
@@ -284,18 +300,25 @@
             fetch(`/get-directorates/${companyId}`)
                 .then(response => response.json())
                 .then(data => {
-                    populateDropdown(directorateSelect, data, 'nama_directorate');
+                    // Filter out directorates with id = 1 and id = 4
+                    const filteredData = data.filter(directorate => directorate.id !== 1 && directorate.id !== 4);
+
+                    populateDropdown(directorateSelect, filteredData, 'nama_directorate');
                     resetDropdown(divisionSelect);
                     resetDropdown(departmentSelect);
                     resetDropdown(sectionSelect);
 
                     // Automatically select the first directorate and trigger the change event
-                    if (data.length > 0) {
-                        directorateSelect.value = data[0].id;
-                        directorateSelect.dispatchEvent(new Event('change'));  // Trigger change event for the next dropdown
+                    if (filteredData.length > 0) {
+                        directorateSelect.value = filteredData[0].id;
+                        directorateSelect.dispatchEvent(new Event('change')); // Trigger change event for the next dropdown
                     }
+                })
+                .catch(error => {
+                    console.error('Error fetching directorates:', error);
                 });
         }
+
 
         // Fetch divisions based on selected directorate
         directorateSelect.addEventListener('change', function() {
