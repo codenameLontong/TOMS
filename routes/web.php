@@ -76,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/overtime/{id}/verify', [OvertimeController::class, 'verify'])->name('overtime.verify');
     Route::post('/overtime/{id}/confirm', [OvertimeController::class, 'confirm'])->name('overtime.confirm');
     Route::get('/pegawai/overtime', [OvertimeController::class, 'index'])->name('pegawai.overtime');
+    Route::post('/overtime/reapprove/{id}', [OvertimeController::class, 'reapprove'])->name('overtime.reapprove');
+
 
     // VENDOR
     Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index'); // View all Vendors

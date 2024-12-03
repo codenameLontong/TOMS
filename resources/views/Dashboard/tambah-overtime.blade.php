@@ -6,6 +6,8 @@
     <title>Buat SPL</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <x-navbar />
@@ -53,7 +55,7 @@
                 <!-- Form Inputs -->
                 <form id="overtime-form" action="{{ route('overtime.store') }}" method="POST">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid gap-4">
                         <!-- NRP Input (Auto-filled) -->
                         <div>
                             <label for="nrp" class="block mb-1">NRP</label>
@@ -86,17 +88,32 @@
 
                         <!-- Other Form Fields (Date, Time, Reason, To-Do) -->
                         <div>
-                            <label for="request_date" class="block mb-1">Request Date</label>
+                            <label for="request_date" class="block mb-1">Overtime Date</label>
                             <input type="date" id="request_date" name="request_date" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
                         </div>
                         <div>
-                            <label for="start_time" class="block mb-1">Start Time</label>
-                            <input type="time" id="start_time" name="start_time" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
+                            <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start time:</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input type="time" id="start_time" name="start_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="00:00" max="23:59" required />
+                            </div>
                         </div>
                         <div>
-                            <label for="end_time" class="block mb-1">End Time</label>
-                            <input type="time" id="end_time" name="end_time" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
+                            <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End time:</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input type="time" id="end_time" name="end_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="00:00" max="23:59" required />
+                            </div>
                         </div>
+
                         <div>
                             <label for="overtime_reason_order_id" class="block mb-1">Overtime Reason</label>
                             <select id="overtime_reason_order_id" name="overtime_reason_order_id" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
@@ -205,6 +222,7 @@
                 $('#pegawai_id, #person_email').val('');  // Clear hidden fields
             });
         });
+
         </script>
 
 

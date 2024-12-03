@@ -15,7 +15,7 @@ class ExceptionController extends Controller
 
     public function create()
     {
-        return view('dashboard.tambah-exception', compact('exceptions'));
+        return view('dashboard.tambah-exception');
     }
 
     public function store(Request $request)

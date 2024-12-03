@@ -7,151 +7,125 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Detail Overtime</h2>
-            <div class="container mx-auto p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- NRP Input (Auto-filled) -->
+    <div class="flex justify-center items-center min-h-screen p-10 sm:ml-64">
+        <div class="p-6 bg-white shadow-lg rounded-lg max-w-5xl w-full">
+            <h2 class="text-center text-2xl font-bold mb-4 underline">SURAT PERINTAH LEMBUR</h2>
+            <div class="mb-3 font-bold">Bersama ini kami tugaskan :</div>
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Saudara</label>
+                <input type="text" value="{{ ($overtime->pegawai)->nama }}" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Divisi/Dept</label>
+                <input type="text" value="{{ ($overtime->pegawai)->department }}" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Tugas yang Dikerjakan</label>
+                <input type="text" value="{{ $overtime->overtimeReason->title }}" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Keterangan</label>
+                <textarea class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>{{ $overtime->todo_list }}</textarea>
+            </div>
+
+            <div class="mb-3 font-bold">Untuk kerja lembur pada :</div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Hari</label>
+                <input type="text" value="Selasa" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Tanggal</label>
+                <span class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100">
+                    {{ \Carbon\Carbon::parse($overtime->request_date)->format('d F Y') }}
+                </span>
+            </div>
+
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Jam Mulai</label>
+                <input type="time" value="{{ $overtime->start_time }}" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <label class="text-gray-700 font-medium w-1/3">Jam Selesai</label>
+                <input type="time" value="{{ $overtime->end_time }}" class="flex-grow border border-gray-300 rounded-md p-2 bg-gray-100" disabled>
+            </div>
+            <p class="text-gray-600 italic mt-2">Bahwa saya yang bertandatangan di bawah ini bersedia tanpa paksaan untuk melaksanakan kerja lembur sesuai dengan jumlah waktu yang tertera</p>
+
+
+
+
+            <!-- Signature Section -->
+            <div class="mt-8">
+                <p class="text-right text-gray-700 font-medium mb-2">Jakarta, {{ \Carbon\Carbon::parse($overtime->order_at)->format('d F Y') }}
+                </p>
+
+                <div class="grid grid-cols-3 gap-4 text-center">
                     <div>
-                        <label for="nrp" class="block mb-1">NRP</label>
-                        <input type="text" id="nrp" name="nrp" value="{{ ($overtime->pegawai)->nrp }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
+                        <p class="font-medium">Mengetahui HC,</p>
+                        <div class="flex items-center justify-center">
+                            @if($overtime->hc_head_confirmed_by)
+                                <span class="text-green-500 font-bold text-2xl">(SIGNED)</span>
+                            @else
+                                <span class="text-green-500 font-bold text-2xl opacity-0">(SIGNED)</span>
+                            @endif
+                        </div>
+                        <div class="border-t border-gray-300 mt-16">
+                            <p class="text-gray-700 mt-2">
+                                {{ $hcUser ? $hcUser->name : '(Nama Karyawan HC)' }}
+                            </p>
+                        </div>
                     </div>
 
-                    <!-- Name Input (Auto-filled) -->
                     <div>
-                        <label for="nama" class="block mb-1">Name</label>
-                        <input type="text" id="nama" name="nama" value="{{ ($overtime->pegawai)->nama }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
+                        <p class="font-medium">Yang bersedia tugas lembur</p>
+                        <div class="flex items-center justify-center">
+                            @if($overtime->approved_by)
+                                <span class="text-green-500 font-bold text-2xl">(SIGNED)</span>
+                            @else
+                                <span class="text-green-500 font-bold text-2xl opacity-0">(SIGNED)</span>
+                            @endif
+                        </div>
+                        <div class="border-t border-gray-300 mt-16">
+                            <p class="text-gray-700 mt-2">
+                                {{ $overtime->pegawai->nama ?? '(Nama Karyawan)' }}
+                            </p>
+                        </div>
                     </div>
 
-                    <!-- Department Input (Auto-filled) -->
                     <div>
-                        <label for="department" class="block mb-1">Department</label>
-                        <input type="text" id="department" name="department" value="{{ ($overtime->pegawai)->department }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- Division Input (Auto-filled) -->
-                    <div>
-                        <label for="division" class="block mb-1">Division</label>
-                        <input type="text" id="division" name="division" value="{{ ($overtime->pegawai)->division }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- Request Date -->
-                    <div>
-                        <label for="request_date" class="block mb-1">Request Date</label>
-                        <input type="date" id="request_date" name="request_date" value="{{ $overtime->request_date }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- Start Time -->
-                    <div>
-                        <label for="start_time" class="block mb-1">Start Time</label>
-                        <input type="time" id="start_time" name="start_time" value="{{ $overtime->start_time }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- End Time -->
-                    <div>
-                        <label for="end_time" class="block mb-1">End Time</label>
-                        <input type="time" id="end_time" name="end_time" value="{{ $overtime->end_time }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- Overtime Reason -->
-                    <div>
-                        <label for="overtime_reason" class="block mb-1">Overtime Reason</label>
-                        <input type="text" id="overtime_reason" name="overtime_reason" value="{{ $overtime->overtimeReason->title }}" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>
-                    </div>
-
-                    <!-- To Do -->
-                    <div>
-                        <label for="todo_list" class="block mb-1">To-do</label>
-                        <textarea id="todo_list" name="todo_list" required class="bg-gray-200 border border-gray-300 rounded-lg p-2 w-full" disabled>{{ $overtime->todo_list }}</textarea>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="{{ route('overtime.edit', $overtime->id) }}"><div class="mt-6">
-                        <button type="submit" class="bg-yellow-500 text-white p-2 rounded-lg w-full">Edit</button>
-                    </div>
-                </a>
-                <a href="#" data-modal-target="deleteModal" data-url="{{ route('overtime.destroy', $overtime->id) }}" onclick="openDeleteModal(this)">
-                    <div class="mt-6">
-                        <button type="button" class="bg-red-500 text-white p-2 rounded-lg w-full">Delete</button>
-                    </div>
-                </a>
-
-                </div>
-
-                <!-- Delete Confirmation Modal -->
-                <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-                    <div class="relative top-1/4 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                        <div class="mt-3 text-center">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Are you sure?</h3>
-                            <p class="mt-2 text-sm text-gray-500">Do you really want to delete this record? This process cannot be undone.</p>
-                            <div class="mt-4">
-                                <button id="cancelButton" class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm" onclick="closeDeleteModal()">Cancel</button>
-                                <form id="deleteForm" action="" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="mt-2 px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-full shadow-sm">Delete</button>
-                                </form>
-                            </div>
+                        <p class="font-medium">Yang memberi tugas</p>
+                        <div class="flex items-center justify-center">
+                            @if($overtime->escalation_approved_by)
+                                <span class="text-green-500 font-bold text-2xl">(SIGNED)</span>
+                            @else
+                                <span class="text-green-500 font-bold text-2xl opacity-0">(SIGNED)</span>
+                            @endif
+                        </div>
+                        <div class="border-t border-gray-300 mt-16">
+                            <p class="text-gray-700 mt-2">
+                                {{ $overtime->orderedBy->name ?? '(Nama Karyawan)' }}
+                            </p>
                         </div>
                     </div>
                 </div>
-                </div>
+
+
             </div>
+
+            <p class="mt-8 text-center text-sm text-gray-500 italic">
+                "Jumlah jam lembur yang diperbolehkan bagi seorang pekerja maksimum 56 jam sebulan" <br> <span class="font-bold">No. 13 Tahun 2003 Pasal 78 point 1 b & PKB 2019 - 2021 Bab IV Pasal 21 point 1 hal 21.</span>
+            </p>
         </div>
-        <script>
-             function openDeleteModal(link) {
-            const modal = document.getElementById('deleteModal');
-            const form = document.getElementById('deleteForm');
-            const url = link.getAttribute('data-url');
-            form.action = url;
-            modal.classList.remove('hidden');
-        }
-
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-        // Change the icons inside the button based on previous settings
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            themeToggleDarkIcon.classList.remove('hidden');
-        }
-
-        var themeToggleBtn = document.getElementById('theme-toggle');
-
-        themeToggleBtn.addEventListener('click', function() {
-
-            // toggle icons inside button
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-
-            // if set via local storage previously
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                }
-
-            // if NOT set via local storage previously
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                }
-            }
-
-        });
-        </script>
+    </div>
 </body>
 </html>
