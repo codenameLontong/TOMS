@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('appraisal_period'); // Appraisal period
             $table->timestamp('created_at'); // Created at timestamp
             $table->string('appraisal_status'); // Status of the appraisal
-            $table->timestamp('pegawai_fill_at'); // Timestamp when filled by employee
-            $table->timestamp('superior_approved_at'); // Timestamp when approved by superior
+            $table->timestamp('pegawai_fill_at')->nullable();
+            $table->timestamp('superior_approved_at')->nullable(); // Timestamp when approved by superior
             $table->integer('rata_rata')->nullable(); // Average rating (adjust scale as necessary)
             $table->string('nilai_final')->nullable(); // Final score (adjust scale as necessary)
 

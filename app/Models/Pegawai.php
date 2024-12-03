@@ -152,4 +152,5 @@ class Pegawai extends Authenticatable
     {
         return $this->belongsTo(Section::class, 'section_id');
     }
+
 }

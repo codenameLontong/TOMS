@@ -108,4 +108,10 @@ class Overtime extends Model
     public function overtimeReason() {
         return $this->belongsTo(OvertimeReasonOrder::class, 'overtime_reason_order_id');
     }
+    public function orderedBy()
+    {
+        return $this->belongsTo(User::class, 'order_by');
+    }
+
+
 }

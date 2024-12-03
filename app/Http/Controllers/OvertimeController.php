@@ -18,54 +18,54 @@ use Spatie\Permission\Models\Role;
 class OvertimeController extends Controller
 {
     public function index()
-{
-    // Get the logged-in user's ID, email, role_id, and dept_id
-    $user = auth()->user();
-    $userId = $user->id;
-    $userEmail = $user->email;
-    $userRoleId = $user->role_id;
+    {
+        $user = auth()->user();
+        $userId = $user->id;
+        $userRoleId = $user->role_id;
 
-    // Check if the user is the special user with role 'hcs_dept_head' (role_id 5)
-    if ($userRoleId == 5) {
+        // General query for all overtimes
         $overtimes = Overtime::with('pegawai')
             ->where('is_deleted', false)
-            ->whereIn('status', ['Need HC Approval', 'Approved'])
-            ->paginate(10);
-    } elseif (!in_array($userRoleId, [1, 2])) {
-        // Regular users who are not superadmin/admin, apply email and order_by conditions
-        $overtimes = Overtime::with('pegawai')
-            ->where('is_deleted', false)
-            ->where(function ($query) use ($userEmail, $userId) {
-                $query->whereHas('pegawai', function ($subQuery) use ($userEmail) {
-                    $subQuery->where('alamat_email', $userEmail);
+            ->orderBy('id', 'desc');
+
+        // Check for role-based filtering
+        if ($userRoleId == 5) { // 'hcs_dept_head' role
+            $overtimes = $overtimes->whereIn('status', ['Need HC Approval', 'Approved']);
+        } elseif (!in_array($userRoleId, [1, 2])) { // Regular users
+            $overtimes = $overtimes->where(function ($query) use ($userId, $user) {
+                $query->whereHas('pegawai', function ($subQuery) use ($user) {
+                    $subQuery->where('alamat_email', $user->email);
                 })
-                ->orWhere('order_by', $userId); // Check if order_by matches the logged-in user's ID
-            })
-            ->paginate(10);
-    } elseif (auth()->user()->role_id === 3 || auth()->user()->role_id === 4) {
-        $overtimes = Overtime::where('status', 'Need Verification')->get();
-    } else {
-        // For superadmin/admin users, show all non-deleted overtimes
-        $overtimes = Overtime::with('pegawai')
-            ->where('is_deleted', false)
-            ->paginate(10);
-    }
-
-    // Check and update is_holiday for each overtime record
-    foreach ($overtimes as $overtime) {
-        $isWeekend = in_array(Carbon::parse($overtime->request_date)->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
-        $isExceptionHoliday = Exception::where('holiday_date', $overtime->request_date)->exists();
-
-        $isHoliday = $isWeekend || $isExceptionHoliday;
-
-        // Update the is_holiday column if necessary
-        if ($overtime->is_holiday != $isHoliday) {
-            $overtime->update(['is_holiday' => $isHoliday ? 1 : 0]);
+                ->orWhere('order_by', $userId);
+            });
+        } elseif (in_array($userRoleId, [3, 4])) { // Specific roles needing verification
+            $overtimes = $overtimes->where('status', 'Need Verification');
         }
+
+        // Fetch all overtimes with pagination
+        $overtimes = $overtimes->paginate(10);
+
+        // Filter rejected overtimes specific to the logged-in user
+        if (in_array($userRoleId, [1, 2])) {
+            // Admin or Superadmin can see all rejected overtimes
+            $rejectedOvertimes = Overtime::with('pegawai')
+                ->whereIn('status', ['Rejected', 'Rejected by Superior', 'Rejected by Employee'])
+                ->get(); // No user-based filter
+        } else {
+            // Regular users only see rejected overtimes related to them
+            $rejectedOvertimes = Overtime::with('pegawai')
+                ->whereIn('status', ['Rejected', 'Rejected by Superior', 'Rejected by Employee'])
+                ->where(function ($query) use ($userId) {
+                    $query->where('escalation_approved_by', $userId)
+                        ->orWhere('approved_by', $userId)
+                        ->orWhere('order_by', $userId); // Check if any of the columns match the logged-in user's ID
+                })
+                ->get(); // Filtered for the logged-in user
+        }
+
+        return view('dashboard.overtime', compact('overtimes', 'rejectedOvertimes'));
     }
 
-    return view('dashboard.overtime', compact('overtimes'));
-}
 
 
     public function create()
@@ -162,12 +162,17 @@ class OvertimeController extends Controller
 
     public function show($id)
     {
-        // Find the overtime record by ID
-        $overtime = Overtime::with('overtimeReason')->findOrFail($id);
+        // Find the overtime record by ID, including related data
+        $overtime = Overtime::with(['overtimeReason', 'orderedBy'])->findOrFail($id);
 
-        // Return the detail view
-        return view('dashboard.view-overtime', compact('overtime'));
+        // Get the newest HC user with role_id = 5
+        $hcUser = \App\Models\User::where('role_id', 5)->latest()->first();
+
+        // Return the detail view with the overtime data and HC user
+        return view('dashboard.view-overtime', compact('overtime', 'hcUser'));
     }
+
+
     public function edit($id)
     {
         // Find the overtime record by ID
@@ -201,7 +206,6 @@ class OvertimeController extends Controller
     {
         $overtime = Overtime::findOrFail($id);
         $user = auth()->user(); // Logged-in pegawai
-
         // Update overtime record with approved data
         $overtime->update([
             'approved_by' => auth()->user()->id,
@@ -216,20 +220,33 @@ class OvertimeController extends Controller
         return redirect()->back()->with('success', 'Overtime approved successfully!');
     }
     public function reject($id)
-    {
-        $overtime = Overtime::findOrFail($id);
-        $user = auth()->user(); // Logged-in pegawai
+{
+    $overtime = Overtime::findOrFail($id);
+    $user = auth()->user(); // Logged-in user
 
-        // Update overtime record with rejected data
-        $overtime->update([
-            'rejected_by' => auth()->user()->id,
-            'rejected_at' => now(),
-            'rejected_note' => request('rejected_note'),
-            'status' => 'Rejected',
-        ]);
-
-        return redirect()->back()->with('error', 'Overtime rejected.');
+    // Determine rejection status based on the user's role_id
+    if ($user->role_id == 3) {
+        // If the user has role_id = 3 (Superior)
+        $status = 'Rejected by Superior';
+    } elseif ($user->role_id == 7) {
+        // If the user has role_id = 7 (Employee)
+        $status = 'Rejected by Employee';
+    } else {
+        // Fallback status if the role_id doesn't match either condition
+        $status = 'Rejected';
     }
+
+    // Update the overtime record with rejection details
+    $overtime->update([
+        'rejected_by' => $user->id,
+        'rejected_at' => now(),
+        'rejected_note' => request('rejected_note'),
+        'status' => $status, // Set the status based on the user's role_id
+    ]);
+
+    return redirect()->back()->with('error', 'Overtime has been rejected.');
+}
+
     public function verify(Request $request, $id)
 {
     $overtime = Overtime::findOrFail($id); // Retrieve the specific overtime record
@@ -273,5 +290,26 @@ class OvertimeController extends Controller
 
         return redirect()->back()->with('success', 'Overtime approved successfully!');
     }
+    public function reapprove($id)
+{
+    $overtime = Overtime::findOrFail($id);
+    $user = auth()->user(); // Logged-in pegawai
+
+    // Check if the user is the previous approver
+    if ($user->id !== $overtime->approved_by && $user->id !== $overtime->escalation_approved_by) {
+        return redirect()->back()->with('error', 'You are not authorized to reapprove this overtime.');
+    }
+
+    // Update overtime details with the new inputs
+    $overtime->update([
+        'start_time' => request('start_time'),
+        'end_time' => request('end_time'),
+        'approved_note' => request('approved_note'),
+        'status' => 'Need HC Approval', // Change the status back to 'Need HC Approval' or any other appropriate status
+    ]);
+
+    return redirect()->route('overtime.index')->with('success', 'Overtime has been re-sent for approval.');
+}
+
 
 }
