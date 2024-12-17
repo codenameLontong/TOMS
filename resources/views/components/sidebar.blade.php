@@ -75,7 +75,7 @@
 
 
             <!-- Appraisal Accordion -->
-            @role('superadmin|admin|superior|pegawai')
+            @role('superadmin|admin|direct_superior|pegawai')
             <li id="appraisal-link" >
                 <button type="button" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white" aria-controls="dropdown-appraisal" data-collapse-toggle="dropdown-appraisal">
                     <svg class="fill-gray-500 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
                 </button>
                 @endrole
                 <!-- Dropdown items -->
-                @role('superadmin|admin|superior|pegawai')
+                @role('superadmin|admin|direct_superior|pegawai')
                 <ul id="dropdown-appraisal" class="hidden py-2 space-y-2">
                     <!-- Pengelolaan Appraisal Link -->
                     <li>
@@ -104,7 +104,7 @@
                 </ul>
             </li>
 
-            @role('superadmin|admin|direct_superior|superior|')
+            @role('superadmin|admin|direct_superior|superior|hcs_dept_head')
             <!-- Struktur Organisasi Accordion -->
             <li id="appraisal-link" >
                 <button type="button" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white" aria-controls="dropdown-struktur" data-collapse-toggle="dropdown-struktur">

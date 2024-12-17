@@ -34,27 +34,32 @@
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Kategori Appraisal</h2>
 
             <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
-                <table id="appraisalTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
-                        <tr>
-                            <th class="px-6 py-3">ID</th>
-                            <th class="px-6 py-3">Kategori</th>
-                            <th class="px-6 py-3">Description</th>
-                            <th class="px-6 py-3">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($appraisalcategorys as $appraisalcategory)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4">{{ $appraisalcategory->id }}</td>
-                            <td class="px-6 py-4">{{ $appraisalcategory->title }}</td>
-                            <td class="px-6 py-4">{{ $appraisalcategory->description }}</td>
-                            <td class="px-6 py-4">@if($appraisalcategory->isactive==1) Aktif @else Tidak Aktif @endif</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                @if($appraisalcategorys->isEmpty())
+                    <p class="text-center text-gray-500 dark:text-gray-400 py-4">Tidak ada kategori appraisal!</p>
+                @else
+                    <table id="appraisalTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                            <tr>
+                                <th class="px-6 py-3">ID</th>
+                                <th class="px-6 py-3">Kategori</th>
+                                <th class="px-6 py-3">Description</th>
+                                <th class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($appraisalcategorys as $appraisalcategory)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4">{{ $appraisalcategory->id }}</td>
+                                    <td class="px-6 py-4">{{ $appraisalcategory->title }}</td>
+                                    <td class="px-6 py-4">{{ $appraisalcategory->description }}</td>
+                                    <td class="px-6 py-4">@if($appraisalcategory->isactive==1) Aktif @else Tidak Aktif @endif</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
             </div>
+
 
                 <!-- Tombol Input -->
                 <div class="mb-4">

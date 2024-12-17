@@ -40,7 +40,7 @@
                 <!-- Nama Vendor -->
                 <div class="mb-4">
                     <label for="nama_vendor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Vendor</label>
-                    <input type="text" id="nama_vendor" name="nama_vendor" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <input type="text" id="nama_vendor" name="nama_vendor" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white uppercase">
                 </div>
 
                 <!-- Astra Non Astra -->
@@ -57,10 +57,10 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">PIC (Person In Charge)</label>
                     <div id="pic-container" class="space-y-4">
                     <div class="flex items-center space-x-2" id="pic-row-template">
-                        <input type="text" name="pics[0][nama]" placeholder="Nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4" required>
+                        <input type="text" name="pics[0][nama]" placeholder="Nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4 uppercase" required>
                         <input type="text" name="pics[0][no_hp]" placeholder="No HP" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4" required>
                         <input type="email" name="pics[0][email]" placeholder="Email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4" required>
-                        <input type="text" name="pics[0][jabatan]" placeholder="Jabatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4" required>
+                        <input type="text" name="pics[0][jabatan]" placeholder="Jabatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white w-1/4 uppercase" required>
                         <button type="button" class="text-gray-400 cursor-not-allowed text-sm font-medium" disabled>Remove</button>
                     </div>
                     </div>

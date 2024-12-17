@@ -106,11 +106,6 @@
                                         Export XLSX
                                     </a>
                                 </li>
-                                <li class="flex items-center">
-                                    <a href="{{ route('pegawai.export.pdf') }}" id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
-                                        Export PDF
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>

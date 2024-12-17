@@ -377,75 +377,41 @@
             });
         }
 
-        // Populate the year dropdown with available years
-        function populateYearSelector(years) {
-            var yearSelector = $('#yearSelector');
-            yearSelector.empty();  // Clear existing options
+        // Line chart data
+        var chartData = {
+            2023: [30, 45, 50, 60, 70, 80, 85, 90, 100, 110, 120, 130],
+            2024: [50, 70, 80, 65, 90, 100, 120, 110, 95, 85, 105, 115],
+            2025: [40, 60, 75, 80, 85, 95, 105, 115, 120, 130, 140, 150]
+        };
 
-            // Add a default option (current year)
-            yearSelector.append('<option value="' + new Date().getFullYear() + '">Current Year</option>');
+        var optionsLine = {
+            series: [{
+                name: 'Jam Lembur',
+                data: chartData[2024] // Default data for 2024
+            }],
+            chart: {
+                type: 'line',
+                height: 350
+            },
+            xaxis: {
+                categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+            }
+        };
 
-            // Populate years dynamically
-            years.forEach(function(year) {
-                yearSelector.append('<option value="' + year + '">' + year + '</option>');
-            });
+        var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
+        lineChart.render();
 
-            // Set the selected year to the current year if not set
-            yearSelector.val(new Date().getFullYear());
-        }
-
-        // Function to fetch overtime data from the server and update the line chart
-        function fetchOvertimeData(year) {
-            $.ajax({
-                url: "{{ route('home.getOvertimeData') }}",  // Make sure you define the route correctly
-                method: 'GET',
-                data: { year: year },
-                success: function (data) {
-                    updateLineChart(data);
-                }
-            });
-        }
-
-        // Function to update the line chart
-        function updateLineChart(data) {
-            var optionsLine = {
-                series: [{
-                    name: 'Jam Lembur',
-                    data: Object.values(data) // Use the values from the response to update chart data
-                }],
-                chart: {
-                    type: 'line',
-                    height: 350
-                },
-                xaxis: {
-                    categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-                }
-            };
-
-            var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
-            lineChart.render();
-        }
-
-        // Event listener for year selector change
-        $('#yearSelector').change(function() {
-            var selectedYear = $(this).val();
-            fetchOvertimeData(selectedYear);  // Fetch and update the chart with new data
-        });
-
-        // Initialize the page with the available years and chart for the current year
-        $(document).ready(function() {
-            fetchAvailableYears();  // Get available years from server
-            fetchOvertimeData(new Date().getFullYear());  // Default year is the current year
+        // Event listener for the year selector
+        document.getElementById('yearSelector').addEventListener('change', function() {
+            var selectedYear = this.value;
+            lineChart.updateSeries([{
+                name: 'Jam Lembur',
+                data: chartData[selectedYear] || []
+            }]);
         });
 
 
     </script>
-
-    <!-- @if(auth()->check() && auth()->user()->hasRole('pegawai'))
-    <script>
-        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
-    </script>
-    @endif -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>

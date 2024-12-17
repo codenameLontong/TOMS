@@ -50,14 +50,18 @@
                                     <label for="remember" class="text-gray-500 dark:text-gray-300">Ingat saya</label>
                                 </div>
                             </div>
-                            <a href="mailto:admin1@gmail.com?subject=Forgot%20Password&body=Hi%20Admin,%0A%0AI%20forgot%20my%20password.%20Please%20assist%20me%20with%20resetting%20it.%0A%0AThank%20you."
+                            <a href="https://www.google.com"
                                 class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
                                 Lupa password?
                             </a>
                         </div>
                         <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-primary-800">Masuk</button>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                            Belum punya akun? Hubungi Administrator
+                            Belum punya akun?
+                            <a href="https://www.google.com"
+                            class="text-primary-600 hover:underline dark:text-primary-500">
+                            Hubungi Administrator
+                            </a>
                         </p>
                     </form>
                     <!-- Form ends here -->

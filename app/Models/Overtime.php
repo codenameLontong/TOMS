@@ -113,5 +113,23 @@ class Overtime extends Model
         return $this->belongsTo(User::class, 'order_by');
     }
 
+    public function approvedByUser()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
 
+    public function escalationApprovedByUser()
+    {
+        return $this->belongsTo(User::class, 'escalation_approved_by');
+    }
+
+    public function hcHeadConfirmedByUser()
+    {
+        return $this->belongsTo(User::class, 'hc_head_confirmed_by');
+    }
+
+    public function rejectedByUser()
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
 }

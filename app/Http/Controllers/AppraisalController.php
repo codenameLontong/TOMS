@@ -200,7 +200,7 @@ class AppraisalController extends Controller
 
         try {
 
-            $pegawai_fill_at = Carbon::now('Asia/Jakarta'); // <-- Using WIB time here
+            $pegawai_fill_at = now()->format('Y-m-d H:i:s'); // Follows PC/server time in 24-hour format
 
             // Insert into the appraisal_employee table
             $appraisalEmployee = AppraisalEmployee::create([
@@ -231,8 +231,6 @@ class AppraisalController extends Controller
         }
     }
 
-
-
     public function updatecategory(Request $request,AppraisalCategory $appraisalcategorys)
     {
         $request->validate([
@@ -240,7 +238,6 @@ class AppraisalController extends Controller
             'description' => 'required|string|max:255',
             'isactive' => 'required',
         ]);
-
 
         $appraisalcategorys->update([
             'title' => $request->title,
@@ -273,7 +270,7 @@ class AppraisalController extends Controller
             $average = 0; // Jika tidak ada elemen, rata-rata diset ke 0
         }
 
-        $superior_approved_at = Carbon::now()->toDateString();
+        $superior_approved_at = now();
         $rata_rata = $average;
 
         $score_value = DB::table('appraisals_score')

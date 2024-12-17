@@ -25,8 +25,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/filter-map-data', [HomeController::class, 'filterMapData'])->name('filter.map.data');
-Route::get('/home/overtime-data', [HomeController::class, 'getOvertimeData'])->name('home.getOvertimeData');
-Route::get('/home/available-years', [HomeController::class, 'getAvailableYears'])->name('home.getAvailableYears');
+Route::get('/get-overtime-data', [HomeController::class, 'getOvertimeData'])->name('home.getOvertimeData');
+Route::get('/get-available-years', [HomeController::class, 'getAvailableYears'])->name('home.getAvailableYears');
 
 Route::middleware(['permission:view pegawai'])->get('/pegawai', [PegawaiController::class, 'index']);
 

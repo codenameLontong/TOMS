@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Appraisal;
+use App\Models\Pegawai;
+use App\Models\AppraisalItem;
 
 class AppraisalEmployee extends Model
 {
@@ -29,5 +31,16 @@ class AppraisalEmployee extends Model
     public function appraisal()
     {
         return $this->belongsTo(Appraisal::class, 'id_appraisal');
+    }
+
+    // Define relationship with Pegawai
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+    }
+
+    public function appraisalItems()
+    {
+        return $this->hasMany(AppraisalItem::class, 'id_appraisals_employee');
     }
 }

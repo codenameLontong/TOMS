@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AppraisalEmployee;
 
 class AppraisalItem extends Model
 {
@@ -18,4 +19,9 @@ class AppraisalItem extends Model
         'pegawai_score',
         'final_score_bysuperior'
     ];
+
+    public function appraisalEmployee()
+    {
+        return $this->belongsTo(AppraisalEmployee::class, 'id_appraisals_employee');
+    }
 }

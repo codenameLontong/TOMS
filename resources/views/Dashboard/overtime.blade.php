@@ -18,23 +18,50 @@
             <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Overtime</h2>
             <!-- Search Bar and Create Overtime Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
-                <div class="relative mt-1 w-80">
-                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="relative mt-1 w-80">
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+
+                    <div class="flex space-x-2">
+                            <div id="exportDropdownButton" data-dropdown-toggle="exportDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
+                                Export
+                                <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            <div id="exportDropdown" class="hidden z-10 w-52 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-center">
+                                        <a href="{{ route('overtime.export.xlsx') }}" id="export-xlsx" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-green-300 bg-green-200">
+                                            Export XLSX
+                                        </a>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <a href="{{ route('overtime.export.pdf') }}" id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
+                                            Export PDF
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
                 <div class="flex flex-col md:flex-row md:space-x-4">
                     <button id="rejectedOvertimeButton" class="flex items-center px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg" onclick="openRejectedModal()">
                         Rejected Overtime (<span id="rejectedCount">{{ $overtimes->whereIn('status', ['Rejected', 'Rejected by Superior', 'Rejected by Employee'])->count() }}</span>)
                     </button>
 
-                @if(in_array(auth()->user()->role_id, [1, 2, 3, 4, 5, 6]))
-                <a href="{{ route('overtime.create') }}" class="flex items-center px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    Buat SPL
-                </a>
-                @endif
+                    @if(in_array(auth()->user()->role_id, [1, 2, 3, 4, 5, 6]))
+                    <a href="{{ route('overtime.create') }}" class="flex items-center px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Buat SPL
+                    </a>
+                    @endif
+                </div>
             </div>
 
                <!-- Overtime Table -->

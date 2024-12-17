@@ -549,13 +549,16 @@ class PegawaiController extends Controller
             $kodeCostCenter = $mapping?->costCenter->kode ?? 'N/A';
             $typeCoa = $mapping?->costCenter?->coaId?->type_coa ?? 'N/A';
 
+            // Retrieve kode_cabang from related Cabang model
+            $cabang = Cabang::where('lokasi_cabang', $pegawai->cabang)->first();
+            $kodeCabang = $cabang?->kode_cabang ?? 'N/A';
             return [
                 'nrp' => $pegawai->nrp,
                 'nrp_vendor' => $pegawai->nrp_vendor,
                 'nama' => $pegawai->nama,
                 'coy' => $pegawai->coy,
                 'cabang' => $pegawai->cabang,
-                'kode_cabang' => $pegawai->kode_cabang,
+                'kode_cabang' => $kodeCabang,
                 'jabatan' => $pegawai->jabatan,
                 'directorate' => $pegawai->directorate,
                 'division' => $pegawai->division,

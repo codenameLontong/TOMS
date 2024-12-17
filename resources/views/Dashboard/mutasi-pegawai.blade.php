@@ -39,7 +39,7 @@
                     </div>
                     <div class="w-1/2">
                         <label for="jabatan_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan Tujuan</label>
-                        <input type="text" id="jabatan_tujuan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="jabatan_tujuan" name="jabatan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 uppercase block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 
@@ -131,7 +131,7 @@
                     </div>
                     <div class="w-1/2">
                         <label for="project_site_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Site Tujuan</label>
-                        <input type="text" id="project_site_tujuan" name="project_site" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="project_site_tujuan" name="project_site" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm uppercase rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 
@@ -143,7 +143,7 @@
                     </div>
                     <div class="w-1/2">
                         <label for="lokasi_kerja_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lokasi Kerja Tujuan</label>
-                        <input type="text" id="lokasi_kerja_tujuan" name="lokasi_kerja" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="lokasi_kerja_tujuan" name="lokasi_kerja" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm uppercase rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
 

@@ -68,7 +68,7 @@ class HomeController extends Controller
             ->pluck('count', 'coy');
 
         // Data for the education pie chart
-        $educationLevels = ['SD', 'SMP', 'SLTP', 'SMA', 'SMK', 'S1', 'D1', 'D3', 'D4'];
+        $educationLevels = ['SD/Sederajat', 'SMP/Sederajat', 'SMA/Sederajat','S1','D1','D2','D3','D4'];
         $educationData = Pegawai::where('employment_status', 'active')
             ->selectRaw("pendidikan, COUNT(*) as count")
             ->whereIn('pendidikan', $educationLevels)
@@ -137,7 +137,7 @@ class HomeController extends Controller
 
     public function getOvertimeData(Request $request)
     {
-        // Default to the current year if none selected
+        // Default to the current year if none is selected
         $year = $request->get('year', now()->year);
 
         // Initialize an array to hold total overtime hours for each month
@@ -157,15 +157,15 @@ class HomeController extends Controller
             $start = Carbon::parse($overtime->hc_head_confirmed_start_time);
             $end = Carbon::parse($overtime->hc_head_confirmed_end_time);
 
-            $overtimeHours = $end->diffInHours($start); // Difference in hours
-
             // Add the calculated hours to the respective month
+            $overtimeHours = $end->diffInHours($start); // Difference in hours
             $monthlyOvertime[$month] += $overtimeHours;
         }
 
         // Return the monthly overtime data as JSON
         return response()->json($monthlyOvertime);
     }
+
 
     public function getAvailableYears()
     {
