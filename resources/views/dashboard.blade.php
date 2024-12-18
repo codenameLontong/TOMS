@@ -142,7 +142,7 @@
 
             <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
                 <div class="flex justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Jam Lembur Approve</h3>
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Jam Lembur Disetujui</h3>
                     <select id="yearSelector" class="border border-gray-300 rounded px-2 py-1 text-gray-700 dark:bg-gray-700 dark:text-white">
                         <!-- Dynamic years will be added here -->
                     </select>
@@ -152,7 +152,7 @@
 
             <!-- Second middle section with pie chart -->
             <div class="p-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Appraisal Full Approve</h3>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Penilaian Pegawai Disetujui</h3>
                 <div id="pieChart"></div>
             </div>
         </div>
