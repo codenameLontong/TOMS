@@ -141,10 +141,13 @@
                             <td class="flex px-6 py-4 space-x-2">
                             @if ($overtime->status == 'Plan')
                             <!-- Trigger Approve Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
-                            onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
+\                               <!-- Trigger Approve Modal -->
+                            <button type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#approveModal"
+                            onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}', '{{ $overtime->todo_list ?? 'No note available' }}')">
                             <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
-                        </button>
+                            </button>
 
 
                             <!-- Trigger Reject Modal -->
@@ -164,11 +167,14 @@
                             @role('direct_superior|superior')
                             <td class="flex px-6 py-4 space-x-2">
                             @if ($overtime->status == 'Need Verification')
-                            <!-- Trigger Verification Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
-                                onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
-                            </button>
+                       <!-- Trigger Verification Modal -->
+                        <button type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#verificationModal"
+                        onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}', '{{ $overtime->approved_note ?? 'No note available' }}')">
+                        <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
+                        </button>
+
 
                             <!-- Trigger Reject Modal -->
                             <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
@@ -188,9 +194,11 @@
                             <td class="flex px-6 py-4 space-x-2">
                             @if ($overtime->status == 'Need HC Approval')
                             <!-- Trigger Confirmation Modal -->
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
-                                onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
+                            <button type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmationModal"
+                            onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}', '{{ $overtime->escalation_approved_note ?? 'No note available' }}')">
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
                             </button>
 
                             <!-- Trigger Reject Modal -->
@@ -283,7 +291,7 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-bold">To Do:</label>
-                            <p class="text-muted">{{ $overtime->todo_list ?? 'No note available' }}</p>
+                            <p class="text-muted" id="todoList">{{ $overtime->todo_list ?? 'No note available' }}</p>
                         </div>
                         <div class="mb-3">
                             <label for="verificationNote" class="form-label">Approval Note</label>
@@ -335,7 +343,7 @@
                     <!-- Display approved_note -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Approved Note:</label>
-                        <p id="approvedNoteText" class="text-muted">{{ $overtime->approved_note ?? 'No note available' }}</p>
+                        <p class="text-muted" id="approved_note">{{ $overtime->approved_note ?? 'No note available' }}</p>
                     </div>
 
                     <div class="mb-3">
@@ -376,8 +384,8 @@
           <form action="" method="POST" id="confirmationForm">
               @csrf
               <div class="mb-3">
-                <label class="form-label fw-bold">Approved Note:</label>
-                <p id="approvedNoteText" class="text-muted">{{ $overtime->escalation_approved_note ?? 'No note available' }}</p>
+                <label class="form-label fw-bold">Verification Note:</label>
+                <p id="escalation_approved_note" class="text-muted">{{ $overtime->escalation_approved_note ?? 'No note available' }}</p>
             </div>
               <div class="mb-3">
                   <label for="confirmation_note" class="form-label">Confirm Note (Optional)</label>
@@ -492,20 +500,31 @@ function closeRejectedModal() {
 
         document.getElementById('cancelButton').addEventListener('click', closeDeleteModal);
 
-        function setApproveAction(url) {
-        document.getElementById('approveForm').action = url;
+        function setApproveAction(url, todo) {
+            // Set the form action URL
+            document.getElementById('approveForm').action = url;
+
+            // Update the todo_list content in the modal
+            document.getElementById('todoList').innerText = todo;
         }
+
 
         function setRejectAction(url) {
             document.getElementById('rejectForm').action = url;
         }
-        function setVerificationAction(url) {
+        function setVerificationAction(url, approved) {
             // Set the form action to the correct route
             document.getElementById('verificationForm').action = url;
+
+            // Update the approved_note content in the modal
+            document.getElementById('approved_note').innerText = approved;
+
         }
-        function setConfirmationAction(url) {
+        function setConfirmationAction(url, escalate) {
             // Set the form action to the correct route
             document.getElementById('confirmationForm').action = url;
+            // Update the escalation_approved_note content in the modal
+            document.getElementById('escalation_approved_note').innerText = escalate;
         }
 
 
