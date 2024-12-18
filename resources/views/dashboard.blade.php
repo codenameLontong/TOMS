@@ -140,7 +140,6 @@
                 </div>
             </div>
 
-            <!-- Middle section with line chart -->
             <div class="p-4 mb-4 bg-white rounded-lg border border-gray-300 dark:border-gray-700 shadow-md dark:bg-gray-800">
                 <div class="flex justify-between mb-2">
                     <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Jam Lembur Approve</h3>
@@ -158,6 +157,17 @@
             </div>
         </div>
     </div>
+
+        <!-- jQuery Library -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- ApexCharts Library -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- Flowbite (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
+
 
     <script>
 
@@ -370,48 +380,83 @@
         addMarkers(originalMapData);
 
         // Fetch available years dynamically from the server (e.g., based on overtime data)
-        function fetchAvailableYears() {
-            $.ajax({
-                url: "{{ route('home.getAvailableYears') }}",  // Create this route to fetch years from overtime records
-                method: 'GET',
-                success: function (data) {
-                    populateYearSelector(data.years);
+        // Function to populate available years
+    function fetchAvailableYears() {
+        $.ajax({
+            url: "{{ route('home.getAvailableYears') }}",
+            method: 'GET',
+            success: function (data) {
+                const yearSelector = document.getElementById('yearSelector');
+                yearSelector.innerHTML = ""; // Clear current options
+                data.years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.text = year;
+                    yearSelector.appendChild(option);
+                });
+                if (data.years.length > 0) {
+                    fetchOvertimeData(data.years[0]); // Load data for the first year
                 }
-            });
-        }
-
-        // Line chart data
-        var chartData = {
-            2023: [30, 45, 50, 60, 70, 80, 85, 90, 100, 110, 120, 130],
-            2024: [50, 70, 80, 65, 90, 100, 120, 110, 95, 85, 105, 115],
-            2025: [40, 60, 75, 80, 85, 95, 105, 115, 120, 130, 140, 150]
-        };
-
-        var optionsLine = {
-            series: [{
-                name: 'Jam Lembur',
-                data: chartData[2024] // Default data for 2024
-            }],
-            chart: {
-                type: 'line',
-                height: 350
-            },
-            xaxis: {
-                categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
             }
-        };
-
-        var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
-        lineChart.render();
-
-        // Event listener for the year selector
-        document.getElementById('yearSelector').addEventListener('change', function() {
-            var selectedYear = this.value;
-            lineChart.updateSeries([{
-                name: 'Jam Lembur',
-                data: chartData[selectedYear] || []
-            }]);
         });
+    }
+
+    // Function to fetch and update overtime data
+    function fetchOvertimeData(year) {
+        $.ajax({
+            url: "{{ route('home.getOvertimeData') }}",
+            method: 'GET',
+            data: { year: year },
+            success: function (response) {
+                console.log("Overtime Data:", response); // Log the response
+                if (response && response.monthlyOvertime) {
+                    updateChart(response.monthlyOvertime);
+                } else {
+                    console.error("Invalid data format:", response);
+                }
+            },
+            error: function (error) {
+                console.error("Error fetching overtime data:", error);
+            }
+        });
+    }
+
+
+    // Initialize the line chart
+    var optionsLine = {
+        series: [{
+            name: 'Jam Lembur',
+            data: [] // Default empty data
+        }],
+        chart: {
+            type: 'line',
+            height: 350
+        },
+        xaxis: {
+            categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+        }
+    };
+
+    var lineChart = new ApexCharts(document.querySelector("#lineChart"), optionsLine);
+    lineChart.render();
+
+    // Function to update chart data
+    function updateChart(data) {
+        lineChart.updateSeries([{
+            name: 'Jam Lembur',
+            data: data
+        }]);
+    }
+
+    // Event listener for year selection
+    document.getElementById('yearSelector').addEventListener('change', function() {
+        const selectedYear = this.value;
+        fetchOvertimeData(selectedYear);
+    });
+
+    // Fetch initial data
+    fetchAvailableYears();
+
 
 
     </script>
