@@ -7,6 +7,8 @@ use App\Models\Vendor;
 use App\Models\Overtime;
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
+
 
 class HomeController extends Controller
 {
@@ -145,7 +147,7 @@ class HomeController extends Controller
 
         // Fetch overtime data where status is approved and hc_head_confirmed_date is within the selected year
         $overtimeData = Overtime::where('status', 'Approved')
-            ->whereYear('hc_head_confirmed_date', $year) // Filter by year
+            ->whereYear('hc_head_confirmed_date', $year)
             ->get();
 
         // Loop through each overtime record to calculate the total hours per month
@@ -157,14 +159,21 @@ class HomeController extends Controller
             $start = Carbon::parse($overtime->hc_head_confirmed_start_time);
             $end = Carbon::parse($overtime->hc_head_confirmed_end_time);
 
-            // Add the calculated hours to the respective month
-            $overtimeHours = $end->diffInHours($start); // Difference in hours
+            $overtimeHours = $start->diffInHours($end);
+
+            // Round up to two decimal places
+            $overtimeHours = ceil($overtimeHours * 100) / 100;
+
             $monthlyOvertime[$month] += $overtimeHours;
+
         }
 
         // Return the monthly overtime data as JSON
-        return response()->json($monthlyOvertime);
+        return response()->json([
+            'monthlyOvertime' => array_values($monthlyOvertime),
+        ]);
     }
+
 
 
     public function getAvailableYears()
@@ -173,9 +182,12 @@ class HomeController extends Controller
                         ->selectRaw('YEAR(hc_head_confirmed_date) as year')
                         ->distinct()
                         ->pluck('year')
-                        ->sortDesc();
+                        ->sortDesc()
+                        ->values() // Reset the keys
+                        ->toArray(); // Ensure it's an array
 
         return response()->json(['years' => $years]);
     }
+
 
 }

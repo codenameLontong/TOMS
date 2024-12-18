@@ -161,7 +161,7 @@
                         @endif
 
                         @if(isset($overtime))
-                            @role('direct_superior')
+                            @role('direct_superior|superior')
                             <td class="flex px-6 py-4 space-x-2">
                             @if ($overtime->status == 'Need Verification')
                             <!-- Trigger Verification Modal -->
