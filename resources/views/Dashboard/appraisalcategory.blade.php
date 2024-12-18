@@ -13,7 +13,7 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Kategori Appraisal</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Kategori Penilaian</h2>
 
             <!-- Search Bar and Add Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
@@ -23,7 +23,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari berdasarkan kata kunci" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
                 <div class="flex space-x-3">
                     <a href="{{ route('appraisal.createcategory') }}" class="flex items-center px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg">
@@ -42,9 +42,9 @@
                         <tr>
                             <th class="px-6 py-3">ID</th>
                             <th class="px-6 py-3">Kategori</th>
-                            <th class="px-6 py-3">Description</th>
+                            <th class="px-6 py-3">Deskripsi</th>
                             <th class="px-6 py-3">Status</th>
-                            <th class="px-6 py-3">Actions</th>
+                            <th class="px-6 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

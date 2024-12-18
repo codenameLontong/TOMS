@@ -16,14 +16,14 @@
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
             <div class="flex flex-row justify-between">
-                <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Exception</h2>
+                <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Hari Libur</h2>
                 <!-- Search Bar and Create Overtime Button -->
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                     <a href="{{ route('exceptions.create') }}" class="flex items-center px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        Buat Exception
+                        Buat Hari Libur
                     </a>
                 </div>
             </div>
@@ -33,10 +33,10 @@
                 <table id="exceptionTable" class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">Id <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(1, this)">Holiday Date <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(2, this)">Note <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3">Actions</th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">ID <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(1, this)">Tanggal Libur <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(2, this)">Catatan <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

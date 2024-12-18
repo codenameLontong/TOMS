@@ -13,7 +13,7 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Appraisal</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Penilaian Pegawai</h2>
 
             <!-- Search Bar and Add Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
@@ -25,7 +25,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari berdasarkan kata kunci" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
 
                     @role('superadmin')
@@ -42,11 +42,6 @@
                                 <li class="flex items-center">
                                     <a href="{{ route('appraisal.export.xlsx') }}" id="export-xlsx" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-green-300 bg-green-200">
                                         Export XLSX
-                                    </a>
-                                </li>
-                                <li class="flex items-center">
-                                    <a href="{{ route('appraisal.export.pdf') }}" id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
-                                        Export PDF
                                     </a>
                                 </li>
                             </ul>
@@ -70,14 +65,14 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
                             <th class="px-6 py-3">ID</th>
-                            <th class="px-6 py-3">Periode Appraisal</th>
-                            <th class="px-6 py-3">Created At</th>
-                            <th class="px-6 py-3">Status Appraisal</th>
+                            <th class="px-6 py-3">Periode Penilaian</th>
+                            <th class="px-6 py-3">Tanggal Pembuatan</th>
+                            <th class="px-6 py-3">Status</th>
                             @if($role == 7)
-                            <th class="px-6 py-3">Pegawai_Fill_At</th>
-                            <th class="px-6 py-3">Superior_Fill_At</th>
+                            <th class="px-6 py-3">Waktu Isi Pegawai</th>
+                            <th class="px-6 py-3">Waktu Isi Superior</th>
                             <th class="px-6 py-3">Rata-Rata</th>
-                            <th class="px-6 py-3">Nilai_Akhir</th>
+                            <th class="px-6 py-3">Nilai Akhir</th>
                             <th class="px-6 py-3">Status Pengajuan</th>
                             <th class="px-6 py-3">Actions</th>
                         @endif

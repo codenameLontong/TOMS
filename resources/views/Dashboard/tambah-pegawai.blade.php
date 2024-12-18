@@ -37,7 +37,7 @@
                 <!-- Nama -->
                 <div class="mb-4">
                     <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
-                    <input type="text" id="nama" name="nama" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <input type="text" id="nama" name="nama" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg uppercase focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 </div>
 
                 <!-- COY and Directorate -->
@@ -51,7 +51,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate</label>
+                    <label for="directorate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Direktorat</label>
                     <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         <option value=""></option>
                     </select>
@@ -59,13 +59,13 @@
 
                 <!-- Division and Department -->
                 <div class="mb-4">
-                    <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Division</label>
+                    <label for="division" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Divisi</label>
                     <select id="division" name="division" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         <option value=""></option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</label>
+                    <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departemen</label>
                     <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                         <option value=""></option>
                     </select>
@@ -129,12 +129,12 @@
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
                         <label for="lokasi_kerja" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lokasi Kerja</label>
-                        <input type="text" id="lokasi_kerja" name="lokasi_kerja" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <input type="text" id="lokasi_kerja" name="lokasi_kerja" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg uppercase focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     </div>
 
                     <div class="w-1/2">
-                        <label for="project_site" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Site</label>
-                        <input type="text" id="project_site" name="project_site" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <label for="project_site" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek/Site</label>
+                        <input type="text" id="project_site" name="project_site" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg uppercase focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     </div>
                 </div>
 
@@ -143,8 +143,8 @@
                     <div class="w-1/2">
                         <label for="jenis_kelamin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kelamin</label>
                         <select id="jenis_kelamin" name="jenis_kelamin" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="PRIA">PRIA</option>
+                            <option value="WANITA">WANITA</option>
                         </select>
                     </div>
                     <div class="w-1/2">
@@ -165,9 +165,9 @@
                     <div class="w-1/2">
                         <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pendidikan</label>
                         <select id="pendidikan" name="pendidikan" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                            <option value="SD">SD/Sederajat</option>
-                            <option value="SMP">SMP/Sederajat</option>
-                            <option value="SMA">SMA/Sederajat</option>
+                            <option value="SD/Sederajat">SD/Sederajat</option>
+                            <option value="SMP/Sederajat">SMP/Sederajat</option>
+                            <option value="SMA/Sederajat">SMA/Sederajat</option>
                             <option value="D1">D1</option>
                             <option value="D2">D2</option>
                             <option value="D3">D3</option>
@@ -224,7 +224,7 @@
                     </div>
                     <div class="w-1/2">
                         <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
-                        <input type="text" id="no_hp" name="no_hp" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <input type="number" id="no_hp" name="no_hp" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     </div>
                 </div>
 

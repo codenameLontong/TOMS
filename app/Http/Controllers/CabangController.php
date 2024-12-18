@@ -39,8 +39,8 @@ class CabangController extends Controller
     {
         // Example: Replace these calculations with your actual logic
         $jumlahPegawai = $cabang->pegawai()->count(); // Assuming `pegawai` is a relationship
-        $jumlahLakiLaki = $cabang->pegawai()->where('jenis_kelamin', 'MALE')->count();
-        $jumlahPerempuan = $cabang->pegawai()->where('jenis_kelamin', 'FEMALE')->count();
+        $jumlahLakiLaki = $cabang->pegawai()->where('jenis_kelamin', 'PRIA')->count();
+        $jumlahPerempuan = $cabang->pegawai()->where('jenis_kelamin', 'WANITA')->count();
 
         return view('dashboard.view-cabang', compact('cabang', 'jumlahPegawai', 'jumlahLakiLaki', 'jumlahPerempuan'));
     }

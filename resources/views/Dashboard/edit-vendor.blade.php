@@ -58,7 +58,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <button type="button" id="add-pic-btn" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2">+ Add PIC</button>
+                    <button type="button" id="add-pic-btn" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2">+ Tambah PIC</button>
                 </div>
 
                 <!-- Submit Button -->

@@ -11,9 +11,9 @@
     <x-navbar />
     <x-sidebar />
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14 max-w-3xl mx-auto">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Buat Exception</h2>
+    <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 mt-14 bg-white dark:bg-gray-800 max-w-3xl mx-auto bg-white shadow-lg">
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Buat Hari Libur</h2>
             <div class="container mx-auto p-4">
                 <!-- New Search Input -->
                 <!-- Form Inputs -->
@@ -22,18 +22,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Other Form Fields (Date, Time, Reason, To-Do) -->
                         <div>
-                            <label for="request_date" class="block mb-1">Holiday Date</label>
+                            <label for="request_date" class="block mb-1">Tanggal Hari Libur</label>
                             <input type="date" id="holiday_date" name="holiday_date" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
                         </div>
                         <div>
-                            <label for="todo_list" class="block mb-1">Note</label>
+                            <label for="todo_list" class="block mb-1">Catatan</label>
                             <input id="note" name="note" required class="bg-gray-50 border border-gray-300 rounded-lg p-2 w-full">
                         </div>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="mt-6">
-                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-lg w-full">Submit</button>
+                        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-lg w-full">Submit</button>
                     </div>
                 </form>
             </div>

@@ -61,24 +61,27 @@
                 <!-- Card for Overtime -->
                 <a href="{{ route('overtime.index') }}" class="flex flex-col justify-between h-40 rounded-lg border border-gray-300 dark:border-gray-700 bg-white shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow">
                     <div class="border-b border-gray-300 dark:border-gray-600 p-2 bg-gray-100 dark:bg-white-100 rounded-t-lg">
-                        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-700 text-center">Overtime</h3>
+                        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-700 text-center">Pengajuan Lembur</h3>
                     </div>
                     <div class="flex-grow grid grid-cols-3 divide-x divide-gray-300 dark:divide-gray-600">
                         <!-- Need Verification Section -->
                         <div class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900">
-                            <h4 class="text-xs font-medium text-blue-800 dark:text-blue-200">Need Verification</h4>
+                            <h4 class="text-xs font-medium text-blue-800 dark:text-blue-200">Menunggu</h4>
+                            <h4 class="text-xs font-medium text-blue-800 dark:text-blue-200"> Verifikasi Atasan</h4>
                             <p class="text-4xl font-bold text-blue-900 dark:text-blue-300">{{ $overtimeStatuses['Need Verification'] }}</p>
                         </div>
 
                         <!-- Need HC Approval Section -->
                         <div class="flex flex-col items-center justify-center bg-yellow-50 dark:bg-yellow-900">
-                            <h4 class="text-xs font-medium text-yellow-800 dark:text-yellow-200">Need HC Approval</h4>
+                            <h4 class="text-xs font-medium text-yellow-800 dark:text-yellow-200">Menunggu</h4>
+                            <h4 class="text-xs font-medium text-yellow-800 dark:text-yellow-200">Persetujuan HC</h4>
                             <p class="text-4xl font-bold text-yellow-900 dark:text-yellow-300">{{ $overtimeStatuses['Need HC Approval'] }}</p>
                         </div>
 
                         <!-- Approved Section -->
                         <div class="flex flex-col items-center justify-center bg-green-50 dark:bg-green-900">
-                            <h4 class="text-xs font-medium text-green-800 dark:text-green-200">Approved</h4>
+                            <h4 class="text-xs font-medium text-green-800 dark:text-green-200">Telah</h4>
+                            <h4 class="text-xs font-medium text-green-800 dark:text-green-200">Disetujui</h4>
                             <p class="text-4xl font-bold text-green-900 dark:text-green-300">{{ $overtimeStatuses['Approved'] }}</p>
                         </div>
                     </div>
@@ -330,13 +333,13 @@
         function addMarkers(filteredData) {
             clearMarkers();
             locations.forEach(location => {
-                var locationData = filteredData[location.key] || { MALE: 0, FEMALE: 0, total: 0 };
+                var locationData = filteredData[location.key] || { PRIA: 0, WANITA: 0, total: 0 };
 
                 // Create a popup with male, female, and total counts
                 var popupContent = `
                     <strong>${location.name}</strong><br>
-                    Laki-laki: ${locationData.MALE}<br>
-                    Perempuan: ${locationData.FEMALE}<br>
+                    Laki-laki: ${locationData.PRIA}<br>
+                    Perempuan: ${locationData.WANITA}<br>
                     Total: ${locationData.total}
                 `;
 

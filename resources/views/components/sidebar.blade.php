@@ -56,7 +56,7 @@
                 <svg class="fill-gray-500 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" >
                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
                 </svg>
-                    <span class="ml-3">Overtime</span>
+                    <span class="ml-3">Pengajuan Lembur</span>
                 </a>
             </li>
             @endrole
@@ -68,7 +68,7 @@
                 <svg class="fill-gray-500 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" >
                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
                 </svg>
-                    <span class="ml-3">Exception</span>
+                    <span class="ml-3">Hari Libur</span>
                 </a>
             </li>
             @endrole
@@ -81,7 +81,7 @@
                     <svg class="fill-gray-500 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M12 2c-.791 0-1.55.314-2.11.874l-.893.893a.985.985 0 0 1-.696.288H7.04A2.984 2.984 0 0 0 4.055 7.04v1.262a.986.986 0 0 1-.288.696l-.893.893a2.984 2.984 0 0 0 0 4.22l.893.893a.985.985 0 0 1 .288.696v1.262a2.984 2.984 0 0 0 2.984 2.984h1.262c.261 0 .512.104.696.288l.893.893a2.984 2.984 0 0 0 4.22 0l.893-.893a.985.985 0 0 1 .696-.288h1.262a2.984 2.984 0 0 0 2.984-2.984V15.7c0-.261.104-.512.288-.696l.893-.893a2.984 2.984 0 0 0 0-4.22l-.893-.893a.985.985 0 0 1-.288-.696V7.04a2.984 2.984 0 0 0-2.984-2.984h-1.262a.985.985 0 0 1-.696-.288l-.893-.893A2.984 2.984 0 0 0 12 2Zm3.683 7.73a1 1 0 1 0-1.414-1.413l-4.253 4.253-1.277-1.277a1 1 0 0 0-1.415 1.414l1.985 1.984a1 1 0 0 0 1.414 0l4.96-4.96Z" clip-rule="evenodd"/>
                         </svg>
-                            <span class="ml-3">Appraisal</span>
+                            <span class="ml-3">Penilaian Pegawai</span>
                             <svg class="w-4 h-4 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -120,15 +120,15 @@
                 <ul id="dropdown-struktur" class="hidden py-2 space-y-2">
                     <!-- Directorates Link -->
                     <li>
-                        <a href="{{ route('directorate.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Directorates</a>
+                        <a href="{{ route('directorate.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Direktorat</a>
                     </li>
                     <!-- Divisions Link -->
                     <li>
-                        <a href="{{ route('division.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Divisions</a>
+                        <a href="{{ route('division.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Divisi</a>
                     </li>
                     <!-- Departments Link -->
                     <li>
-                        <a href="{{ route('department.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Departments</a>
+                        <a href="{{ route('department.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Departemen</a>
                     </li>
                     <!-- Sections Link -->
                     <li>
@@ -144,22 +144,3 @@
         </ul>
     </div>
 </aside>
-
-<!-- <script>
-    // Get the current user role
-    let userRole = '{{ auth()->user()->role }}'; // assuming you pass the role to the JS
-
-    // Show or hide the elements based on the user role
-    if (userRole === 'admin') {
-        document.getElementById('dashboard-link').classList.remove('hidden');
-        document.getElementById('pegawai-link').classList.remove('hidden');
-        document.getElementById('vendor-link').classList.remove('hidden');
-        document.getElementById('cabang-link').classList.remove('hidden');
-        document.getElementById('appraisal-link').classList.remove('hidden');
-    } else if (userRole === 'pegawai') {
-        document.getElementById('appraisal-link').classList.remove('hidden');
-        document.getElementById('overtime-link').classList.remove('hidden');
-    } else if (userRole === 'vendor') {
-        document.getElementById('vendor-link').classList.remove('hidden');
-    }
-</script> -->

@@ -43,13 +43,13 @@ class HomeController extends Controller
 
         // Prepare data for the map
         $mapData = $pegawaiData->groupBy('cabang')->map(function ($items) {
-            $maleCount = $items->where('jenis_kelamin', 'MALE')->sum('count');
-            $femaleCount = $items->where('jenis_kelamin', 'FEMALE')->sum('count');
+            $maleCount = $items->where('jenis_kelamin', 'PRIA')->sum('count');
+            $femaleCount = $items->where('jenis_kelamin', 'WANITA')->sum('count');
             $totalCount = $maleCount + $femaleCount;
 
             return [
-                'MALE' => $maleCount,
-                'FEMALE' => $femaleCount,
+                'PRIA' => $maleCount,
+                'WANITA' => $femaleCount,
                 'total' => $totalCount,
             ];
         });
@@ -121,13 +121,13 @@ class HomeController extends Controller
             ->get();
 
         $mapData = $pegawaiData->groupBy('cabang')->map(function ($items) {
-            $maleCount = $items->where('jenis_kelamin', 'MALE')->sum('count');
-            $femaleCount = $items->where('jenis_kelamin', 'FEMALE')->sum('count');
+            $maleCount = $items->where('jenis_kelamin', 'PRIA')->sum('count');
+            $femaleCount = $items->where('jenis_kelamin', 'WANITA')->sum('count');
             $totalCount = $maleCount + $femaleCount;
 
             return [
-                'MALE' => $maleCount,
-                'FEMALE' => $femaleCount,
+                'PRIA' => $maleCount,
+                'WANITA' => $femaleCount,
                 'total' => $totalCount,
             ];
         });

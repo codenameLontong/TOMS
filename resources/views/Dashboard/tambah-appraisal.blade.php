@@ -13,36 +13,36 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Appraisal</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Tambah Penilaian</h2>
 
             <form method="POST" action="{{ route('appraisal.storeappraisal') }}">
             @csrf
                 <!-- Appraisal Period -->
                 <div div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bulan Periode Appraisal</label>
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bulan Periode Penilaian</label>
                     <select type="text" id="monthperiod" name="monthperiod" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="Desember">Desember</option>
                     </select>
                     </div>
                     <div class="w-1/2">
-                    <label for="yearperiod" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tahun Periode Appraisal</label>
+                    <label for="yearperiod" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tahun Periode Penilaian</label>
                     <input type="text" id="yearperiod" value="{{ date('Y') }}" name="yearperiod" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
                     </div>
                 </div>
             <!-- Appraisal Table -->
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Kategori Appraisal</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Kategori Penilaian</h2>
 
             <div class="relative overflow-x-auto sm:rounded-lg" style="max-height: 621px; overflow-y: auto;">
                 @if($appraisalcategorys->isEmpty())
-                    <p class="text-center text-gray-500 dark:text-gray-400 py-4">Tidak ada kategori appraisal!</p>
+                    <p class="text-center text-gray-500 dark:text-gray-400 py-4">Tidak ada kategori penilaian!</p>
                 @else
                     <table id="appraisalTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                             <tr>
                                 <th class="px-6 py-3">ID</th>
                                 <th class="px-6 py-3">Kategori</th>
-                                <th class="px-6 py-3">Description</th>
+                                <th class="px-6 py-3">Deskripsi</th>
                                 <th class="px-6 py-3">Status</th>
                             </tr>
                         </thead>

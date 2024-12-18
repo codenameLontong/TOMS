@@ -27,7 +27,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Search for items" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari berdasarkan kata kunci" class="block p-2 pl-10 w-80 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
 
                      <!-- Filter Button to Switch Between Active and Terminated -->
@@ -134,7 +134,7 @@
                 <table id="pegawaiTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                         <tr>
-                            <th class="px-6 py-3 sticky top-0">NRP</th>
+                            <th class="px-6 py-3 sticky top-0">NRP TRAKNUS</th>
                             <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(1)">Nama
                                 <span id="sortIconNama" class="inline-block"></span>
                             </th>
@@ -147,10 +147,10 @@
                             <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(4)">Jabatan
                                 <span id="sortIconJabatan" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(5)">Department
+                            <th class="px-6 py-3 sticky top-0 cursor-pointer" onclick="sortTable(5)">Departemen
                                 <span id="sortIconDepartment" class="inline-block"></span>
                             </th>
-                            <th class="px-6 py-3 sticky top-0">Actions</th>
+                            <th class="px-6 py-3 sticky top-0">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

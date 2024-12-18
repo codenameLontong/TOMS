@@ -78,11 +78,11 @@
                 <!-- Directorate Sekarang and Directorate Tujuan -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                        <label for="directorate_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate Sekarang</label>
+                        <label for="directorate_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Direktorat Sekarang</label>
                         <input type="text" id="directorate_sekarang" name="directorate_sekarang" value="{{ $pegawai->directorate }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                     <div class="w-1/2">
-                        <label for="directorate_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directorate Tujuan</label>
+                        <label for="directorate_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Direktorat Tujuan</label>
                         <select id="directorate" name="directorate" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></select>
                     </div>
                 </div>
@@ -102,11 +102,11 @@
                 <!-- Department Sekarang and Department Tujuan -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                        <label for="department_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department Sekarang</label>
+                        <label for="department_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departemen Sekarang</label>
                         <input type="text" id="department_sekarang" name="department_sekarang" value="{{ $pegawai->department }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                     <div class="w-1/2">
-                        <label for="department_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department Tujuan</label>
+                        <label for="department_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departemen Tujuan</label>
                         <select id="department" name="department" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></select>
                     </div>
                 </div>
@@ -126,11 +126,11 @@
                 <!-- Project Site Sekarang and Project Site Tujuan -->
                 <div class="flex space-x-4 mb-4">
                     <div class="w-1/2">
-                        <label for="project_site_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Site Sekarang</label>
+                        <label for="project_site_sekarang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek/Site Sekarang</label>
                         <input type="text" id="project_site_sekarang" name="project_site_sekarang" value="{{ $pegawai->project_site }}" disabled class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                     </div>
                     <div class="w-1/2">
-                        <label for="project_site_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Site Tujuan</label>
+                        <label for="project_site_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Proyek/Site Tujuan</label>
                         <input type="text" id="project_site_tujuan" name="project_site" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm uppercase rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>

@@ -15,12 +15,12 @@
 
     <div class="p-4 sm:ml-64 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg mt-14 bg-white dark:bg-gray-800 shadow-lg">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Overtime</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Pengajuan Lembur</h2>
             <!-- Search Bar and Create Overtime Button -->
             <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 pb-4">
                 <div class="flex items-center space-x-2">
                     <div class="relative mt-1 w-80">
-                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari Overtime" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <input type="text" id="table-search" onkeyup="searchTable()" placeholder="Cari berdasarkan kata kunci" class="block p-2 pl-10 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
 
                     <div class="flex space-x-2">
@@ -50,7 +50,7 @@
 
                 <div class="flex flex-col md:flex-row md:space-x-4">
                     <button id="rejectedOvertimeButton" class="flex items-center px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg" onclick="openRejectedModal()">
-                        Rejected Overtime (<span id="rejectedCount">{{ $overtimes->whereIn('status', ['Rejected', 'Rejected by Superior', 'Rejected by Employee'])->count() }}</span>)
+                        Lembur Ditolak (<span id="rejectedCount">{{ $overtimes->whereIn('status', ['Rejected', 'Rejected by Superior', 'Rejected by Employee'])->count() }}</span>)
                     </button>
 
                     @if(in_array(auth()->user()->role_id, [1, 2, 3, 4, 5, 6]))
@@ -69,13 +69,13 @@
                 <table id="pegawaiTable" class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">NRP <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(1, this)">Name <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(2, this)">Overtime Date <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(3, this)">Start Time <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(4, this)">End Time <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(0, this)">NRP TRAKNUS <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(1, this)">Nama <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(2, this)">Tanggal Lembur <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(3, this)">Waktu Mulai Lembur <span>&#9650;</span></th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(4, this)">Waktu Selesai Lembur<span>&#9650;</span></th>
                             <th scope="col" class="px-6 py-3 cursor-pointer" data-sort="asc" onclick="sortTable(5, this)">Status <span>&#9650;</span></th>
-                            <th scope="col" class="px-6 py-3">Actions</th>
+                            <th scope="col" class="px-6 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="overtimeTableBody">
@@ -143,14 +143,14 @@
                             <!-- Trigger Approve Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#approveModal"
                             onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}')">
-                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Setuju</span>
                         </button>
 
 
                             <!-- Trigger Reject Modal -->
                             <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
                                 onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Tolak</span>
                             </button>
                             @else
 
@@ -167,13 +167,13 @@
                             <!-- Trigger Verification Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#verificationModal"
                                 onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verify</span>
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verifikasi</span>
                             </button>
 
                             <!-- Trigger Reject Modal -->
                             <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
                                 onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Tolak</span>
                             </button>
                             @else
 
@@ -190,13 +190,13 @@
                             <!-- Trigger Confirmation Modal -->
                             <button type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"
                                 onclick="setConfirmationAction('{{ route('overtime.confirm', $overtime->id) }}')">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Confirm</span>
+                                <span class="bg-green-500 text-white py-1 px-3 rounded-full">Konfirmasi</span>
                             </button>
 
                             <!-- Trigger Reject Modal -->
                             <button type="button"  data-bs-toggle="modal" data-bs-target="#rejectModal"
                                 onclick="setRejectAction('{{ route('overtime.reject', $overtime->id) }}')">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Reject</span>
+                                <span class="bg-red-500 text-white py-1 px-3 rounded-full">Tolak</span>
                             </button>
                             @else
 
@@ -216,7 +216,7 @@
 
         <div class="flex items-center space-x-2 mt-4">
             <span class="w-4 h-4 bg-yellow-200 inline-block"></span>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Outside Work Days</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Di Luar Hari Kerja</span>
         </div>
 
                    <!-- Pagination -->

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('division');
             $table->string('department');
             $table->string('section')->nullable();
-            $table->enum('jenis_kelamin', ['MALE', 'FEMALE']);
+            $table->enum('jenis_kelamin', ['PRIA', 'PEREMPUAN']);
             $table->enum('agama', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
             $table->enum('pendidikan', ['SD/Sederajat', 'SMP/Sederajat', 'SMA/Sederajat', 'S1', 'D1', 'D2', 'D3', 'D4']);
             $table->enum('status', ['TK', 'K0','K1', 'K2', 'K3', 'K4', 'K5']); // keep this 'status' enum column
