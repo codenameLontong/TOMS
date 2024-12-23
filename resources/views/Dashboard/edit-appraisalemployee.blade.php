@@ -49,10 +49,10 @@
                             <td class="px-6 py-4"><b>{{ $appraisal_items->title }}</b></td>
                             <td class="px-6 py-4">{{ $appraisal_items->description }}</td>
                             <td class="px-6 py-4">
-                                <input type="number" value="{{ $appraisal_items->pegawai_score  }}" min="10" max="100" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
+                                <input type="number" step="0.1" value="{{ $appraisal_items->pegawai_score  }}" min="1" max="5" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
                             </td>
                             <td class="px-6 py-4">
-                                <input type="number" min="1" max="5" id="{{ $appraisal_items->id }}" name="{{ $appraisal_items->id }}" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <input type="number" step="0.1" min="1" max="5" id="{{ $appraisal_items->id }}" name="{{ $appraisal_items->id }}" required class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </td>
                         </tr>
                         @endforeach

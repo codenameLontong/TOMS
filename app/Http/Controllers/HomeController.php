@@ -43,8 +43,10 @@ class HomeController extends Controller
             ->groupBy('cabang', 'jenis_kelamin')
             ->get();
 
-        // Prepare data for the map
-        $mapData = $pegawaiData->groupBy('cabang')->map(function ($items) {
+        $mapData = $pegawaiData->groupBy(function ($item) {
+            // Trim spaces from the 'cabang' key
+            return trim($item->cabang);
+        })->map(function ($items) {
             $maleCount = $items->where('jenis_kelamin', 'PRIA')->sum('count');
             $femaleCount = $items->where('jenis_kelamin', 'WANITA')->sum('count');
             $totalCount = $maleCount + $femaleCount;
@@ -122,7 +124,10 @@ class HomeController extends Controller
             ->groupBy('cabang', 'jenis_kelamin')
             ->get();
 
-        $mapData = $pegawaiData->groupBy('cabang')->map(function ($items) {
+        $mapData = $pegawaiData->groupBy(function ($item) {
+            // Trim spaces from the 'cabang' key
+            return trim($item->cabang);
+        })->map(function ($items) {
             $maleCount = $items->where('jenis_kelamin', 'PRIA')->sum('count');
             $femaleCount = $items->where('jenis_kelamin', 'WANITA')->sum('count');
             $totalCount = $maleCount + $femaleCount;
@@ -136,6 +141,7 @@ class HomeController extends Controller
 
         return response()->json($mapData);
     }
+
 
     public function getOvertimeData(Request $request)
     {

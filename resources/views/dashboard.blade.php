@@ -339,17 +339,20 @@
             currentMarkers = [];
         }
 
-        // Function to add markers to the map
         function addMarkers(filteredData) {
             clearMarkers();
             locations.forEach(location => {
-                var locationData = filteredData[location.key] || { PRIA: 0, WANITA: 0, total: 0 };
+                // Normalize the location key and filteredData keys by trimming whitespace
+                const locationKey = location.key.trim();
+                const normalizedDataKey = Object.keys(filteredData).find(key => key.trim() === locationKey);
+
+                var locationData = filteredData[normalizedDataKey] || { PRIA: 0, WANITA: 0, total: 0 };
 
                 // Create a popup with male, female, and total counts
                 var popupContent = `
                     <strong>${location.name}</strong><br>
-                    Laki-laki: ${locationData.PRIA}<br>
-                    Perempuan: ${locationData.WANITA}<br>
+                    Pria: ${locationData.PRIA}<br>
+                    Wanita: ${locationData.WANITA}<br>
                     Total: ${locationData.total}
                 `;
 

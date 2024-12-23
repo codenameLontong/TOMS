@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,6 +69,7 @@
                     <div class="w-1/2">
                         <label for="coy_tujuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">COY Tujuan</label>
                         <select id="COY" name="coy" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="" disabled selected>Pilih company</option>
                             @foreach($companies as $company)
                                 <option value="{{ $company->id }}" {{ $company->id == $pegawai->company_id ? 'selected' : '' }}>{{ $company->coy }}</option>
                             @endforeach
@@ -169,7 +171,9 @@
                     fetch(`/get-directorates/${companyId}`)
                         .then(response => response.json())
                         .then(data => {
-                            populateDropdown(directorateSelect, data, 'nama_directorate');
+                            const filteredData = data.filter(directorate => directorate.id !== 1 && directorate.id !== 4);
+
+                            populateDropdown(directorateSelect, filteredData, 'nama_directorate');
                             resetDropdown(divisionSelect);
                             resetDropdown(departmentSelect);
                             resetDropdown(sectionSelect);

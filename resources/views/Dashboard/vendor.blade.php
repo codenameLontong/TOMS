@@ -7,6 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
+    @if(auth()->check() && auth()->user()->hasRole('pegawai'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -75,7 +80,7 @@
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4">{{ $vendor->kode_vendor }}</td>
                             <td class="px-6 py-4">{{ $vendor->nama_vendor }}</td>
-                            <td class="px-6 py-4">{{ $vendor->astra_non_astra }}</td>
+                            <td class="px-6 py-4">{{ strtoupper ($vendor->astra_non_astra) }}</td>
                             <td class="flex px-6 py-4">
                                 <a href="{{ route('vendor.view', $vendor->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

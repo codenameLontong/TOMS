@@ -10,6 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+    @if(auth()->check() && auth()->user()->hasRole('pegawai'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
 </head>
 <body>
     <x-navbar />
@@ -52,41 +57,6 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
-                    </div>
-
-                    <!-- Filter Button -->
-                    <div id="filterButton" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-                        </svg>
-                        Filter
-                    </div>
-
-                    <!-- Filter Modal -->
-                    <div id="filterModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-                        <div class="bg-white p-6 rounded shadow-lg w-1/3 relative">
-                            <!-- Close Button -->
-                            <button type="button" onclick="closeFilterModal()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 focus:outline-none">
-                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                            <h2 class="text-lg font-semibold mb-4 text-gray-900">Filter by Department</h2>
-                            <form action="{{ route('pegawai.index') }}" method="GET">
-                                <div class="space-y-2 max-h-60 overflow-y-auto">
-                                    @foreach ($departments as $department)
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="departments[]" value="{{ $department }}" id="department-{{ $loop->index }}" class="mr-2">
-                                        <label for="department-{{ $loop->index }}" class="text-sm text-gray-700">{{ $department }}</label>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                <div class="mt-4 flex justify-end space-x-2">
-                                    <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400" onclick="closeFilterModal()">Cancel</button>
-                                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Apply</button>
-                                </div>
-                            </form>
                         </div>
                     </div>
 
@@ -157,11 +127,11 @@
                         @foreach($pegawais as $pegawai)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4">{{ $pegawai->nrp }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->nama }}</td>
+                            <td class="px-6 py-4">{{ strtoupper($pegawai->nama) }}</td>
                             <td class="px-6 py-4">{{ $pegawai->coy }}</td>
                             <td class="px-6 py-4">{{ $pegawai->cabang }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->jabatan }}</td>
-                            <td class="px-6 py-4">{{ $pegawai->department }}</td>
+                            <td class="px-6 py-4">{{ strtoupper($pegawai->jabatan) }}</td>
+                            <td class="px-6 py-4">{{ strtoupper($pegawai->department) }}</td>
                             <td class="flex px-6 py-4">
                                 <a href="{{ route('pegawai.view', $pegawai->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

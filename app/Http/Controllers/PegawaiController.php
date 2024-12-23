@@ -141,6 +141,12 @@ class PegawaiController extends Controller
         $kodeCabang = $cabang->kode_cabang; // Retrieve kode_cabang from the cabangs table
         $tahunMasuk = Carbon::parse($request->input('tanggal_masuk_tn_shn'))->format('y'); // Last 2 digits of the year
 
+         // Check if the company is SWADAYA HARAPAN NUSANTARA
+        if ($company->coy === 'SWADAYA HARAPAN NUSANTARA') {
+            // For SWADAYA HARAPAN NUSANTARA, use S01 as the prefix
+            $kodeCabang = 'S01';
+        }
+
         // Find the latest pegawai in this cabang and year (considering both kode_cabang and year in NRP)
         $latestPegawai = Pegawai::where('nrp', 'like', $kodeCabang . $tahunMasuk . '%')  // Ensure it matches both kode_cabang and tahun
                         ->orderBy('nrp', 'desc')

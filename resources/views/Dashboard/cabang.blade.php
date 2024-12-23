@@ -15,6 +15,11 @@
         document.documentElement.classList.remove('dark')
     }
 </script>
+    @if(auth()->check() && auth()->user()->hasRole('pegawai'))
+    <script>
+        window.location.href = '{{ route('overtime.index') }}'; // Redirect to the overtime page
+    </script>
+    @endif
 </head>
 <body>
     <x-navbar />

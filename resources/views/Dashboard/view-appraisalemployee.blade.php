@@ -58,6 +58,7 @@
                                     <td class="px-6 py-4">
                                         <input disabled
                                             type="number"
+                                            step="0.1"
                                             value="{{ $appraisal_items->pegawai_score }}"
                                             id="score_{{ $appraisal_items->id }}"
                                             name="scores[{{ $appraisal_items->pegawai_score }}]"

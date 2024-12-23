@@ -24,6 +24,7 @@
                     </div>
 
                     <div class="flex space-x-2">
+                            @role('superadmin|admin')
                             <div id="exportDropdownButton" data-dropdown-toggle="exportDropdown" class="flex items-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 cursor-pointer">
                                 Export
                                 <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -38,15 +39,12 @@
                                             Export XLSX
                                         </a>
                                     </li>
-                                    <li class="flex items-center">
-                                        <a href="{{ route('overtime.export.pdf') }}" id="export-pdf" class="block py-2 px-4 w-full text-left text-sm font-medium text-gray-900 rounded-lg border border-gray-200 hover:bg-red-300 bg-red-200">
-                                            Export PDF
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
+                            @endrole
                         </div>
                     </div>
+
 
                 <div class="flex flex-col md:flex-row md:space-x-4">
                     <button id="rejectedOvertimeButton" class="flex items-center px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg" onclick="openRejectedModal()">
@@ -140,13 +138,12 @@
                             @role('pegawai')
                             <td class="flex px-6 py-4 space-x-2">
                             @if ($overtime->status == 'Plan')
-                            <!-- Trigger Approve Modal -->
-\                               <!-- Trigger Approve Modal -->
+                              <!-- Trigger Approve Modal -->
                             <button type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#approveModal"
                             onclick="setApproveAction('{{ route('overtime.approve', $overtime->id) }}', '{{ $overtime->todo_list ?? 'No note available' }}')">
-                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Approve</span>
+                            <span class="bg-green-500 text-white py-1 px-3 rounded-full">Setuju</span>
                             </button>
 
 
@@ -171,7 +168,7 @@
                         <button type="button"
                         data-bs-toggle="modal"
                         data-bs-target="#verificationModal"
-                        onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}', '{{ $overtime->approved_note ?? 'No note available' }}')">
+                        onclick="setVerificationAction('{{ route('overtime.verify', $overtime->id) }}', '{{ $overtime->approved_start_time }}', '{{ $overtime->approved_end_time }}')">
                         <span class="bg-green-500 text-white py-1 px-3 rounded-full">Verifikasi</span>
                         </button>
 
@@ -227,7 +224,7 @@
             <span class="text-sm text-gray-500 dark:text-gray-400">Di Luar Hari Kerja</span>
         </div>
 
-                   <!-- Pagination -->
+            <!-- Pagination -->
             <nav id="pagination" class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Pagination">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
@@ -293,10 +290,6 @@
                             <label class="form-label fw-bold">To Do:</label>
                             <p class="text-muted" id="todoList">{{ $overtime->todo_list ?? 'No note available' }}</p>
                         </div>
-                        <div class="mb-3">
-                            <label for="verificationNote" class="form-label">Approval Note</label>
-                            <textarea class="form-control" id="verificationNote" name="approved_note" rows="3"></textarea>
-                        </div>
                         <button type="submit" class="btn btn-success">Approve</button>
                     </form>
                 </div>
@@ -341,10 +334,10 @@
                 <form action="" method="POST" id="verificationForm">
                     @csrf
                     <!-- Display approved_note -->
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label fw-bold">Approved Note:</label>
                         <p class="text-muted" id="approved_note">{{ $overtime->approved_note ?? 'No note available' }}</p>
-                    </div>
+                    </div> -->
 
                     <div class="mb-3">
                         <label for="verificationNote" class="form-label">Verification Note</label>
@@ -353,13 +346,13 @@
 
                     <!-- Fillable start and end times -->
                     <div class="mb-3">
-                        <label for="approvedStartTime" class="form-label">Approved Start Time</label>
-                        <input type="time" class="form-control" id="approvedStartTime" name="approved_start_time" value="{{ $overtime->approved_start_time ?? '' }}">
+                        <label for="approved_start_time" class="form-label">Approved Start Time</label>
+                        <input type="time" class="form-control" id="approved_start_time" name="approved_start_time" value="{{ $overtime->approved_start_time ?? '' }}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="approvedEndTime" class="form-label">Approved End Time</label>
-                        <input type="time" class="form-control" id="approvedEndTime" name="approved_end_time" value="{{ $overtime->approved_end_time ?? '' }}">
+                        <label for="approved_end_time" class="form-label">Approved End Time</label>
+                        <input type="time" class="form-control" id="approved_end_time" name="approved_end_time" value="{{ $overtime->approved_end_time ?? '' }}">
                     </div>
 
                     <button type="submit" class="btn btn-success">Verify</button>
@@ -505,19 +498,22 @@ function closeRejectedModal() {
             document.getElementById('approveForm').action = url;
 
             // Update the todo_list content in the modal
-            document.getElementById('todoList').innerText = todo;
+            document.getElementById('todoList').value = todo;
         }
 
 
         function setRejectAction(url) {
             document.getElementById('rejectForm').action = url;
         }
-        function setVerificationAction(url, approved) {
+        function setVerificationAction(url, approved_start_time, approved_end_time) {
             // Set the form action to the correct route
             document.getElementById('verificationForm').action = url;
 
             // Update the approved_note content in the modal
-            document.getElementById('approved_note').innerText = approved;
+            document.getElementById('approved_start_time').value = approved_start_time;
+
+            // Update the approved_note content in the modal
+            document.getElementById('approved_end_time').value = approved_end_time;
 
         }
         function setConfirmationAction(url, escalate) {

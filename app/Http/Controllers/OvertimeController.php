@@ -43,7 +43,7 @@ class OvertimeController extends Controller
         }
 
         // Fetch all overtimes with pagination
-        $overtimes = $overtimes->paginate(10);
+        $overtimes = $overtimes->paginate(15);
 
         // Filter rejected overtimes specific to the logged-in user
         if (in_array($userRoleId, [1, 2])) {
@@ -283,8 +283,8 @@ class OvertimeController extends Controller
             'hc_head_confirmed_at' => now(),
             'hc_head_confirmed_note' => request('confirmation_note'),
             'hc_head_confirmed_date' => $overtime->request_date,
-            'hc_head_confirmed_start_time' => $overtime->start_time,
-            'hc_head_confirmed_end_time' => $overtime->end_time,
+            'hc_head_confirmed_start_time' => $overtime->escalation_approved_start_time,
+            'hc_head_confirmed_end_time' => $overtime->escalation_approved_end_time,
             'status' => 'Approved', // Or any status you'd prefer
         ]);
 

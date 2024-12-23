@@ -42,8 +42,81 @@ class AppraisalController extends Controller
 
         if($role==3){
         return view('dashboard.appraisal-approval', compact('appraisals','role','appraisalsEmployee'));
-        }else{
+        }
+        if ($role==1) {
+            $appraisals = DB::table('appraisals')
+            ->select('appraisals.*')
+            ->get();
+
             return view('dashboard.appraisal', compact('appraisals','role'));
+        }else{
+            $appraisals_foremployee_cek = AppraisalEmployee::where('pegawai_id', auth()->user()->pegawai_id)->get();
+
+            if($appraisals_foremployee_cek->isEmpty()){
+                $appraisals = DB::table('appraisals')
+                ->leftJoin('appraisals_employee', 'appraisals.id', '=', 'appraisals_employee.id_appraisal')
+                ->select('appraisals.*',
+                DB::raw('COALESCE(appraisals_employee.id, "") as appraisal_employee_id'),
+                DB::raw('NULL AS pegawai_fill_at'),
+                DB::raw('COALESCE(appraisals_employee.superior_approved_at, "") as superior_approved_at'),
+                DB::raw('COALESCE(appraisals_employee.rata_rata, "") as rata_rata'),
+                DB::raw('COALESCE(appraisals_employee.nilai_final, "") as nilai_final'),
+                DB::raw('"" AS appraisal_employee_status'),
+                DB::raw('"Open" as appraisal_status_name')
+                )
+                ->get();
+
+                return view('dashboard.appraisal', compact('appraisals','role'));
+            }else{
+                $appraisals = $appraisals = DB::table('appraisals')
+                ->select(
+                    'appraisals.*',
+                    DB::raw("(SELECT appraisals_employee.id
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS appraisal_employee_id"),
+                    DB::raw("(SELECT appraisals_employee.pegawai_fill_at
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS pegawai_fill_at"),
+                    DB::raw("(SELECT appraisals_employee.superior_approved_at
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS superior_approved_at"),
+                    DB::raw("(SELECT appraisals_employee.rata_rata
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS rata_rata"),
+                    DB::raw("(SELECT appraisals_employee.nilai_final
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS nilai_final"),
+                    DB::raw("(SELECT appraisals_employee.appraisal_status
+                              FROM appraisals_employee
+                              WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                              AND appraisals_employee.id_appraisal = appraisals.id
+                              LIMIT 1) AS appraisal_employee_status"),
+                    DB::raw("COALESCE(
+                              (SELECT appraisal_status.status
+                               FROM appraisal_status
+                               WHERE appraisal_status.id =
+                                     (SELECT appraisals_employee.appraisal_status
+                                      FROM appraisals_employee
+                                      WHERE pegawai_id = " . auth()->user()->pegawai_id . "
+                                      AND appraisals_employee.id_appraisal = appraisals.id
+                                      LIMIT 1)
+                              ), 'Open') AS appraisal_status_name")
+                )
+                ->get();
+
+                return view('dashboard.appraisal', compact('appraisals','role'));
+            }
+
         }
     }
 

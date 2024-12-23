@@ -49,7 +49,7 @@
             </li>
             @endrole
 
-            @role('superadmin|admin|direct_superior|superior|hcs_dept_head|pegawai')
+            @role('superadmin|admin|direct_superior|superior|hcs_dept_head|pegawai|hc_div_head')
             <!-- Overtime Link -->
             <li id="overtime-link" >
                 <a href="{{ route('overtime.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -75,7 +75,7 @@
 
 
             <!-- Appraisal Accordion -->
-            @role('superadmin|admin|direct_superior|pegawai')
+            @role('superadmin|admin|direct_superior|pegawai|hc_div_head')
             <li id="appraisal-link" >
                 <button type="button" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white" aria-controls="dropdown-appraisal" data-collapse-toggle="dropdown-appraisal">
                     <svg class="fill-gray-500 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -88,17 +88,17 @@
                 </button>
                 @endrole
                 <!-- Dropdown items -->
-                @role('superadmin|admin|direct_superior|pegawai')
+                @role('superadmin|admin|direct_superior|pegawai|hc_div_head')
                 <ul id="dropdown-appraisal" class="hidden py-2 space-y-2">
                     <!-- Pengelolaan Appraisal Link -->
                     <li>
-                        <a href="{{ route('appraisal.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Pengelolaan Appraisal</a>
+                        <a href="{{ route('appraisal.index') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Pengelolaan Penilaian</a>
                     </li>
                     @endrole
                     <!-- Kategori Appraisal Link -->
                     @role('superadmin')
                     <li>
-                        <a href="{{ route('appraisal.category') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Kategori Appraisal</a>
+                        <a href="{{ route('appraisal.category') }}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group pl-11 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">Kategori Penilaian</a>
                     </li>
                     @endrole
                 </ul>
